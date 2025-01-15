@@ -5,8 +5,16 @@
 package frc.robot;
 
 public final class Constants {
-
   public static class Superstructure {
+  
+  }
+
+  public static final class Intake {
+    
+    public static final double kIntakeS = 0.0;
+    public static final double kIntakeV = 0.0;
+    public static final double kIntakeA = 0.0;
+    public static final double kIntakeG = 0.0;
 
   }
 }
