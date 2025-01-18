@@ -14,9 +14,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
+
   final TalonFX intakemotor = new TalonFX(0);
   VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private IntakeStates state = IntakeStates.NONE;
+
+  public enum IntakeStates {
+    NONE,
+    STOWED,
+    HANDOFF,
+    CORAL_1,
+    CORAL_2,
+    CORAL_3,
+    ALGAE_REMOVE_2,
+    ALGAE_REMOVE_3,
+    SHALLOW_CLIMB,
+    DEEP_CLIMB
+  }
+
   /** Creates a new Intake. */
   public Intake() 
   {
@@ -31,19 +46,6 @@ public class Intake extends SubsystemBase {
     );
   }
   
-
-  public enum IntakeStates {
-    NONE,
-    STOWED,
-    HANDOFF,
-    CORAL_1,
-    CORAL_2,
-    CORAL_3,
-    ALGAE_REMOVE_2,
-    ALGAE_REMOVE_3,
-    SHALLOW_CLIMB,
-    DEEP_CLIMB
-  }
     @Override
     public void periodic() {
 
