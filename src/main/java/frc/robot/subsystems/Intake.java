@@ -3,12 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,12 +24,23 @@ public class Intake extends SubsystemBase {
     TalonFXConfiguration IntakeConfig = new TalonFXConfiguration();
     IntakeConfig.withSlot0(
             new Slot0Configs()
-                .withGravityType(GravityTypeValue.Arm_Cosine)
-                .withKS(Constants.Intake.kIntakeS) // 0.27
-                .withKV(Constants.Intake.kIntakeV) // 1.4
-                .withKA(Constants.Intake.kIntakeA) // 0.01
-                .withKG(Constants.Intake.kIntakeG) // 0.20
+                .withKS(Constants.Intake.kIntakeS) 
+                .withKV(Constants.Intake.kIntakeV) 
+                .withKG(Constants.Intake.kIntakeG)
+                .withKA(Constants.Intake.kIntakeA) 
+                .withKP(Constants.Intake.kIntakeP) 
+                .withKI(Constants.Intake.kIntakeI) 
+                .withKD(Constants.Intake.kIntakeD) 
     );
+
+    intakemotor.getConfigurator().apply(IntakeConfig);
+    intakemotor.setNeutralMode(NeutralModeValue.Brake);
+
+    IntakeConfig.withFeedback(
+        new FeedbackConfigs()
+          .withSensorToMechanismRatio(Constants.Intake.kIntakeGearRatio)
+    );
+
   }
   
 
@@ -85,10 +97,26 @@ public class Intake extends SubsystemBase {
           break;
 
         case DEEP_CLIMB:
-          intakemotor.setControl(velocityVoltage);
+          intakemotor.setControl(velocityVoltage.withVelocity(0));
           break;
   
     // This method will be called once per scheduler run
   }
+}
+
+public void setState(IntakeStates state) {
+  this.state = state;
+}
+
+public void setNeutralMode(NeutralModeValue neutralModeValue) {
+  intakemotor.setNeutralMode(neutralModeValue);
+}
+
+public IntakeStates getState() {
+  return state;
+}
+
+public double getIntakeSpeed() {
+  return intakemotor.getVelocity().getValueAsDouble();
 }
 }
