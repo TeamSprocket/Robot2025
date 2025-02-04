@@ -16,8 +16,8 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 
-  final TalonFX intakemotor = new TalonFX(0);
-  VelocityVoltage velocityVoltage = new VelocityVoltage(0);
+  private final TalonFX intakemotor = new TalonFX(0);
+  private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private IntakeStates state = IntakeStates.NONE;
 
   public enum IntakeStates {
@@ -37,6 +37,8 @@ public class Intake extends SubsystemBase {
   public Intake() 
   {
     TalonFXConfiguration IntakeConfig = new TalonFXConfiguration();
+
+
     IntakeConfig.withSlot0(
             new Slot0Configs()
                 .withKS(Constants.Intake.kIntakeS) 
@@ -48,13 +50,17 @@ public class Intake extends SubsystemBase {
                 .withKD(Constants.Intake.kIntakeD) 
     );
 
-    intakemotor.getConfigurator().apply(IntakeConfig);
-    intakemotor.setNeutralMode(NeutralModeValue.Brake);
-
     IntakeConfig.withFeedback(
         new FeedbackConfigs()
           .withSensorToMechanismRatio(Constants.Intake.kIntakeGearRatio)
     );
+
+    intakemotor.getConfigurator().apply(IntakeConfig);
+
+
+    intakemotor.setNeutralMode(NeutralModeValue.Brake);
+
+    
 
   }
   
