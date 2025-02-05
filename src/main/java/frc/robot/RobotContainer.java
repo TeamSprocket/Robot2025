@@ -28,6 +28,7 @@ public class RobotContainer {
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   Superstructure superstructure = new Superstructure();
+  Vision limelight = new Vision(drivetrain);
 
   // ------- Swerve Generated -------
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -82,6 +83,9 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+    driver.y().onTrue(limelight.getAlignPathRight());
+    driver.x().onTrue(limelight.getAlignPathLeft());
 
     // --------------------=Operator=--------------------
 
