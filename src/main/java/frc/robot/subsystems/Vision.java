@@ -70,7 +70,7 @@ public class Vision extends SubsystemBase {
     }
 
     public Command getAlignPath(boolean pathDirection) {
-        updatePose();
+        addVisionPose();
         fiducialID = LimelightHelper.getFiducialID(name);
         endpointL = new Pose2d(); // used for both sides
 
@@ -132,7 +132,7 @@ public class Vision extends SubsystemBase {
     }
 
     public Command getAlignPathLeft() {
-        updatePose();
+        addVisionPose();
         fiducialID = LimelightHelper.getFiducialID(name);
         endpointL = new Pose2d();
         switch ((int)fiducialID) {
@@ -172,7 +172,7 @@ public class Vision extends SubsystemBase {
     }
 
     public Command getAlignPathRight() {
-        updatePose();
+        addVisionPose();
         fiducialID = LimelightHelper.getFiducialID(name);
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
@@ -289,10 +289,10 @@ public class Vision extends SubsystemBase {
         return false;
     }
 
-    public Pose2d updatePose() {
+    public Pose2d addVisionPose() {
         if (hasTargets()) {
             Pose2d pose = getPose2d();
-            drivetrain.updateOdometry(pose, getTimeStamp());
+            drivetrain.addVisionMeasurement(pose, getTimeStamp());
             return pose;
         } else {
             return drivetrain.getAutoBuilderPose();
