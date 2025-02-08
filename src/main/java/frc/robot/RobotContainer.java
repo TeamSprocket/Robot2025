@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Superstructure.SSStates;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.Telemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
 import static edu.wpi.first.units.Units.*;
 
@@ -40,10 +41,12 @@ public class RobotContainer {
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final Telemetry logger = new Telemetry(MaxSpeed);
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
   public RobotContainer() {
+    drivetrain.configureAutoBuilder();
     configureBindings();
     initNamedCommands();
     initAutons();
@@ -86,6 +89,8 @@ public class RobotContainer {
 
     driver.y().onTrue(limelight.getAlignPathRight().alongWith(Commands.print("RIGHT")));
     driver.x().onTrue(limelight.getAlignPathLeft().alongWith(Commands.print("LEFT")));
+
+    drivetrain.registerTelemetry(logger::telemeterize);
 
     // --------------------=Operator=--------------------
 

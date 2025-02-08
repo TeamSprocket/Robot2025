@@ -126,7 +126,7 @@ public class Vision extends SubsystemBase {
 
         return AutoBuilder.pathfindToPose(
         endpointL,
-        new PathConstraints(4, 3, 4, 2), 0.0
+        new PathConstraints(2, 2, 3, 2), 0.0
         );
 
     }
@@ -213,7 +213,7 @@ public class Vision extends SubsystemBase {
     public Command getPathfindToPose(Pose2d endpoint) {
         return AutoBuilder.pathfindToPose(
             endpoint,
-            new PathConstraints(4, 3, 4, 2), 0.0
+            new PathConstraints(2, 2, 3, 2), 0.0
         );
     }
 
