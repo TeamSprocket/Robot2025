@@ -87,8 +87,8 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    driver.y().onTrue(limelight.getAlignPathRight().alongWith(Commands.print("RIGHT")));
-    driver.x().onTrue(limelight.getAlignPathLeft().alongWith(Commands.print("LEFT")));
+    driver.y().onTrue(limelight.getAlignPathRight().andThen(Commands.print("RIGHT")));
+    driver.x().onTrue(limelight.getAlignPathLeft().andThen(Commands.print("LEFT")));
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
