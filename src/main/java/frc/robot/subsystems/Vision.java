@@ -39,8 +39,6 @@ public class Vision extends SubsystemBase {
     Pose2d endpointL = new Pose2d();
     Pose2d endpointR = new Pose2d();
 
-    Pose2d robotPose = new Pose2d();
-
     Command pathL;
     Command pathR;
 
@@ -60,79 +58,18 @@ public class Vision extends SubsystemBase {
         debug();
 
         updateAlignPose();
+        drivetrain.addVisionMeasurement(getPose2d(), getTimeStamp());
 
-        if (hasTargets() && updateFirst) {
-            resetPose();
-            updateFirst = false;
-        } else if (!hasTargets() && !updateFirst) {
-            updateFirst = true;
-        }
+        // if (hasTargets() && updateFirst) {
+        //     resetPose();
+        //     updateFirst = false;
+        // } else if (!hasTargets() && !updateFirst) {
+        //     updateFirst = true;
+        // }
     }
 
-    public Command getAlignPath(boolean pathDirection) {
-        addVisionPose();
-        fiducialID = LimelightHelper.getFiducialID(name);
-        endpointL = new Pose2d(); // used for both sides
-
-        if (pathDirection) { 
-                switch ((int)fiducialID) {
-                    case 17:
-                        endpointL = Constants.Vision.poseAlignBlueRight17;
-                        break;
-                    case 18:
-                        endpointL = Constants.Vision.poseAlignBlueRight18;
-                        break;
-                    case 19:
-                        endpointL = Constants.Vision.poseAlignBlueRight19;
-                        break;
-                    case 20:
-                        endpointL = Constants.Vision.poseAlignBlueRight20;
-                        break;
-                    case 21:
-                        endpointL = Constants.Vision.poseAlignBlueRight21;
-                        break;
-                    case 22:
-                        endpointL = Constants.Vision.poseAlignBlueRight22;
-                        break;
-                    case -1:
-                        endpointL = drivetrain.getAutoBuilderPose();
-                        break;
-                }
-        } else {
-            switch ((int)fiducialID) {
-                case 17:
-                    endpointL = Constants.Vision.poseAlignBlueLeft17;
-                    break;
-                case 18:
-                    endpointL = Constants.Vision.poseAlignBlueLeft18;
-                    break;
-                case 19:
-                    endpointL = Constants.Vision.poseAlignBlueLeft19;
-                    break;
-                case 20:
-                    endpointL = Constants.Vision.poseAlignBlueLeft20;
-                    break;
-                case 21:
-                    endpointL = Constants.Vision.poseAlignBlueLeft21;
-                    break;
-                case 22:
-                    endpointL = Constants.Vision.poseAlignBlueLeft22;
-                    break;
-                case -1:
-                    endpointL = drivetrain.getAutoBuilderPose();
-                    break;
-            }
-        }
-
-        return AutoBuilder.pathfindToPose(
-        endpointL,
-        new PathConstraints(2, 2, 3, 2), 0.0
-        );
-
-    }
-
-    public Command getAlignPathLeft() {
-        addVisionPose();
+    public Pose2d getPoseLeft() {
+        resetPose();
         fiducialID = LimelightHelper.getFiducialID(name);
         endpointL = new Pose2d();
         switch ((int)fiducialID) {
@@ -158,21 +95,16 @@ public class Vision extends SubsystemBase {
                 endpointL = drivetrain.getAutoBuilderPose();
                 break;
         }
-    
 
-        // pathL = AutoBuilder.pathfindToPose(
+        // AutoBuilder.pathfindToPose(
         //     endpointL,
-        //     new PathConstraints(4, 3, 4, 2), 
-        //     0.0
+        //     new PathConstraints(2, 2, 3, 2), 0.0
         // );
-
-        // return pathL;
-
-        return getPathfindToPose(endpointL);
+        return endpointL;
     }
-
-    public Command getAlignPathRight() {
-        addVisionPose();
+    
+    public Pose2d getPoseRight() {
+        resetPose();
         fiducialID = LimelightHelper.getFiducialID(name);
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
@@ -199,23 +131,28 @@ public class Vision extends SubsystemBase {
                 break;
         }
 
-        // pathR = AutoBuilder.pathfindToPose(
-        //     endpointR,
-        //     new PathConstraints(4, 3, 4, 2), 
-        //     0.0
+        // AutoBuilder.pathfindToPose(
+        //     endpointL,
+        //     new PathConstraints(2, 2, 3, 2), 0.0
         // );
 
-        // return pathR;
-
-        return getPathfindToPose(endpointR);
+        return endpointR;
     }
 
-    public Command getPathfindToPose(Pose2d endpoint) {
-        return AutoBuilder.pathfindToPose(
-            endpoint,
-            new PathConstraints(2, 2, 3, 2), 0.0
-        );
-    }
+    // public Command runAlignPathLeft() {
+    //     return runOnce(() -> pathfindLeft());
+    // }
+
+    // public Command runAlignPathRight() {
+    //     return runOnce(() -> pathfindRight());
+    // }
+
+    // public Command getPathfindToPose(Pose2d endpoint) {
+    //     return AutoBuilder.pathfindToPose(
+    //         endpoint,
+    //         new PathConstraints(2, 2, 3, 2), 0.0
+    //     );
+    // }
 
     /**
      * @return {xCoord, yCoord, timestamp}
