@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -18,7 +19,10 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.DriveFeedforwards;
 
@@ -111,9 +115,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 new PPHolonomicDriveController(
                     // PID constants for translation
-                    new PIDConstants(3, 0, 0),
+                    new PIDConstants(0.1, 0, 0),
                     // PID constants for rotation
-                    new PIDConstants(0.5, 0, 0)
+                    new PIDConstants(0.0, 0, 0)
                 ),
                 config,
                
@@ -422,32 +426,25 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    public Command autopath(){
+    public PathPlannerPath autopath(){
         try{
-        PathPlannerPath apath = PathPlannerPath.fromPathFile("zak");
-        
-        return new FollowPathCommand(
-                        apath, 
-                        () -> getState().Pose, 
-                        () -> getState().Speeds, 
-                        (speeds, feedforwards) -> setControl(
-                        m_pathApplyRobotSpeeds.withSpeeds(speeds)
-                            .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                        ), 
-                        new PPHolonomicDriveController(
-                        // PID constants for translation
-                        new PIDConstants(7, 0, 0),
-                        // PID constants for rotation
-                        new PIDConstants(3, 0, 0)
-                        ), 
-                        RobotConfig.fromGUISettings(), 
-                        () -> false, 
-                        this
-                    );
+            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+                new Pose2d(0, 0, Rotation2d.fromDegrees((0))),
+                new Pose2d(2, 0, Rotation2d.fromDegrees((0)))
+            );
+
+            PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI);
+
+            // PathPlannerPath apath = PathPlannerPath.fromPathFile("path1");
+            return new PathPlannerPath(
+                waypoints, 
+                constraints, 
+                null, 
+                new GoalEndState(0, new Rotation2d()));
+        // return new PathPlannerPath();
         } catch (Exception e) {
             DriverStation.reportError("Broken" + e.getMessage(), e.getStackTrace());
-                return new InstantCommand(() -> System.out.println("error" + e.getMessage()));
+                return null;
         }
     }
 

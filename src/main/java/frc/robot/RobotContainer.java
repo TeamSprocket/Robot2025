@@ -10,11 +10,13 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
@@ -90,18 +92,19 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    driver.y().onTrue(AutoBuilder.pathfindToPose(
-      limelight.getPoseRight(),
-        new PathConstraints(2, 2, 3, 2), 
-        0.0)
-        .andThen(Commands.print("RIGHT")));
+    // driver.y().onTrue(AutoBuilder.pathfindToPose(
+    //   limelight.getPoseRight(),
+    //     new PathConstraints(2, 2, 3, 2), 
+    //     0.0)
+    //     .andThen(Commands.print("RIGHT")));
 
-    driver.x().onTrue(AutoBuilder.pathfindToPose(
-      limelight.getPoseLeft(), 
-      new PathConstraints(2, 2, 3, 2), 
-      0.0)
-      .andThen(Commands.print("LEFT")));
-
+    // driver.x().onTrue(AutoBuilder.pathfindToPose(
+    //   limelight.getPoseLeft(), 
+    //   new PathConstraints(2, 2, 3, 2), 
+    //   0.0)
+    //   .andThen(Commands.print("LEFT")));
+      driver.leftTrigger().whileTrue(AutoBuilder.followPath(drivetrain.autopath()));
+      driver.x().onTrue(new InstantCommand(() -> drivetrain.resetPose(new Pose2d())));
     drivetrain.registerTelemetry(logger::telemeterize);
 
     // --------------------=Operator=--------------------
