@@ -426,21 +426,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    public PathPlannerPath autopath(){
+    public Command autopath(){
         try{
-            List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-                new Pose2d(0, 0, Rotation2d.fromDegrees((0))),
-                new Pose2d(2, 0, Rotation2d.fromDegrees((0)))
-            );
-
-            PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI);
-
-            // PathPlannerPath apath = PathPlannerPath.fromPathFile("path1");
-            return new PathPlannerPath(
-                waypoints, 
-                constraints, 
-                null, 
-                new GoalEndState(0, new Rotation2d()));
+            PathPlannerPath apath = PathPlannerPath.fromPathFile("path1");
+        
+            return new FollowPathCommand(
+                        apath, 
+                        () -> getState().Pose, 
+                        () -> getState().Speeds, 
+                        (speeds, feedforwards) -> setControl(
+                        m_pathApplyRobotSpeeds.withSpeeds(speeds)
+                            .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+                        ), 
+                        new PPHolonomicDriveController(
+                        // PID constants for translation
+                        new PIDConstants(8, 0, 0), //without 16
+                        // PID constants for rotation
+                        new PIDConstants(0, 0, 0)
+                        ), 
+                        RobotConfig.fromGUISettings(),
+                        () -> false, 
+                        this
+                    );
         // return new PathPlannerPath();
         } catch (Exception e) {
             DriverStation.reportError("Broken" + e.getMessage(), e.getStackTrace());
