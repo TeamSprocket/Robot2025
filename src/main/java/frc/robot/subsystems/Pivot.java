@@ -14,23 +14,28 @@ public class Pivot extends SubsystemBase {
     
   
     public Pivot(){
-    var talonFXConfigs = new TalonFXConfiguration();
-    var slot0Configs= talonFXConfigs.Slot0;
-    slot0Configs.kP = 0.0 ;
-    slot0Configs.kI = 0.0 ;
-    slot0Configs.kD = 0.0 ;
-    slot0Configs.kS = 0.0 ;
-    slot0Configs.kV = 0.0 ;
-    slot0Configs.kA = 0.0 ;
+      var talonFXConfigs = new TalonFXConfiguration();
+      talonFXConfigs.withSlot0(
+        new Slot0Configs()
+          .withKS(0.0)
+          .withKV(0.0)
+          .withKA(0.0)
+          .withKG(0.0)
+          .withKP(0.0)
+          .withKI(0.0)
+          .withKD(0.0)
 
 
-    var motionMagicConfigs = talonFXConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 5; 
-    motionMagicConfigs.MotionMagicAcceleration = 160;
+      );
 
 
-    motor_1.getConfigurator().apply(talonFXConfigs, 0.050);
-    magVelocity.Slot = 0;
+      var motionMagicConfigs = talonFXConfigs.MotionMagic;
+      motionMagicConfigs.MotionMagicCruiseVelocity = 5; 
+      motionMagicConfigs.MotionMagicAcceleration = 160;
+
+
+      motor_1.getConfigurator().apply(talonFXConfigs, 0.050);
+      magVelocity.Slot = 0;
     }
     
     
@@ -56,33 +61,53 @@ public class Pivot extends SubsystemBase {
         break;
 
         case STOWED:
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
 
         case INTAKE:
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
 
         case HANDOFF:
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
 
         case CORAL_1:
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
 
         case CORAL_2:
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
 
         case CORAL_3:
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
 
         case ALGAE_REMOVE_2:
+        motor_1.setControl(magVelocity.withPosition(4));
+
         break;
 
         case ALGAE_REMOVE_3:
+        motor_1.setControl(magVelocity.withPosition(4));
+
         break;
 
         case SHALLOW_CLIMB:
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
 
         case DEEP_CLIMB: 
+        motor_1.setControl(magVelocity.withPosition(0));
+
         break;
       }
     }
