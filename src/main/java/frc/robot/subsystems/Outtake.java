@@ -4,19 +4,20 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Outtake extends SubsystemBase {
 private final TalonFX motor1 = new TalonFX(0);
 private final TalonFX motor2 = new TalonFX(0);
-
+final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
 
   public enum OuttakeStates {
@@ -36,78 +37,92 @@ private final TalonFX motor2 = new TalonFX(0);
 
   private void configMotors(){
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
-    final VelocityVoltage m_velocity = new VelocityVoltage(0);
 
-    talonFXConfigs.withSlot0(new Slot0Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0));
+    talonFXConfigs.withSlot0(
+      new Slot0Configs()
+      .withKP(0)
+      .withKI(0)
+      .withKD(0)
+      .withKS(0)
+      .withKV(0)
+      .withKA(0));
+
+      talonFXConfigs.withFeedback(
+        new FeedbackConfigs()
+        .withSensorToMechanismRatio(0)
+      );
+
+    
     motor1.getConfigurator().apply(talonFXConfigs, 0);
     motor2.getConfigurator().apply(talonFXConfigs, 0);
+    motor1.getVelocity();
+    motor2.getVelocity(); 
 
-    m_velocity.Slot = 0;
-    motor1.setControl(m_velocity);
-    motor2.setControl(m_velocity);
   }
 
   /** Creates a new Outtake. */
   public Outtake() {
+    configMotors();
   }
 
   @Override
   public void periodic() {
-    VelocityVoltage stopControl = new VelocityVoltage(0);
     switch(state){
+      
+
       case NONE:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
 
       case STOWED:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
 
       case INTAKE:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
     
       case HANDOFF:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
     
       case CORAL_1:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
 
       case CORAL_2:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
       
       case CORAL_3:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
 
       case ALGAE_REMOVE_2:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
 
       case ALGAE_REMOVE_3:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
       
       case SHALLOW_CLIMB:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
       
       case DEEP_CLIMB:
-        motor1.setControl(stopControl);
-        motor2.setControl(stopControl);
+        motor1.setControl(velocityVoltage.withVelocity(0));
+        motor2.setControl(velocityVoltage.withVelocity(0));
         break;
         
     }
