@@ -115,9 +115,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 new PPHolonomicDriveController(
                     // PID constants for translation
-                    new PIDConstants(0.1, 0, 0),
+                    new PIDConstants(5, 0, 0), //0.1
                     // PID constants for rotation
-                    new PIDConstants(0.0, 0, 0)
+                    new PIDConstants(1, 0.1, 0.1
+                    ) //6 0 0
                 ),
                 config,
                
@@ -428,27 +429,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public Command autopath(){
         try{
-            PathPlannerPath apath = PathPlannerPath.fromPathFile("path1");
-        
-            return new FollowPathCommand(
-                        apath, 
-                        () -> getState().Pose, 
-                        () -> getState().Speeds, 
-                        (speeds, feedforwards) -> setControl(
-                        m_pathApplyRobotSpeeds.withSpeeds(speeds)
-                            .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                        ), 
-                        new PPHolonomicDriveController(
-                        // PID constants for translation
-                        new PIDConstants(8, 0, 0), //without 16
-                        // PID constants for rotation
-                        new PIDConstants(0, 0, 0)
-                        ), 
-                        RobotConfig.fromGUISettings(),
-                        () -> false, 
-                        this
-                    );
+            // PathPlannerPath apath = PathPlannerPath.fromPathFile("path3");
+            Command path = AutoBuilder.followPath(PathPlannerPath.fromPathFile("path3"));
+            // return new FollowPathCommand(
+            //             apath, 
+            //             () -> getState().Pose, 
+            //             () -> getState().Speeds, 
+            //             (speeds, feedforwards) -> setControl(
+            //             m_pathApplyRobotSpeeds.withSpeeds(speeds)
+            //                 .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+            //                 .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+            //             ), 
+            //             new PPHolonomicDriveController(
+            //             // PID constants for translation
+            //             new PIDConstants(12.5, 0, 0.1), //p:12.5, d:0.1
+
+            //             // PID constants for rotation
+            //             new PIDConstants(0, 0, 0.00)
+            //             ), 
+            //             RobotConfig.fromGUISettings(),
+            //             () -> false, 
+            //             this
+            //         );
+            return path;
         // return new PathPlannerPath();
         } catch (Exception e) {
             DriverStation.reportError("Broken" + e.getMessage(), e.getStackTrace());
