@@ -104,7 +104,7 @@ public class RobotContainer {
     //   0.0)
     //   .andThen(Commands.print("LEFT")));
       driver.rightBumper().whileTrue(drivetrain.autopath());
-      driver.x().onTrue(new InstantCommand(() -> drivetrain.resetPose(new Pose2d(1.865, 2.197, Rotation2d.fromDegrees(0)))));
+      driver.x().onTrue(new InstantCommand(() -> drivetrain.resetPose(new Pose2d(1.177, 2.197, Rotation2d.fromDegrees(0)))));
     drivetrain.registerTelemetry(logger::telemeterize);
 
     // --------------------=Operator=--------------------

@@ -117,7 +117,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     // PID constants for translation
                     new PIDConstants(5, 0, 0), //0.1
                     // PID constants for rotation
-                    new PIDConstants(1, 0.1, 0.1
+                    new PIDConstants(1.75, 0.7, 0.5
                     ) //6 0 0
                 ),
                 config,
