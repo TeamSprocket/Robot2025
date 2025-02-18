@@ -85,8 +85,36 @@ public class RobotContainer {
 
     // --------------------=Operator=--------------------
 
+    new Trigger(operator.leftBumper())
+      .whileTrue(superstructure.setState(SSStates.INTAKE))
+      .onFalse(superstructure.setState(SSStates.HANDOFF))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+    
+    new Trigger(operator.rightBumper())
+      .whileTrue(superstructure.setState(SSStates.CORAL_3))
+      .onTrue(outtake.rollMotors())
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
     new Trigger(operator.x())
-      .whileTrue(superstructure.setState(SSStates.NONE))
+      .whileTrue(superstructure.setState(SSStates.CORAL_1))
+      .onTrue(outtake.rollMotors())
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    new Trigger(operator.y())
+      .whileTrue(superstructure.setState(SSStates.CORAL_2))
+      .onTrue(outtake.rollMotors())
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    new Trigger(operator.a())
+      .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_2))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    new Trigger(operator.b())
+      .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    new Trigger(operator.rightBumper())
+      .whileTrue(superstructure.setState(SSStates.DEEP_CLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
   }
 

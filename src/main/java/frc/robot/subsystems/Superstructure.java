@@ -115,37 +115,37 @@ public class Superstructure extends SubsystemBase {
 
   private void coral1() {
     // move elevator to L1
-    // claw release will be seperate (similar to shooting last year)
+    // roll outtake motors
   }
 
   private void coral2() {
     // move elevator to L2
     // swerve alignment might have to separate in robot container
-    // claw release will be seperate (similar to shooting last year)
+    // roll outtake motors
   }
 
   private void coral3() {
     // move elevator to L3
     // turn pivot to correct angle
     // swerve alignment might have to separate in robot container
-    // claw release will be seperate (similar to shooting last year)
+    // roll outtake motors
   }
 
   private void algaeRemove2() {
     // move elevator to L2
-    // turn wheels
-    // may have to retract elevator not sure tbh
+    // pivot
+    // roll wheels
   }
 
   private void algaeRemove3() {
     // move elevator to L2
-    // turn wheels
-    // may have to retract elevator not sure tbh
+    // pivot
+    // roll wheels
   }
 
   private void deepClimb() {
     // ig align as best as it can
-    // lowk might leave it as manual
+    // while true turn pivot (add hardstop maybe)
   }
 
   // ------ commands -------
