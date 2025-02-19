@@ -7,11 +7,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
@@ -27,7 +32,13 @@ public class RobotContainer {
   private final TunerConstants tunerConst = new TunerConstants();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  Superstructure superstructure = new Superstructure();
+  Elevator elevator = new Elevator();
+  Intake intake = new Intake();
+  Outtake outtake = new Outtake();
+  Pivot pivot = new Pivot();
+  Vision vision = new Vision(drivetrain);
+
+  Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot);
 
   // ------- Swerve Generated -------
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -83,27 +94,32 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+    driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
+      vision.getPoseRight(),
+        new PathConstraints(2, 2, 3, 2), 
+        0.0)
+        .andThen(Commands.print("RIGHT")));
+
+    driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
+      vision.getPoseLeft(), 
+      new PathConstraints(2, 2, 3, 2), 
+      0.0)
+      .andThen(Commands.print("LEFT")));
+
     // --------------------=Operator=--------------------
 
     new Trigger(operator.leftBumper())
       .whileTrue(superstructure.setState(SSStates.INTAKE))
-      .onFalse(superstructure.setState(SSStates.HANDOFF))
       .whileFalse(superstructure.setState(SSStates.STOWED));
     
-    new Trigger(operator.rightBumper())
+    new Trigger(operator.rightBumper()) // method 1
       .whileTrue(superstructure.setState(SSStates.CORAL_3))
-      .onTrue(outtake.rollMotors())
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+      .whileFalse(new InstantCommand(() -> outtake.runOuttake())
+        .andThen(superstructure.setState(SSStates.STOWED)));
 
-    new Trigger(operator.x())
-      .whileTrue(superstructure.setState(SSStates.CORAL_1))
-      .onTrue(outtake.rollMotors())
-      .whileFalse(superstructure.setState(SSStates.STOWED));
-
-    new Trigger(operator.y())
-      .whileTrue(superstructure.setState(SSStates.CORAL_2))
-      .onTrue(outtake.rollMotors())
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+    new Trigger(operator.y()) // method 2
+      .whileTrue(superstructure.setTESTState(SSStates.CORAL_2))
+      .whileFalse(superstructure.setTESTState(SSStates.STOWED));
 
     new Trigger(operator.a())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_2))
@@ -111,10 +127,6 @@ public class RobotContainer {
 
     new Trigger(operator.b())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
-
-    new Trigger(operator.rightBumper())
-      .whileTrue(superstructure.setState(SSStates.DEEP_CLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
   }
 
