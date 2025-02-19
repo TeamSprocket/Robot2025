@@ -1,8 +1,12 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -23,6 +27,8 @@ import frc.util.Util;
 
 public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Endpoint", Pose2d.struct).publish();
+
+    Optional<Alliance> allianceColor = DriverStation.getAlliance();
 
     private int[] blueReefAprilTag = {17, 18, 19, 20, 21, 22};
     private int[] redReefAprilTag = {6, 7, 8, 9, 10, 11};
@@ -70,7 +76,7 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getPoseLeft() {
         resetPose();
-        fiducialID = LimelightHelper.getFiducialID(name);
+        fiducialID = getTargetTag();
         endpointL = new Pose2d();
         switch ((int)fiducialID) {
             case 17:
@@ -96,16 +102,12 @@ public class Vision extends SubsystemBase {
                 break;
         }
 
-        // AutoBuilder.pathfindToPose(
-        //     endpointL,
-        //     new PathConstraints(2, 2, 3, 2), 0.0
-        // );
         return endpointL;
     }
     
     public Pose2d getPoseRight() {
         resetPose();
-        fiducialID = LimelightHelper.getFiducialID(name);
+        fiducialID = getTargetTag();
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
             case 17:
@@ -139,20 +141,32 @@ public class Vision extends SubsystemBase {
         return endpointR;
     }
 
-    // public Command runAlignPathLeft() {
-    //     return runOnce(() -> pathfindLeft());
-    // }
+    private int getTargetTag() {
+      int tag = (int)LimelightHelper.getFiducialID(name);
+      boolean testRed = false;
+        for (int element : redReefAprilTag) {
+          if (element == tag) {
+              testRed = true;
+              break;
+          }
+      }
 
-    // public Command runAlignPathRight() {
-    //     return runOnce(() -> pathfindRight());
-    // }
+      boolean testBlue = false;
+      for (int element : blueReefAprilTag) {
+          if (element == tag) {
+              testBlue = true;
+              break;
+          }
+      }
 
-    // public Command getPathfindToPose(Pose2d endpoint) {
-    //     return AutoBuilder.pathfindToPose(
-    //         endpoint,
-    //         new PathConstraints(2, 2, 3, 2), 0.0
-    //     );
-    // }
+      if ((allianceColor.get() == Alliance.Red) && testRed) {
+        return tag;
+      } else if ((allianceColor.get() == Alliance.Blue) && testBlue) {
+        return tag;
+      } else {
+        return -1;
+      }
+    }
 
     /**
      * @return {xCoord, yCoord, timestamp}
