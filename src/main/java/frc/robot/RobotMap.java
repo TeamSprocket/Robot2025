@@ -42,24 +42,20 @@ public final class RobotMap {
   }
 
   public static final class Elevator{
-    public static final int ELEVATOR_LEFT = 11;
-    public static final int ELEVATOR_RIGHT = 19;
+    public static final int ELEVATOR_LEFT = 10;
+    public static final int ELEVATOR_RIGHT = 11;
   }
 
-  public static final class ShooterPivot {
-    public static final int WRIST = 13;
+  public static final class AlgaePivot {
+    public static final int ALGAE_PIVOT = 12;
   }
 
   public static final class Intake {
-    public static final int ROLL_INTAKE = 14;
-    public static final int PIVOT_INTAKE = 15;
+    public static final int ROLL_INTAKE = 13;
   }
 
   public static final class Shooter {
-    public static final int SHOOTER_TOP = 17;
-    public static final int SHOOTER_BOTTOM = 12;
-    public static final int INDEXER = 16;
-
+    public static final int ROLL_SHOOTER = 14;
     // DIO
     public static final int BEAM_BREAK = 0;
   }
