@@ -13,15 +13,7 @@ public final class Constants {
   public static final class Pivot {
     
     public static final double kAngleStowed = 0.0;
-    public static final double kAngleIntake = 0.0;
-    public static final double kAngleHandoff = 0.0;
-    public static final double kAngleCoral1 = 0.0;
-    public static final double kAngleCoral2 = 0.0;
-    public static final double kAngleCoral3 = 0.0;
-    public static final double kAngleAlgaeRemove2 = 0.0;
-    public static final double kAngleAlgaeRemove3 = 0.0;
-    public static final double kAngleShallowClimb = 0.0;
-    public static final double kAngleDeepClimb = 0.0;
+    public static final double kAngleAlgaeRemove = 0.0;
 
     public static final double kMotionMagicCruiseVelocity = 0.0;
     public static final double kMotionMagicAcceleration = 0.0;
