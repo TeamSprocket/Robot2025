@@ -1,14 +1,18 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -35,14 +39,17 @@ public class Pivot extends SubsystemBase {
       TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
       talonFXConfigs.withSlot0(
         new Slot0Configs()
-          .withKS(0.0)
-          .withKV(0.0)
-          .withKA(0.0)
-          .withKG(0.0)
-          .withKP(0.0)
+          .withKS(0.47)//0.47
+          .withKV(1.1667)//1.1667
+          .withKA(0.001)//0.01
+          .withKG(0.4)//0.3
+          .withKP(20)
           .withKI(0.0)
           .withKD(0.0)
+          .withGravityType(GravityTypeValue.Arm_Cosine)
       );
+
+      talonFXConfigs.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(Constants.Pivot.kPivotGearRatio));
 
       MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
       motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Pivot.kMotionMagicCruiseVelocity; 
@@ -54,8 +61,9 @@ public class Pivot extends SubsystemBase {
 
     @Override
     public void periodic() {
+      SmartDashboard.putString("State", currentState.toString());
 
-      setState(stateChooser.getSelected()); // TODO: remove this when done tuning
+       // TODO: remove this when done tuning
 
       switch(currentState){
         case NONE:
@@ -74,5 +82,9 @@ public class Pivot extends SubsystemBase {
 
   public void setState(PivotStates state) {
     this.currentState = state;
+  }
+
+  public Command setStateCmd() {
+    return new InstantCommand(() -> setState(PivotStates.STOWED));
   }
 }
