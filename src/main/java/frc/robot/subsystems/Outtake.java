@@ -11,6 +11,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,23 +22,25 @@ private final TalonFX motor1 = new TalonFX(0);
 private final TalonFX motor2 = new TalonFX(0);
 final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
-
   public enum OuttakeStates {
     NONE,
     STOWED,
     INTAKE,
-    HANDOFF,
-    CORAL_1,
-    CORAL_2,
-    CORAL_3,
-    ALGAE_REMOVE_2,
-    ALGAE_REMOVE_3,
-    SHALLOW_CLIMB,
-    DEEP_CLIMB
+    CORAL_OUTTAKE,
+    ALGAE_REMOVE
   }
+
   private OuttakeStates state = OuttakeStates.NONE;
+  private final SendableChooser<OuttakeStates> stateChooser = new SendableChooser<>();
 
   private void configMotors(){
+
+    stateChooser.setDefaultOption("NONE", OuttakeStates.NONE);
+    stateChooser.addOption("STOWED", OuttakeStates.STOWED);
+    stateChooser.addOption("CORAL_2", OuttakeStates.CORAL_OUTTAKE);
+    stateChooser.addOption("ALGAE_REMOVE_2", OuttakeStates.ALGAE_REMOVE);
+    SmartDashboard.putData("Elevator State Chooser", stateChooser);
+
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
 
     talonFXConfigs.withSlot0(
@@ -49,9 +54,8 @@ final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
       talonFXConfigs.withFeedback(
         new FeedbackConfigs()
-        .withSensorToMechanismRatio(0)
+        .withSensorToMechanismRatio(Constants.Outtake.kOuttakeGearRatio)
       );
-
     
     motor1.getConfigurator().apply(talonFXConfigs, 0);
     motor2.getConfigurator().apply(talonFXConfigs, 0);
@@ -67,6 +71,8 @@ final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
   @Override
   public void periodic() {
+    setState(stateChooser.getSelected()); // TODO: remove this when done testing
+
     switch(state){
       
 
@@ -76,56 +82,35 @@ final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         break;
 
       case STOWED:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedStowed));
+        motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedStowed));
         break;
 
       case INTAKE:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
-        break;
-    
-      case HANDOFF:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
-        break;
-    
-      case CORAL_1:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedIntake));
+        motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedIntake));
         break;
 
-      case CORAL_2:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
-        break;
-      
-      case CORAL_3:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
+      case ALGAE_REMOVE:
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeRemoval));
+        motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeRemoval));
         break;
 
-      case ALGAE_REMOVE_2:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
-        break;
-
-      case ALGAE_REMOVE_3:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
-        break;
-      
-      case SHALLOW_CLIMB:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
-        break;
-      
-      case DEEP_CLIMB:
-        motor1.setControl(velocityVoltage.withVelocity(0));
-        motor2.setControl(velocityVoltage.withVelocity(0));
+      case CORAL_OUTTAKE:
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
+        motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
         break;
         
     }
     // This method will be called once per scheduler run
+  }
+
+  public void runOuttake() {
+    motor1.setControl(velocityVoltage.withVelocity(0));
+    motor2.setControl(velocityVoltage.withVelocity(0));  
+  }
+
+  public void setState(OuttakeStates state) {
+    this.state = state;
   }
 }
