@@ -1,6 +1,7 @@
 //IMPORTS
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -25,38 +26,27 @@ public class Elevator extends SubsystemBase {
     private MotionMagicVoltage mmControl = new MotionMagicVoltage(0);
 
     //ELEVATOR STATES  
-    public static enum SSStates {
+    public static enum ElevatorStates {
         NONE,
         STOWED,
-        INTAKE,
-        HANDOFF,
-        CORAL_1,
         CORAL_2,
         CORAL_3,
         ALGAE_REMOVE_2,
-        ALGAE_REMOVE_3,
-        SHALLOW_CLIMB,
-        DEEP_CLIMB
+        ALGAE_REMOVE_3
     }
 
-    private SSStates state = SSStates.NONE;
-    private final SendableChooser<SSStates> stateChooser = new SendableChooser<>();
+    private ElevatorStates state = ElevatorStates.NONE;
+    private final SendableChooser<ElevatorStates> stateChooser = new SendableChooser<>();
 
     public Elevator() {
         configMotors();
 
-        stateChooser.setDefaultOption("NONE", SSStates.NONE);
-        stateChooser.addOption("STOWED", SSStates.STOWED);
-        stateChooser.addOption("INTAKE", SSStates.INTAKE);
-        stateChooser.addOption("HANDOFF", SSStates.HANDOFF);
-        stateChooser.addOption("CORAL_1", SSStates.CORAL_1);
-        stateChooser.addOption("CORAL_2", SSStates.CORAL_2);
-        stateChooser.addOption("CORAL_3", SSStates.CORAL_3);
-        stateChooser.addOption("ALGAE_REMOVE_2", SSStates.ALGAE_REMOVE_2);
-        stateChooser.addOption("ALGAE_REMOVE_3", SSStates.ALGAE_REMOVE_3);
-        stateChooser.addOption("SHALLOW_CLIMB", SSStates.SHALLOW_CLIMB);
-        stateChooser.addOption("DEEP_CLIMB", SSStates.DEEP_CLIMB);
-
+        stateChooser.setDefaultOption("NONE", ElevatorStates.NONE);
+        stateChooser.addOption("STOWED", ElevatorStates.STOWED);
+        stateChooser.addOption("CORAL_2", ElevatorStates.CORAL_2);
+        stateChooser.addOption("CORAL_3", ElevatorStates.CORAL_3);
+        stateChooser.addOption("ALGAE_REMOVE_2", ElevatorStates.ALGAE_REMOVE_2);
+        stateChooser.addOption("ALGAE_REMOVE_3", ElevatorStates.ALGAE_REMOVE_3);
         SmartDashboard.putData("Elevator State Chooser", stateChooser);
 
         elevatorFollowerMotor.setControl(new MotionMagicVoltage(0));
@@ -75,18 +65,6 @@ public class Elevator extends SubsystemBase {
                 moveToHeight(Constants.Elevator.kHeightStowed);
                 break;
 
-            case INTAKE:
-                moveToHeight(Constants.Elevator.kHeightIntake);
-                break;
-
-            case HANDOFF:
-                moveToHeight(Constants.Elevator.kHeightHandoff);
-                break;
-
-            case CORAL_1:
-                moveToHeight(Constants.Elevator.kHeightCoral1);
-                break;
-
             case CORAL_2:
                 moveToHeight(Constants.Elevator.kHeightCoral2);
                 break;
@@ -102,21 +80,13 @@ public class Elevator extends SubsystemBase {
             case ALGAE_REMOVE_3:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove3);
                 break;
-
-            case SHALLOW_CLIMB:
-                moveToHeight(Constants.Elevator.kHeightShallowClimb);
-                break;
-
-            case DEEP_CLIMB:
-                moveToHeight(Constants.Elevator.kHeightDeepClimb);
-                break;
         }
 
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValueAsDouble());
         SmartDashboard.putString("Elevator State", state.toString());
     }
 
-    public void setState(SSStates newState) {
+    public void setState(ElevatorStates newState) {
         state = newState;
     }
 
@@ -144,6 +114,11 @@ public class Elevator extends SubsystemBase {
                 .withKA(Constants.Elevator.kA)
                 .withKG(Constants.Elevator.kG)
                 .withGravityType(GravityTypeValue.Elevator_Static)
+        );
+
+        config.withFeedback(
+            new FeedbackConfigs()
+                .withSensorToMechanismRatio(Constants.Elevator.kElevatorGearRatio)
         );
 
         elevatorMotor.getConfigurator().apply(config);

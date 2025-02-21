@@ -33,5 +33,6 @@ public final class Constants {
     public static final double kA = 0.0;
     public static final double kG = 0.0;
 
-}
+    public static final double kElevatorGearRatio = 5.44;
+  }
 }
