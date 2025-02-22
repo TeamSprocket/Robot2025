@@ -6,6 +6,7 @@ import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -60,6 +61,7 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
     handleStateChange();
+    SmartDashboard.putString("SUPERSTRUCTURE STATE CURRENT", currentState.toString());
   }
 
   // Methods
@@ -72,7 +74,6 @@ public class Superstructure extends SubsystemBase {
         break;
 
       case STOWED:
-      default:
         stowed();
         break;
 
@@ -143,13 +144,14 @@ public class Superstructure extends SubsystemBase {
   }
 
   private void coral2() { // test method
+    System.out.println("TESTESTETSTETSSTETSTST");
     Commands.sequence(
       new InstantCommand(() -> {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_2);
         pivot.setState(PivotStates.STOWED);
-      }),
+      }).alongWith(Commands.print("saenbgfdoskadlpas")),
       new WaitCommand(1), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
       // .andThen(new WaitCommand(1))

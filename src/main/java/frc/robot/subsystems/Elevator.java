@@ -44,6 +44,7 @@ public class Elevator extends SubsystemBase {
     }
 
     private ElevatorStates state = ElevatorStates.NONE;
+    
     private final SendableChooser<ElevatorStates> stateChooser = new SendableChooser<>();
 
     public Elevator() {
@@ -67,7 +68,7 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() {
         // setState(stateChooser.getSelected());
-
+        SmartDashboard.putString("ELEVATOR STATE", state.toString());
         switch (state) {
             case NONE:
                 elevatorMotor.set(0);
@@ -105,7 +106,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setState(ElevatorStates newState) {
-        state = newState;
+        this.state = newState;
     }
 
     private void moveToHeight(double targetHeight) {

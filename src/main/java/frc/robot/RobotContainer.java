@@ -119,7 +119,7 @@ public class RobotContainer {
         .andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger(operator.y()) // method 2
-      .whileTrue(superstructure.setState(SSStates.CORAL_2))
+      .whileTrue(superstructure.setState(SSStates.CORAL_2).alongWith(Commands.print("ADKJHFAKJHFKSHDJ")))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.a())

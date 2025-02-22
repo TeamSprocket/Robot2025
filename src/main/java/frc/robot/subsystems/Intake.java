@@ -64,7 +64,7 @@ public class Intake extends SubsystemBase {
   
   @Override
   public void periodic() {
-
+    SmartDashboard.putString("INTAKE STATE", state.toString());
     // setState(stateChooser.getSelected()); // TODO: remove later
 
     switch (state) {

@@ -70,6 +70,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
   @Override
   public void periodic() {
+    SmartDashboard.putString("OUTTALKE STATE", state.toString());
     // setState(stateChooser.getSelected()); // TODO: remove this when done testing
 
     switch(state){
