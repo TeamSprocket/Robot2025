@@ -17,7 +17,7 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 
-  private final TalonFX intakemotor = new TalonFX(0);
+  private final TalonFX intakemotor = new TalonFX(13);
   private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private IntakeStates state = IntakeStates.NONE;
 
@@ -26,7 +26,8 @@ public class Intake extends SubsystemBase {
   public enum IntakeStates {
     NONE,
     STOWED,
-    INTAKE
+    INTAKE,
+    EJECT
   }
 
   /** Creates a new Intake. */
@@ -34,8 +35,9 @@ public class Intake extends SubsystemBase {
 
     stateChooser.setDefaultOption("NONE", IntakeStates.NONE);
     stateChooser.addOption("STOWED", IntakeStates.STOWED);
-    stateChooser.addOption("ALGAE_REMOVE_2", IntakeStates.INTAKE);
-    SmartDashboard.putData("Elevator State Chooser", stateChooser);
+    stateChooser.addOption("INTAKE", IntakeStates.INTAKE);
+    stateChooser.addOption("EJECT", IntakeStates.EJECT);
+    SmartDashboard.putData("Intake State Chooser", stateChooser);
 
     TalonFXConfiguration IntakeConfig = new TalonFXConfiguration();
 
@@ -71,12 +73,17 @@ public class Intake extends SubsystemBase {
         break;
 
       case STOWED:
-        intakemotor.setControl(velocityVoltage.withVelocity(0));
+        intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedStowed));
         break;
           
       case INTAKE:
-        intakemotor.setControl(velocityVoltage.withVelocity(0));
+        intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedIntake));
         break;
+
+      case EJECT:
+        intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedEject));
+        break;
+    
 
       // This method will be called once per scheduler run
     }
@@ -85,6 +92,7 @@ public class Intake extends SubsystemBase {
   public void setState(IntakeStates state) {
     this.state = state;
   }
+
 
   public void setNeutralMode(NeutralModeValue neutralModeValue) {
     intakemotor.setNeutralMode(neutralModeValue);

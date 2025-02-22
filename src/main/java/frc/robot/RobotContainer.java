@@ -27,6 +27,8 @@ public class RobotContainer {
   private final TunerConstants tunerConst = new TunerConstants();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  public final Intake intake = new Intake();
+
   Superstructure superstructure = new Superstructure();
 
   // ------- Swerve Generated -------

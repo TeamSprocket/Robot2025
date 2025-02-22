@@ -37,10 +37,6 @@ public class Superstructure extends SubsystemBase {
   public SSStates lastState = SSStates.NONE;
   public SSStates wantedState = SSStates.NONE;
 
-  RobotConfig robotConfig = new RobotConfig(1.0, 4.5, null, null);
-  ModuleConfig moduleConfig = new ModuleConfig(null, null, 0, null, null, 0);
-  DCMotor dcMotor = new DCMotor(0, 0, 0, 0, 0, 0);
-  TalonFX motor = new TalonFX(0);
 
   private Timer timer = new Timer();
 

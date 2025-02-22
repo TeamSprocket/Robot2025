@@ -11,11 +11,12 @@ public final class Constants {
 
   public static final class Intake {
     
-    public static final double kSpeedIntake = 0.0;
-    public static final double kSpeedStowed = 0.0;
+    public static final double kSpeedIntake = 20;
+    public static final double kSpeedStowed = 0;
+    public static final double kSpeedEject= -5;
 
-    public static final double kIntakeS = 0.0;
-    public static final double kIntakeV = 0.0;
+    public static final double kIntakeS = 0.182;
+    public static final double kIntakeV = 0.132;
     public static final double kIntakeA = 0.0;  
     public static final double kIntakeG = 0.0;
     public static final double kIntakeP = 0.0;
