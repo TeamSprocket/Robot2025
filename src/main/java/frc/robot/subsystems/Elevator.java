@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -33,7 +34,8 @@ public class Elevator extends SubsystemBase {
         CORAL_2,
         CORAL_3,
         ALGAE_REMOVE_2,
-        ALGAE_REMOVE_3
+        ALGAE_REMOVE_3,
+        TESTING
     }
 
     private ElevatorStates state = ElevatorStates.NONE;
@@ -81,6 +83,8 @@ public class Elevator extends SubsystemBase {
             case ALGAE_REMOVE_3:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove3);
                 break;
+            case TESTING:
+                elevatorMotor.setControl(new VoltageOut(1));
         }
 
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValueAsDouble());
