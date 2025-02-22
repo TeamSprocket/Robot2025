@@ -45,11 +45,11 @@ final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
     talonFXConfigs.withSlot0(
       new Slot0Configs()
-      .withKP(0)
+      .withKP(35.0)
       .withKI(0)
       .withKD(0)
-      .withKS(0)
-      .withKV(0)
+      .withKS(0.25)
+      .withKV(0.153)
       .withKA(0));
 
       talonFXConfigs.withFeedback(
@@ -87,8 +87,8 @@ final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         break;
 
       case INTAKE:
-        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedIntake));
-        motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedIntake));
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
+        motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
         break;
 
       case ALGAE_REMOVE:
