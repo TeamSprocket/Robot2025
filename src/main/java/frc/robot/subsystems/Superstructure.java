@@ -27,8 +27,10 @@ public class Superstructure extends SubsystemBase {
     INTAKE,
     CORAL_2,
     CORAL_3,
+    CORAL_4,
     ALGAE_REMOVE_2,
-    ALGAE_REMOVE_3
+    ALGAE_REMOVE_3,
+    EJECT
   }
 
   /**
@@ -60,44 +62,11 @@ public class Superstructure extends SubsystemBase {
   
   @Override
   public void periodic() {
-    handleStateChange();
     SmartDashboard.putString("SUPERSTRUCTURE STATE CURRENT", currentState.toString());
   }
 
   // Methods
-  public void handleStateChange() {
-    lastState = currentState;
-    currentState = wantedState;
-
-    switch (currentState) {
-      case NONE:
-        break;
-
-      case STOWED:
-        stowed();
-        break;
-
-      case INTAKE:
-        intake();
-        break;
-
-      case CORAL_2:
-        coral2();
-        break;
-
-      case CORAL_3:
-        coral3();
-        break;
-
-      case ALGAE_REMOVE_2:
-        algaeRemove2();
-        break;
-
-      case ALGAE_REMOVE_3:
-        algaeRemove3();
-        break;
-    }
-  }
+  
 
   // ------ states ------
 
@@ -125,8 +94,8 @@ public class Superstructure extends SubsystemBase {
   //   // roll outtake motors
   // }
 
-  private void stowed() {
-    Commands.runOnce(() -> {
+  private Command stowed() {
+    return Commands.runOnce(() -> {
       intake.setState(IntakeStates.STOWED);
       outtake.setState(OuttakeStates.STOWED);
       elevator.setState(ElevatorStates.STOWED);
@@ -134,39 +103,38 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
-  private void intake() {
-    Commands.runOnce(() -> {
-      intake.setState(IntakeStates.STOWED);
-      outtake.setState(OuttakeStates.CORAL_OUTTAKE);
+  private Command intake() {
+    return Commands.runOnce(() -> {
+      intake.setState(IntakeStates.INTAKE);
+      outtake.setState(OuttakeStates.STOWED);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.STOWED);
     });
   }
 
-  private void coral2() { // test method
-    System.out.println("TESTESTETSTETSSTETSTST");
-    Commands.sequence(
+  private Command coral2() { // test method
+    return Commands.sequence(
       new InstantCommand(() -> {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_2);
         pivot.setState(PivotStates.STOWED);
       }).alongWith(Commands.print("saenbgfdoskadlpas")),
-      new WaitCommand(1), // wait until elevator goes up (might not need or use function to detect)
+      new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
       // .andThen(new WaitCommand(1))
     );
   }
 
-  private void coral3() {
-    Commands.sequence(
+  private Command coral3() {
+    return Commands.sequence(
       new InstantCommand(() -> {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_3);
         pivot.setState(PivotStates.STOWED);
       }),
-      new WaitCommand(1), // wait until elevator goes up (might not need or use function to detect)
+      new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
       // .andThen(new WaitCommand(1))
     );
@@ -176,13 +144,27 @@ public class Superstructure extends SubsystemBase {
     // roll outtake motors
   }
 
-  private void algaeRemove2() {
-    Commands.sequence(
+  private Command coral4() {
+    return Commands.sequence(
+      new InstantCommand(() -> {
+        intake.setState(IntakeStates.STOWED); 
+        outtake.setState(OuttakeStates.STOWED);
+        elevator.setState(ElevatorStates.CORAL_4);
+        pivot.setState(PivotStates.STOWED);
+      }),
+      new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
+      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
+      // .andThen(new WaitCommand(1))
+    );
+  }
+
+  private Command algaeRemove2() {
+    return Commands.sequence(
       new InstantCommand(() -> {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.ALGAE_REMOVE_2);
-        pivot.setState(PivotStates.STOWED);
+        pivot.setState(PivotStates.ALGAE_REMOVE);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.ALGAE_REMOVE)).alongWith(Commands.print("OUTTAKEING"))
@@ -193,15 +175,15 @@ public class Superstructure extends SubsystemBase {
     // roll wheels
   }
 
-  private void algaeRemove3() {
-    Commands.sequence(
+  private Command algaeRemove3() {
+    return Commands.sequence(
       new InstantCommand(() -> {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.ALGAE_REMOVE_3);
-        pivot.setState(PivotStates.STOWED);
+        pivot.setState(PivotStates.ALGAE_REMOVE);
       }),
-      new WaitCommand(1), // wait until elevator goes up (might not need or use function to detect)
+      new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.ALGAE_REMOVE)).alongWith(Commands.print("OUTTAKEING"))
       // .andThen(new WaitCommand(1))
     );
@@ -210,13 +192,53 @@ public class Superstructure extends SubsystemBase {
     // roll wheels
   }
 
+  private Command eject() {
+    return new InstantCommand(() -> {
+      intake.setState(IntakeStates.EJECT);
+      outtake.setState(OuttakeStates.STOWED);
+      elevator.setState(ElevatorStates.STOWED);
+      pivot.setState(PivotStates.STOWED);
+    });
+  }
+
   // ------ commands -------
   /**
    * Sets the superstructure target state
    * @param currentState Target state
    */
   public Command setState(SSStates wantedState) {
-      return new InstantCommand(() -> this.wantedState = wantedState);
+    switch (wantedState) {
+      case NONE:
+        break;
+
+      case STOWED:
+        return stowed();
+        
+      case INTAKE:
+        return intake();
+        
+      case CORAL_2:
+        return coral2();
+        
+      case CORAL_3:
+        return coral3();
+
+      case CORAL_4:
+        return coral4();
+        
+      case ALGAE_REMOVE_2:
+        return algaeRemove2();
+        
+      case ALGAE_REMOVE_3:
+        return algaeRemove3();
+      
+      case EJECT:
+        return eject();
+        
+      default:
+        return Commands.print("failed");
+    }
+    return Commands.print("failed");
   }
 
   // ------ methods ------

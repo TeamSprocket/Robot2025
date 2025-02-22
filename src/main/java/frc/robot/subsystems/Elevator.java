@@ -36,6 +36,7 @@ public class Elevator extends SubsystemBase {
         STOWED,
         CORAL_2,
         CORAL_3,
+        CORAL_4,
         ALGAE_REMOVE_2,
         ALGAE_REMOVE_3
         // TESTING,
@@ -85,6 +86,9 @@ public class Elevator extends SubsystemBase {
             case CORAL_3:
                 moveToHeight(Constants.Elevator.kHeightCoral3);
                 break;
+
+            case CORAL_4:
+                moveToHeight(Constants.Elevator.kHeightCoral4);
 
             case ALGAE_REMOVE_2:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove2);

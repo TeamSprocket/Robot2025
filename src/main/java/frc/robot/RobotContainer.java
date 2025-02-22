@@ -114,20 +114,28 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
     
     new Trigger(operator.rightBumper()) // method 1
-      .whileTrue(superstructure.setState(SSStates.CORAL_3))
+      .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(new InstantCommand(() -> outtake.runOuttake())
         .andThen(superstructure.setState(SSStates.STOWED)));
 
-    new Trigger(operator.y()) // method 2
+    new Trigger(operator.b()) // method 2
       .whileTrue(superstructure.setState(SSStates.CORAL_2).alongWith(Commands.print("ADKJHFAKJHFKSHDJ")))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.a())
+    new Trigger (operator.y())
+      .whileTrue(superstructure.setState(SSStates.CORAL_3))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    new Trigger (operator.x())
+      .whileTrue(superstructure.setState(SSStates.CORAL_4))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    new Trigger(operator.povDown())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_2))
         // .andThen(Commands.waitUntil(elevator.atSetpoint()))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.b())
+    new Trigger(operator.povUp())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3))
         // .andThen(Commands.waitUntil(elevator.atSetpoint()))
       .whileFalse(superstructure.setState(SSStates.STOWED));

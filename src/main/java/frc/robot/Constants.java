@@ -86,8 +86,8 @@ public final class Constants {
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = 0.2;
-    public static final double kAngleAlgaeRemove = 0.0;
+    public static final double kAngleStowed = 0.05;
+    public static final double kAngleAlgaeRemove = 0.28;
 
     public static final double kMotionMagicCruiseVelocity = 2;
     public static final double kMotionMagicAcceleration = 4;
@@ -110,10 +110,11 @@ public final class Constants {
     public static final double kHeightIntake = 0.0;
     public static final double kHeightHandoff = 0.0;
     public static final double kHeightCoral1 = 0.0;
-    public static final double kHeightCoral2 = 1.0;
-    public static final double kHeightCoral3 = 4.0;
-    public static final double kHeightAlgaeRemove2 = 3.0;
-    public static final double kHeightAlgaeRemove3 = 0.0;
+    public static final double kHeightCoral2 = 0.95;
+    public static final double kHeightCoral3 = 2.47;
+    public static final double kHeightCoral4 = 4.0;
+    public static final double kHeightAlgaeRemove2 = 0.94;
+    public static final double kHeightAlgaeRemove3 = 2.6;
     public static final double kHeightShallowClimb = 0.0;
     public static final double kHeightDeepClimb = 0.0;
 
