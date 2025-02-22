@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -98,6 +99,11 @@ public class Elevator extends SubsystemBase {
     private void configMotors() {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
+        config.withFeedback(
+            new FeedbackConfigs()
+                .withSensorToMechanismRatio(Constants.Elevator.kElevatorGearRatio)
+        );
+
         config.withMotionMagic(
             new MotionMagicConfigs()
                 .withMotionMagicCruiseVelocity(Constants.Elevator.kMotionMagicCruiseVelocity)
@@ -126,5 +132,8 @@ public class Elevator extends SubsystemBase {
 
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
         elevatorFollowerMotor.setNeutralMode(NeutralModeValue.Brake);
+
+        elevatorFollowerMotor.setControl(new StrictFollower(elevatorMotor.getDeviceID()));
+
     }
 }
