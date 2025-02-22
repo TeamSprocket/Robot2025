@@ -11,28 +11,24 @@ public final class Constants {
   }
 
   public static class Elevator {
+    public static final double kMAX_HEIGHT_UP = 4.5; //5.0 in reality
     public static final double kHeightStowed = 0.0;
-    public static final double kHeightIntake = 0.0;
-    public static final double kHeightHandoff = 0.0;
-    public static final double kHeightCoral1 = 0.0;
-    public static final double kHeightCoral2 = 0.0;
-    public static final double kHeightCoral3 = 0.0;
+    public static final double kHeightCoral2 = 1.0;
+    public static final double kHeightCoral3 = 4.0;
     public static final double kHeightAlgaeRemove2 = 0.0;
     public static final double kHeightAlgaeRemove3 = 0.0;
-    public static final double kHeightShallowClimb = 0.0;
-    public static final double kHeightDeepClimb = 0.0;
 
-    public static final double kMotionMagicCruiseVelocity = 0.0;
-    public static final double kMotionMagicAcceleration = 0.0;
+    public static final double kMotionMagicCruiseVelocity = 4.0;
+    public static final double kMotionMagicAcceleration = 8.0;
 
-    public static final double kP = 0.0;
+    public static final double kP = 40;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
-    public static final double kG = 0.0;
+    public static final double kS = 0.105;
+    public static final double kV = 0.738;
+    public static final double kA = 0.001;
+    public static final double kG = 0.375;
 
-    public static final double kElevatorGearRatio = 5.44;
+    public static final double kElevatorGearRatio = 5.77;
   }
 }

@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.util.Alert;
+import frc.util.ShuffleboardIO;
 
 public class Elevator extends SubsystemBase {
 
@@ -29,6 +31,8 @@ public class Elevator extends SubsystemBase {
 
     private MotionMagicVoltage mmControl = new MotionMagicVoltage(0);
 
+    VelocityVoltage vv = new VelocityVoltage(0);
+
     //ELEVATOR STATES  
     public static enum ElevatorStates {
         NONE,
@@ -36,10 +40,7 @@ public class Elevator extends SubsystemBase {
         CORAL_2,
         CORAL_3,
         ALGAE_REMOVE_2,
-        ALGAE_REMOVE_3,
-        TESTING,
-        TESTING2,
-        TESTING3
+        ALGAE_REMOVE_3
     }
 
     private ElevatorStates state = ElevatorStates.NONE;
@@ -47,6 +48,8 @@ public class Elevator extends SubsystemBase {
 
     public Elevator() {
         configMotors();
+        elevatorMotor.setPosition(0);
+        elevatorFollowerMotor.setPosition(0);
 
         stateChooser.setDefaultOption("NONE", ElevatorStates.NONE);
         stateChooser.addOption("STOWED", ElevatorStates.STOWED);
@@ -54,12 +57,9 @@ public class Elevator extends SubsystemBase {
         stateChooser.addOption("CORAL_3", ElevatorStates.CORAL_3);
         stateChooser.addOption("ALGAE_REMOVE_2", ElevatorStates.ALGAE_REMOVE_2);
         stateChooser.addOption("ALGAE_REMOVE_3", ElevatorStates.ALGAE_REMOVE_3);
-        stateChooser.addOption("TESTING", ElevatorStates.TESTING);
-        stateChooser.addOption("TESTING2", ElevatorStates.TESTING2);
-        stateChooser.addOption("TESTING3", ElevatorStates.TESTING3);
         SmartDashboard.putData("Elevator State Chooser", stateChooser);
 
-        elevatorFollowerMotor.setControl(new MotionMagicVoltage(0));
+        ShuffleboardIO.addSlider("Elevator Voltage", -1.0, 1.0, 0);
     }
 
     @Override
@@ -90,12 +90,6 @@ public class Elevator extends SubsystemBase {
             case ALGAE_REMOVE_3:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove3);
                 break;
-            case TESTING:
-                elevatorMotor.setControl(new VoltageOut(0.90));
-            case TESTING2:
-                elevatorMotor.setControl(new VoltageOut(0.93));
-            case TESTING3:
-                elevatorMotor.setControl(new VoltageOut(0.96));
         }
 
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValueAsDouble());
@@ -137,20 +131,15 @@ public class Elevator extends SubsystemBase {
                 .withGravityType(GravityTypeValue.Elevator_Static)
         );
 
-        config.withFeedback(
-            new FeedbackConfigs()
-                .withSensorToMechanismRatio(Constants.Elevator.kElevatorGearRatio)
-        );
-
         config.withMotorOutput(new MotorOutputConfigs()
-            .withInverted(InvertedValue.CounterClockwise_Positive)
+            .withInverted(InvertedValue.Clockwise_Positive)
         );
 
         elevatorMotor.getConfigurator().apply(config);
         elevatorFollowerMotor.getConfigurator().apply(config);
 
         elevatorFollowerMotor.getConfigurator().apply(
-            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)
+            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
         );
 
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
@@ -158,5 +147,9 @@ public class Elevator extends SubsystemBase {
 
         elevatorFollowerMotor.setControl(new StrictFollower(elevatorMotor.getDeviceID()));
 
+    }
+
+    private void debug() {
+        
     }
 }
