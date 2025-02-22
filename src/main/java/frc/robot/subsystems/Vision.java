@@ -28,7 +28,7 @@ import frc.util.Util;
 public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Endpoint", Pose2d.struct).publish();
 
-    Optional<Alliance> allianceColor = DriverStation.getAlliance();
+    Alliance allianceColor = Alliance.Blue;
 
     private int[] blueReefAprilTag = {17, 18, 19, 20, 21, 22};
     private int[] redReefAprilTag = {6, 7, 8, 9, 10, 11};
@@ -159,9 +159,9 @@ public class Vision extends SubsystemBase {
           }
       }
 
-      if ((allianceColor.get() == Alliance.Red) && testRed) {
+      if ((allianceColor == Alliance.Red) && testRed) {
         return tag;
-      } else if ((allianceColor.get() == Alliance.Blue) && testBlue) {
+      } else if ((allianceColor == Alliance.Blue) && testBlue) {
         return tag;
       } else {
         return -1;

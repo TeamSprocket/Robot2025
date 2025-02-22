@@ -15,7 +15,7 @@ import edu.wpi.first.math.numbers.N3;
 public final class Constants {
 
   public static class Superstructure {
-
+    public static double kAtGoalTolerance = 0.2;
   }
 
   public static final class Vision {
@@ -54,88 +54,80 @@ public final class Constants {
 
   public static final class Intake {
     
-    public static final double kSpeedIntake = 0.0;
-    public static final double kSpeedStowed = 0.0;
+    public static final double kSpeedIntake = 20;
+    public static final double kSpeedStowed = 0;
+    public static final double kSpeedEject = -5;
 
-    public static final double kIntakeS = 0.0;
-    public static final double kIntakeV = 0.0;
-    public static final double kIntakeA = 0.0;
+    public static final double kIntakeS = 0.182;
+    public static final double kIntakeV = 0.132;
+    public static final double kIntakeA = 0.0;  
     public static final double kIntakeG = 0.0;
     public static final double kIntakeP = 0.0;
     public static final double kIntakeI = 0.0;
     public static final double kIntakeD = 0.0;
     public static final double kIntakeGearRatio = 1.0;
-
   }
 
   public static final class Outtake {
-
-    public static final double kSpeedIntake = 0.0;
-    public static final double kSpeedOuttake = 0.0;
-    public static final double kSpeedAlgaeRemoval = 0.0;
-    public static final double kSpeedStowed = 0.0;
     
-    public static final double kOuttakeS = 0.0;
-    public static final double kOuttakeV = 0.0;
-    public static final double kOuttakeA = 0.0;
-    public static final double kOuttakeG = 0.0;
+    public static final double kSpeedStowed = 0.0;
+    public static final double kSpeedOuttake = 6.0;
+    public static final double kSpeedAlgaeRemoval = -7.5;
+
+    public static final double kOuttakeS = 0.25; // 0.25
+    public static final double kOuttakeV = 0.0; // 0.153
+    public static final double kOuttakeA = 0.0; //nothing
+    public static final double kOuttakeG = 0.0; //nothing
     public static final double kOuttakeP = 0.0;
     public static final double kOuttakeI = 0.0;
     public static final double kOuttakeD = 0.0;
     public static final double kOuttakeGearRatio = 1.0;
-
   }
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = 0.0;
-    public static final double kAngleIntake = 0.0;
-    public static final double kAngleHandoff = 0.0;
-    public static final double kAngleCoral1 = 0.0;
-    public static final double kAngleCoral2 = 0.0;
-    public static final double kAngleCoral3 = 0.0;
-    public static final double kAngleAlgaeRemove2 = 0.0;
-    public static final double kAngleAlgaeRemove3 = 0.0;
-    public static final double kAngleShallowClimb = 0.0;
-    public static final double kAngleDeepClimb = 0.0;
+    public static final double kAngleStowed = 0.2;
+    public static final double kAngleAlgaeRemove = 0.0;
 
-    public static final double kMotionMagicCruiseVelocity = 0.0;
-    public static final double kMotionMagicAcceleration = 0.0;
+    public static final double kMotionMagicCruiseVelocity = 2;
+    public static final double kMotionMagicAcceleration = 4;
 
-    public static final double kP = 0.0;
+    public static final double kP = 40;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
+    public static final double kS = 0.24;
+    public static final double kV = 0.74;
     public static final double kA = 0.0;
-    public static final double kG = 0.0;
+    public static final double kG = -0.42;
 
     public static final double kPivotGearRatio = 2.75;
   }
 
   public static class Elevator {
+    public static final double kMAX_HEIGHT_UP = 4.5;
+
     public static final double kHeightStowed = 0.0;
     public static final double kHeightIntake = 0.0;
     public static final double kHeightHandoff = 0.0;
     public static final double kHeightCoral1 = 0.0;
-    public static final double kHeightCoral2 = 0.0;
-    public static final double kHeightCoral3 = 0.0;
-    public static final double kHeightAlgaeRemove2 = 0.0;
+    public static final double kHeightCoral2 = 1.0;
+    public static final double kHeightCoral3 = 4.0;
+    public static final double kHeightAlgaeRemove2 = 3.0;
     public static final double kHeightAlgaeRemove3 = 0.0;
     public static final double kHeightShallowClimb = 0.0;
     public static final double kHeightDeepClimb = 0.0;
 
-    public static final double kMotionMagicCruiseVelocity = 0.0;
-    public static final double kMotionMagicAcceleration = 0.0;
+    public static final double kMotionMagicCruiseVelocity = 4.0;
+    public static final double kMotionMagicAcceleration = 8.0;
 
-    public static final double kP = 0.0;
+    public static final double kP = 40.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
-    public static final double kG = 0.0;
+    public static final double kS = 0.105;
+    public static final double kV = 0.738;
+    public static final double kA = 0.001;
+    public static final double kG = 0.375;
 
-    public static final double kElevatorGearRatio = 5.44;
+    public static final double kElevatorGearRatio = 5.77;
   }
 }

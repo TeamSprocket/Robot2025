@@ -3,17 +3,22 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
+import frc.util.Util;
 import frc.util.Alert;
 
 public class Elevator extends SubsystemBase {
@@ -33,6 +38,9 @@ public class Elevator extends SubsystemBase {
         CORAL_3,
         ALGAE_REMOVE_2,
         ALGAE_REMOVE_3
+        // TESTING,
+        // TESTING2,
+        // TESTING3
     }
 
     private ElevatorStates state = ElevatorStates.NONE;
@@ -47,14 +55,18 @@ public class Elevator extends SubsystemBase {
         stateChooser.addOption("CORAL_3", ElevatorStates.CORAL_3);
         stateChooser.addOption("ALGAE_REMOVE_2", ElevatorStates.ALGAE_REMOVE_2);
         stateChooser.addOption("ALGAE_REMOVE_3", ElevatorStates.ALGAE_REMOVE_3);
+        // stateChooser.addOption("TESTING", ElevatorStates.TESTING);
+        // stateChooser.addOption("TESTING2", ElevatorStates.TESTING2);
+        // stateChooser.addOption("TESTING3", ElevatorStates.TESTING3);
         SmartDashboard.putData("Elevator State Chooser", stateChooser);
 
-        elevatorFollowerMotor.setControl(new MotionMagicVoltage(0));
+        elevatorMotor.setPosition(0);
+        elevatorFollowerMotor.setPosition(0);
     }
 
     @Override
     public void periodic() {
-        setState(stateChooser.getSelected());
+        // setState(stateChooser.getSelected());
 
         switch (state) {
             case NONE:
@@ -80,6 +92,12 @@ public class Elevator extends SubsystemBase {
             case ALGAE_REMOVE_3:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove3);
                 break;
+            // case TESTING:
+            //     elevatorMotor.setControl(new VoltageOut(0.90));
+            // case TESTING2:
+            //     elevatorMotor.setControl(new VoltageOut(0.93));
+            // case TESTING3:
+            //     elevatorMotor.setControl(new VoltageOut(0.96));
         }
 
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValueAsDouble());
@@ -95,8 +113,21 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setControl(mmControl);
     }
 
+    public boolean atSetpoint() {
+        return Util.inRange(
+            elevatorMotor.getPosition().getValueAsDouble() - mmControl.Position, 
+            -1 * Constants.Superstructure.kAtGoalTolerance, 
+            Constants.Superstructure.kAtGoalTolerance
+        );
+    }
+
     private void configMotors() {
         TalonFXConfiguration config = new TalonFXConfiguration();
+
+        config.withFeedback(
+            new FeedbackConfigs()
+                .withSensorToMechanismRatio(Constants.Elevator.kElevatorGearRatio)
+        );
 
         config.withMotionMagic(
             new MotionMagicConfigs()
@@ -116,15 +147,26 @@ public class Elevator extends SubsystemBase {
                 .withGravityType(GravityTypeValue.Elevator_Static)
         );
 
-        config.withFeedback(
-            new FeedbackConfigs()
-                .withSensorToMechanismRatio(Constants.Elevator.kElevatorGearRatio)
+        // config.withFeedback(
+        //     new FeedbackConfigs()
+        //         .withSensorToMechanismRatio(Constants.Elevator.kElevatorGearRatio)
+        // );
+
+        config.withMotorOutput(new MotorOutputConfigs()
+            .withInverted(InvertedValue.Clockwise_Positive)
         );
 
         elevatorMotor.getConfigurator().apply(config);
         elevatorFollowerMotor.getConfigurator().apply(config);
 
+        elevatorFollowerMotor.getConfigurator().apply(
+            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
+        );
+
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
         elevatorFollowerMotor.setNeutralMode(NeutralModeValue.Brake);
+
+        elevatorFollowerMotor.setControl(new StrictFollower(elevatorMotor.getDeviceID()));
+
     }
 }
