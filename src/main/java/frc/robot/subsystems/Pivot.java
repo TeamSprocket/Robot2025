@@ -18,7 +18,7 @@ import frc.robot.Constants;
 
 public class Pivot extends SubsystemBase {
     MotionMagicVoltage magVelocity = new MotionMagicVoltage(0);
-    private final TalonFX motor_1 = new TalonFX(0); 
+    private final TalonFX motor_1 = new TalonFX(12);
     PivotStates currentState = PivotStates.NONE;
 
     private final SendableChooser<PivotStates> stateChooser = new SendableChooser<>();
@@ -30,6 +30,7 @@ public class Pivot extends SubsystemBase {
     }
   
     public Pivot(){
+      motor_1.setPosition(0);
 
       stateChooser.setDefaultOption("NONE", PivotStates.NONE);
       stateChooser.addOption("STOWED", PivotStates.STOWED);
@@ -39,21 +40,25 @@ public class Pivot extends SubsystemBase {
       TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
       talonFXConfigs.withSlot0(
         new Slot0Configs()
-          .withKS(0.47)//0.47
-          .withKV(1.1667)//1.1667
-          .withKA(0.001)//0.01
-          .withKG(0.4)//0.3
-          .withKP(20)
-          .withKI(0.0)
-          .withKD(0.0)
+          .withKS(0.24)//0.24
+          .withKV(0.74)//
+          .withKA(0)//
+          .withKG(-0.42)//0.42
+          .withKP(40)
+          .withKI(0)
+          .withKD(0)
           .withGravityType(GravityTypeValue.Arm_Cosine)
       );
 
-      talonFXConfigs.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(Constants.Pivot.kPivotGearRatio));
+      talonFXConfigs.withFeedback(
+        new FeedbackConfigs()
+        .withSensorToMechanismRatio(Constants.Pivot.kPivotGearRatio)
+      );
 
-      MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
-      motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Pivot.kMotionMagicCruiseVelocity; 
-      motionMagicConfigs.MotionMagicAcceleration = Constants.Pivot.kMotionMagicAcceleration;
+      talonFXConfigs.withMotionMagic(new MotionMagicConfigs()
+        .withMotionMagicAcceleration(Constants.Pivot.kMotionMagicAcceleration)
+        .withMotionMagicCruiseVelocity(Constants.Pivot.kMotionMagicCruiseVelocity)
+      );
 
       motor_1.getConfigurator().apply(talonFXConfigs, 0.050);
       magVelocity.Slot = 0;
@@ -62,6 +67,7 @@ public class Pivot extends SubsystemBase {
     @Override
     public void periodic() {
       SmartDashboard.putString("State", currentState.toString());
+      setState(stateChooser.getSelected());
 
        // TODO: remove this when done tuning
 

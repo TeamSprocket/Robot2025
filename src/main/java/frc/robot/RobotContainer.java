@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Superstructure.SSStates;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Pivot.PivotStates;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.TunerConstants;
 import static edu.wpi.first.units.Units.*;
@@ -26,6 +28,8 @@ public class RobotContainer {
 
   private final TunerConstants tunerConst = new TunerConstants();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+  public final Pivot pivot = new Pivot();
 
   Superstructure superstructure = new Superstructure();
 
@@ -84,6 +88,7 @@ public class RobotContainer {
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     // --------------------=Operator=--------------------
+    // operator.a().whileTrue(pivot.setState(PivotStates.STOWED));
 
     new Trigger(operator.x())
       .whileTrue(superstructure.setState(SSStates.NONE))
