@@ -50,6 +50,21 @@ public final class Constants {
     public static final Pose2d poseAlignBlueRight21 = new Pose2d(6.0, 4.2, Rotation2d.fromDegrees(180));
     public static final Pose2d poseAlignBlueLeft22 = new Pose2d(5.125, 2.675, Rotation2d.fromDegrees(120));
     public static final Pose2d poseAlignBlueRight22 = new Pose2d(5.45, 2.86, Rotation2d.fromDegrees(120));
+
+
+
+    public static final Pose2d poseAlignRedLeft10 = new Pose2d(11.73, 4.213, Rotation2d.fromDegrees(0));
+    public static final Pose2d poseAlignRedRight10 = new Pose2d(11.73, 3.822, Rotation2d.fromDegrees(0));
+    public static final Pose2d poseAlignRedLeft9 = new Pose2d(12.441, 5.310, Rotation2d.fromDegrees(300));
+    public static final Pose2d poseAlignRedRight9 = new Pose2d(12.171, 5.159, Rotation2d.fromDegrees(300));
+    public static final Pose2d poseAlignRedLeft8 = new Pose2d(13.974, 5.179, Rotation2d.fromDegrees(240));
+    public static final Pose2d poseAlignRedRight8 = new Pose2d(13.676, 5.310, Rotation2d.fromDegrees(240));
+    public static final Pose2d poseAlignRedLeft7 = new Pose2d(14.515, 3.867, Rotation2d.fromDegrees(180));
+    public static final Pose2d poseAlignRedRight7 = new Pose2d(14.500, 4.213, Rotation2d.fromDegrees(180));
+    public static final Pose2d poseAlignRedLeft6 = new Pose2d(13.628, 2.755, Rotation2d.fromDegrees(120));
+    public static final Pose2d poseAlignRedRight6 = new Pose2d(13.914, 2.951, Rotation2d.fromDegrees(120));
+    public static final Pose2d poseAlignRedLeft11 = new Pose2d(12.456, 2.725, Rotation2d.fromDegrees(60));
+    public static final Pose2d poseAlignRedRight11 = new Pose2d(12.186, 2.891, Rotation2d.fromDegrees(60));
   }
 
   public static final class Intake {
