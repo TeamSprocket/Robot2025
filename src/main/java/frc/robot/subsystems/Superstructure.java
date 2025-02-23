@@ -65,34 +65,7 @@ public class Superstructure extends SubsystemBase {
     SmartDashboard.putString("SUPERSTRUCTURE STATE CURRENT", currentState.toString());
   }
 
-  // Methods
-  
-
-  // ------ states ------
-
-  // private void stowed() {
-  //   intake.setState(IntakeStates.STOWED);
-  //   outtake.setState(OuttakeStates.STOWED);
-  //   elevator.setState(ElevatorStates.STOWED);
-  //   pivot.setState(PivotStates.STOWED);
-  // }
-
-  // private void intake() {
-  //   intake.setState(IntakeStates.STOWED);
-  //   outtake.setState(OuttakeStates.CORAL_OUTTAKE);
-  //   elevator.setState(ElevatorStates.STOWED);
-  //   pivot.setState(PivotStates.STOWED);
-  // }
-
-  // private void coral2() {
-  //   intake.setState(IntakeStates.STOWED);
-  //   outtake.setState(OuttakeStates.STOWED);
-  //   elevator.setState(ElevatorStates.CORAL_2);
-  //   pivot.setState(PivotStates.STOWED);
-  //   // move elevator to L2
-  //   // swerve alignment might have to separate in robot container
-  //   // roll outtake motors
-  // }
+  // States
 
   private Command stowed() {
     return Commands.runOnce(() -> {
@@ -119,10 +92,9 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_2);
         pivot.setState(PivotStates.STOWED);
-      }).alongWith(Commands.print("saenbgfdoskadlpas")),
+      }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
-      // .andThen(new WaitCommand(1))
+      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
 
@@ -136,12 +108,7 @@ public class Superstructure extends SubsystemBase {
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
-      // .andThen(new WaitCommand(1))
     );
-    // move elevator to L3
-    // turn pivot to correct angle
-    // swerve alignment might have to separate in robot container
-    // roll outtake motors
   }
 
   private Command coral4() {
@@ -154,7 +121,6 @@ public class Superstructure extends SubsystemBase {
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
-      // .andThen(new WaitCommand(1))
     );
   }
 
@@ -168,11 +134,7 @@ public class Superstructure extends SubsystemBase {
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
       new InstantCommand(() -> outtake.setState(OuttakeStates.ALGAE_REMOVE)).alongWith(Commands.print("OUTTAKEING"))
-      // .andThen(new WaitCommand(1))
     );
-    // move elevator to L2
-    // pivot
-    // roll wheels
   }
 
   private Command algaeRemove3() {
@@ -184,12 +146,8 @@ public class Superstructure extends SubsystemBase {
         pivot.setState(PivotStates.ALGAE_REMOVE);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
-      new InstantCommand(() -> outtake.setState(OuttakeStates.ALGAE_REMOVE)).alongWith(Commands.print("OUTTAKEING"))
-      // .andThen(new WaitCommand(1))
+      new InstantCommand(() -> outtake.setState(OuttakeStates.ALGAE_REMOVE))
     );
-    // move elevator to L2
-    // pivot
-    // roll wheels
   }
 
   private Command eject() {
@@ -216,15 +174,15 @@ public class Superstructure extends SubsystemBase {
         
       case INTAKE:
         return intake();
+
+      case CORAL_4:
+        return coral4();
         
       case CORAL_2:
         return coral2();
         
       case CORAL_3:
         return coral3();
-
-      case CORAL_4:
-        return coral4();
         
       case ALGAE_REMOVE_2:
         return algaeRemove2();

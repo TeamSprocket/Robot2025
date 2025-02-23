@@ -39,9 +39,6 @@ public class Elevator extends SubsystemBase {
         CORAL_4,
         ALGAE_REMOVE_2,
         ALGAE_REMOVE_3
-        // TESTING,
-        // TESTING2,
-        // TESTING3
     }
 
     private ElevatorStates state = ElevatorStates.NONE;
@@ -57,9 +54,6 @@ public class Elevator extends SubsystemBase {
         stateChooser.addOption("CORAL_3", ElevatorStates.CORAL_3);
         stateChooser.addOption("ALGAE_REMOVE_2", ElevatorStates.ALGAE_REMOVE_2);
         stateChooser.addOption("ALGAE_REMOVE_3", ElevatorStates.ALGAE_REMOVE_3);
-        // stateChooser.addOption("TESTING", ElevatorStates.TESTING);
-        // stateChooser.addOption("TESTING2", ElevatorStates.TESTING2);
-        // stateChooser.addOption("TESTING3", ElevatorStates.TESTING3);
         SmartDashboard.putData("Elevator State Chooser", stateChooser);
 
         elevatorMotor.setPosition(0);
@@ -89,6 +83,7 @@ public class Elevator extends SubsystemBase {
 
             case CORAL_4:
                 moveToHeight(Constants.Elevator.kHeightCoral4);
+                break;
 
             case ALGAE_REMOVE_2:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove2);
@@ -97,12 +92,6 @@ public class Elevator extends SubsystemBase {
             case ALGAE_REMOVE_3:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove3);
                 break;
-            // case TESTING:
-            //     elevatorMotor.setControl(new VoltageOut(0.90));
-            // case TESTING2:
-            //     elevatorMotor.setControl(new VoltageOut(0.93));
-            // case TESTING3:
-            //     elevatorMotor.setControl(new VoltageOut(0.96));
         }
 
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValueAsDouble());

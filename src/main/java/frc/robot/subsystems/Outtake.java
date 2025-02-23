@@ -98,7 +98,6 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
       case CORAL_OUTTAKE:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
-        System.out.println("CORAL CORAL CORAL");
         // motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
         break;
         

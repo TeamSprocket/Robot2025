@@ -36,7 +36,7 @@ public class RobotContainer {
   Intake intake = new Intake();
   Outtake outtake = new Outtake();
   Pivot pivot = new Pivot();
-  // Vision vision = new Vision(drivetrain);
+  Vision vision = new Vision(drivetrain);
 
   Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot);
 
@@ -54,7 +54,7 @@ public class RobotContainer {
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
   public RobotContainer() {
-    // drivetrain.configureAutoBuilder();
+    drivetrain.configureAutoBuilder();
     configureBindings();
     initNamedCommands();
     initAutons();
@@ -95,17 +95,17 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    // driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
-    //   vision.getPoseRight(),
-    //     new PathConstraints(2, 2, 3, 2), 
-    //     0.0)
-    //     .andThen(Commands.print("RIGHT")));
+    driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
+      vision.getPoseRight(),
+        new PathConstraints(2, 2, 3, 2), 
+        0.0)
+        .andThen(Commands.print("RIGHT")));
 
-    // driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
-    //   vision.getPoseLeft(), 
-    //   new PathConstraints(2, 2, 3, 2), 
-    //   0.0)
-    //   .andThen(Commands.print("LEFT")));
+    driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
+      vision.getPoseLeft(), 
+      new PathConstraints(2, 2, 3, 2), 
+      0.0)
+      .andThen(Commands.print("LEFT")));
 
     // --------------------=Operator=--------------------
 
@@ -119,7 +119,7 @@ public class RobotContainer {
         .andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger(operator.b()) // method 2
-      .whileTrue(superstructure.setState(SSStates.CORAL_2).alongWith(Commands.print("ADKJHFAKJHFKSHDJ")))
+      .whileTrue(superstructure.setState(SSStates.CORAL_2))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger (operator.y())
@@ -127,7 +127,7 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger (operator.x())
-      .whileTrue(superstructure.setState(SSStates.CORAL_4))
+      .whileTrue(superstructure.setState(SSStates.CORAL_4).alongWith(Commands.print("444444444")))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.povDown())

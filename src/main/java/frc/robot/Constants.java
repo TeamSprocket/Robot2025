@@ -112,7 +112,7 @@ public final class Constants {
     public static final double kHeightCoral1 = 0.0;
     public static final double kHeightCoral2 = 0.95;
     public static final double kHeightCoral3 = 2.47;
-    public static final double kHeightCoral4 = 4.0;
+    public static final double kHeightCoral4 = 5.1;
     public static final double kHeightAlgaeRemove2 = 0.94;
     public static final double kHeightAlgaeRemove3 = 2.6;
     public static final double kHeightShallowClimb = 0.0;
