@@ -14,6 +14,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -27,6 +29,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     STOWED,
     INTAKE,
     CORAL_OUTTAKE,
+    CORAL1,
     ALGAE_REMOVE
   }
 
@@ -100,14 +103,17 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
         // motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
         break;
+      
+      case CORAL1:
+        motor1.setControl(velocityVoltage.withVelocity(3));
+        break;
         
     }
     // This method will be called once per scheduler run
   }
 
-  public void runOuttake() {
-    motor1.setControl(velocityVoltage.withVelocity(0));
-    // motor2.setControl(velocityVoltage.withVelocity(0));  
+  public void runOuttake(double percent) {
+    motor1.set(Constants.Outtake.kTuneSpeed);
   }
 
   public void setState(OuttakeStates state) {

@@ -1,10 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.RobotConfig;
-
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +20,7 @@ public class Superstructure extends SubsystemBase {
     NONE,
     STOWED,
     INTAKE,
+    CORAL_1,
     CORAL_2,
     CORAL_3,
     CORAL_4,
@@ -81,7 +77,7 @@ public class Superstructure extends SubsystemBase {
       intake.setState(IntakeStates.INTAKE);
       outtake.setState(OuttakeStates.STOWED);
       elevator.setState(ElevatorStates.STOWED);
-      pivot.setState(PivotStates.STOWED);
+      pivot.setState(PivotStates.INTAKE);
     });
   }
 
@@ -120,7 +116,7 @@ public class Superstructure extends SubsystemBase {
         pivot.setState(PivotStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE)).alongWith(Commands.print("OUTTAKEING"))
+      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
 
@@ -133,9 +129,10 @@ public class Superstructure extends SubsystemBase {
         pivot.setState(PivotStates.ALGAE_REMOVE);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
-      new InstantCommand(() -> outtake.setState(OuttakeStates.ALGAE_REMOVE)).alongWith(Commands.print("OUTTAKEING"))
+      new InstantCommand(() -> {outtake.setState(OuttakeStates.ALGAE_REMOVE); pivot.setState(PivotStates.ALGAE_REMOVE);})
     );
   }
+
 
   private Command algaeRemove3() {
     return Commands.sequence(
@@ -143,10 +140,10 @@ public class Superstructure extends SubsystemBase {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.ALGAE_REMOVE_3);
-        pivot.setState(PivotStates.ALGAE_REMOVE);
+        pivot.setState(PivotStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), // wait until elevator goes up (might not need or use function to detect)
-      new InstantCommand(() -> outtake.setState(OuttakeStates.ALGAE_REMOVE))
+      new InstantCommand(() -> {outtake.setState(OuttakeStates.ALGAE_REMOVE); pivot.setState(PivotStates.ALGAE_REMOVE);})
     );
   }
 
@@ -154,6 +151,14 @@ public class Superstructure extends SubsystemBase {
     return new InstantCommand(() -> {
       intake.setState(IntakeStates.EJECT);
       outtake.setState(OuttakeStates.STOWED);
+      elevator.setState(ElevatorStates.STOWED);
+      pivot.setState(PivotStates.STOWED);
+    });
+  }
+  private Command coral1() {
+    return new InstantCommand(() -> {
+      intake.setState(IntakeStates.STOWED); 
+      outtake.setState(OuttakeStates.CORAL1);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.STOWED);
     });
@@ -174,16 +179,19 @@ public class Superstructure extends SubsystemBase {
         
       case INTAKE:
         return intake();
+      
+      case CORAL_1:
+        return coral1();
 
-      case CORAL_4:
-        return coral4();
-        
       case CORAL_2:
         return coral2();
         
       case CORAL_3:
         return coral3();
-        
+
+      case CORAL_4:
+        return coral4();
+
       case ALGAE_REMOVE_2:
         return algaeRemove2();
         
@@ -192,6 +200,7 @@ public class Superstructure extends SubsystemBase {
       
       case EJECT:
         return eject();
+
         
       default:
         return Commands.print("failed");

@@ -27,7 +27,8 @@ public class Pivot extends SubsystemBase {
     public enum PivotStates {
       NONE,
       STOWED,
-      ALGAE_REMOVE
+      ALGAE_REMOVE,
+      INTAKE
     }
   
     public Pivot(){
@@ -81,6 +82,10 @@ public class Pivot extends SubsystemBase {
 
         case ALGAE_REMOVE:
         motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeRemove));
+        break;
+
+        case INTAKE:
+        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleIntake));
         break;
       }
     }

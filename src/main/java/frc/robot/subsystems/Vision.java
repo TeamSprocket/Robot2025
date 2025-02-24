@@ -36,6 +36,7 @@ public class Vision extends SubsystemBase {
     CommandSwerveDrivetrain drivetrain;
 
     String name = "limelight-front";
+    int counter = 0;
 
     Pose2d lastPose = new Pose2d();
     double lastTimeStamp = 0.0;
@@ -60,18 +61,19 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        publisher.set(drivetrain.getAutoBuilderPose());
+        publisher.set(drivetrain.getState().Pose);
         debug();
 
         updateAlignPose();
         drivetrain.addVisionMeasurement(getPose2d(), getTimeStamp());
 
-        // if (hasTargets() && updateFirst) {
-        //     resetPose();
-        //     updateFirst = false;
-        // } else if (!hasTargets() && !updateFirst) {
-        //     updateFirst = true;
-        // }
+        if (hasTargets() && updateFirst) {
+            addVisionPose();
+            counter++;
+            updateFirst = false;
+        } else if (!hasTargets() && !updateFirst) {
+            updateFirst = true;
+        }
     }
 
     public Pose2d getPoseLeft() {
@@ -262,13 +264,15 @@ public class Vision extends SubsystemBase {
     
     private void debug() {
         SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
-        SmartDashboard.putNumber("FUDICIAL ID", LimelightHelper.getFiducialID(name));
+        SmartDashboard.putNumber("APRILTAG POSE", getPose2d().getX());
         SmartDashboard.putNumber("END XL",endpointL.getX());
         SmartDashboard.putNumber("END YL",endpointL.getY());
         SmartDashboard.putNumber("END XR",endpointR.getX());
         SmartDashboard.putNumber("END YR",endpointR.getY());
         SmartDashboard.putNumber("dist to left", distToAprilLeft);
         SmartDashboard.putNumber("dist to right", distToAprilRight);
+        SmartDashboard.putNumber("times reset", counter);
+        SmartDashboard.putBoolean("has targets", hasTargets());
      }
 
 }
