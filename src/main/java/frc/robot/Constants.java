@@ -69,7 +69,7 @@ public final class Constants {
 
   public static final class Intake {
     
-    public static final double kSpeedIntake = 20;
+    public static final double kSpeedIntake = 12;//20
     public static final double kSpeedStowed = 0;
     public static final double kSpeedEject = -5;
 
@@ -86,7 +86,7 @@ public final class Constants {
   public static final class Outtake {
     
     public static final double kSpeedStowed = 0.0;
-    public static final double kSpeedOuttake = 6.0;
+    public static final double kSpeedOuttake = 1;
     public static final double kSpeedAlgaeRemoval = -7.5;
     public static final double kTuneSpeed = 0.3;
 
@@ -104,10 +104,10 @@ public final class Constants {
     
     public static final double kAngleStowed = 0.05;
     public static final double kAngleAlgaeRemove = 0.28;
-    public static final double kAngleIntake = 0.0;
+    public static final double kAngleIntake = 0.44;
 
-    public static final double kMotionMagicCruiseVelocity = 2;
-    public static final double kMotionMagicAcceleration = 4;
+    public static final double kMotionMagicCruiseVelocity = 6;//2
+    public static final double kMotionMagicAcceleration = 7; //4
 
     public static final double kP = 40;
     public static final double kI = 0.0;

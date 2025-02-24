@@ -26,7 +26,7 @@ import frc.util.LimelightHelper;
 import frc.util.Util;
 
 public class Vision extends SubsystemBase {
-    StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Endpoint", Pose2d.struct).publish();
+    StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
 
     Alliance allianceColor = Alliance.Blue;
 
@@ -64,16 +64,17 @@ public class Vision extends SubsystemBase {
         publisher.set(drivetrain.getState().Pose);
         debug();
 
-        updateAlignPose();
+        updateAlignPose(false);
         drivetrain.addVisionMeasurement(getPose2d(), getTimeStamp());
 
-        if (hasTargets() && updateFirst) {
-            addVisionPose();
-            counter++;
-            updateFirst = false;
-        } else if (!hasTargets() && !updateFirst) {
-            updateFirst = true;
-        }
+        // if (hasTargets() && updateFirst) {
+        //     addVisionPose();
+        //     // updateAlignPose();
+        //     counter++;
+        //     updateFirst = false;
+        // } else if (!hasTargets() && !updateFirst) {
+        //     updateFirst = true;
+        // }
     }
 
     public Pose2d getPoseLeft() {
@@ -108,7 +109,7 @@ public class Vision extends SubsystemBase {
     }
     
     public Pose2d getPoseRight() {
-        resetPose();
+        updateAlignPose(true);
         fiducialID = getTargetTag();
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
@@ -198,8 +199,14 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public void updateAlignPose() {
-        if (LimelightHelper.getTV(name)) {
+    public double getTX() {
+        if (hasTargets()) {
+            
+        }
+    }
+
+    public void updateAlignPose(boolean vision) {
+        if (LimelightHelper.getTV(name) && vision) {
             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
             drivetrain.alignRobotPose = estimate.pose;
         } else {

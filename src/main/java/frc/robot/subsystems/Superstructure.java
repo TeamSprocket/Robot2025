@@ -75,7 +75,7 @@ public class Superstructure extends SubsystemBase {
   private Command intake() {
     return Commands.runOnce(() -> {
       intake.setState(IntakeStates.INTAKE);
-      outtake.setState(OuttakeStates.STOWED);
+      outtake.setState(OuttakeStates.INTAKE);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.INTAKE);
     });

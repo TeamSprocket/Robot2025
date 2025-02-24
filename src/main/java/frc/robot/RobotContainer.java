@@ -11,6 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -54,6 +55,7 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
+  private PIDController pidRotationAlign = new PIDController(0.5, 0, 0);
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
@@ -98,8 +100,8 @@ public class RobotContainer {
     driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.1, 0.0, 0.0))));
     driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.1, 0.0, 0.0))));
     // driver.rightBumper().onTrue(drivetrain.autopath());
-    driver.x().onTrue(new InstantCommand(() -> drivetrain.resetPose(new Pose2d(2.323,5.635 ,Rotation2d.fromDegrees(0)))));
-    driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
+    driver.x().onTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, 0))));
+    driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose(true)));
     drivetrain.registerTelemetry(logger::telemeterize);
 
     // reset the field-centric heading on left bumper press
@@ -122,12 +124,11 @@ public class RobotContainer {
     // --------------------=Operator=--------------------
 
     new Trigger(operator.leftTrigger())
-      .whileTrue(superstructure.setState(SSStates.INTAKE)
-      .andThen(superstructure.setState(SSStates.STOWED)));
-
-    new Trigger(operator.leftTrigger())
-      .onFalse(superstructure.setState(SSStates.INTAKE).andThen(new InstantCommand(()->outtake.runOuttake(0.4)).andThen(Commands.waitSeconds(1)))
-      .andThen(superstructure.setState(SSStates.STOWED)));
+      .whileTrue(superstructure.setState(SSStates.INTAKE))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+    // new Trigger(operator.leftTrigger())
+    //   .onFalse(new InstantCommand(()->outtake.runOuttake(0.4))
+    //   .andThen(superstructure.setState(SSStates.STOWED)));
     
     new Trigger(operator.button(8)) // method 1
       .whileTrue(superstructure.setState(SSStates.EJECT))
@@ -189,4 +190,10 @@ public class RobotContainer {
       )
     );
   }
+
+  
+  public double getRotationalAlignSpeed() {
+    double currentRotation = drivetrain.getYaw().getRadians();
+    double targetRotation = currentRotation + 
+}
 }
