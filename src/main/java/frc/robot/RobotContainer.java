@@ -110,7 +110,7 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
+    driver.rightTrigger().onTrue(AutoBuilder.pathfindToPose(
       vision.getPoseRight(),
       new PathConstraints(2, 2, 3, 2), 
       0.0)
@@ -215,16 +215,47 @@ public class RobotContainer {
     );
   }
 
-  private Command pathfind(String direction) {
-    if (direction.equals("right")) {
+  public Command allign(String direction) {
+    if (direction.equals("left")) {
       return Commands.sequence(
-        new FunctionalCommand(
-          () -> applyAlignSpeeds(),
-          () -> applyAlignSpeeds(),
-          () -> System.out.println("pathfinding"),
-          Util.inRange(vision.getTX(), 0.1, 0.1),
-          drivetrain.getState())
+            Commands.runOnce(() -> vision.updateAlignPose(true))
+          , 
+            Commands.runOnce(() -> applyAlignSpeeds()
+          ),
+            Commands.runOnce(() -> AutoBuilder.pathfindToPose(
+              vision.getPoseRight(),
+              new PathConstraints(2, 2, 3, 2), 
+              0.0)
+              .andThen(Commands.print("RIGHT")))
+        
+      );
+    } else if (direction.equals("right")) {
+      return Commands.sequence(
+            Commands.runOnce(() -> vision.updateAlignPose(true))
+          , 
+            Commands.runOnce(() -> applyAlignSpeeds()
+          ),
+            Commands.runOnce(() -> AutoBuilder.pathfindToPose(
+              vision.getPoseLeft(),
+              new PathConstraints(2, 2, 3, 2), 
+              0.0)
+              .andThen(Commands.print("RIGHT")))
+        
       );
     }
+    
+    }
   }
-}
+
+  // private Command pathfind(String direction) {
+  //   if (direction.equals("right")) {
+  //     return Commands.sequence(
+  //       new FunctionalCommand(
+  //         () -> applyAlignSpeeds(),
+  //         () -> applyAlignSpeeds(),
+  //         () -> System.out.println("pathfinding"),
+  //         Util.inRange(vision.getTX(), 0.1, 0.1),
+  //         drivetrain.getState())
+  //     );
+  //   }
+  // }
