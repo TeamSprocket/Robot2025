@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
@@ -27,6 +29,7 @@ import frc.robot.subsystems.Superstructure.SSStates;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.Telemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
+import frc.util.Util;
 import static edu.wpi.first.units.Units.*;
 
 public class RobotContainer {
@@ -55,7 +58,7 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
-  private PIDController pidRotationAlign = new PIDController(0.5, 0, 0);
+  private PIDController pidRotationAlign = new PIDController(0.1, 0, 0);
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
@@ -100,7 +103,7 @@ public class RobotContainer {
     driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.1, 0.0, 0.0))));
     driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.1, 0.0, 0.0))));
     // driver.rightBumper().onTrue(drivetrain.autopath());
-    driver.x().onTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, 0))));
+
     driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose(true)));
     drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -193,7 +196,35 @@ public class RobotContainer {
 
   
   public double getRotationalAlignSpeed() {
+    vision.updatePose = true;
+
     double currentRotation = drivetrain.getYaw().getRadians();
-    double targetRotation = currentRotation + 
-}
+    double targetRotation = currentRotation + vision.getTX();
+    
+    double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
+    return targetSpeed;
+  }
+
+  private void applyAlignSpeeds() {
+    drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
+      .withSpeeds(new ChassisSpeeds(
+          0, 
+        0, 
+        getRotationalAlignSpeed()
+      ))
+    );
+  }
+
+  private Command pathfind(String direction) {
+    if (direction.equals("right")) {
+      return Commands.sequence(
+        new FunctionalCommand(
+          () -> applyAlignSpeeds(),
+          () -> applyAlignSpeeds(),
+          () -> System.out.println("pathfinding"),
+          Util.inRange(vision.getTX(), 0.1, 0.1),
+          drivetrain.getState())
+      );
+    }
+  }
 }

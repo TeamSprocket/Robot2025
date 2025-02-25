@@ -30,6 +30,8 @@ public class Vision extends SubsystemBase {
 
     Alliance allianceColor = Alliance.Blue;
 
+    public boolean updatePose = false;
+
     private int[] blueReefAprilTag = {17, 18, 19, 20, 21, 22};
     private int[] redReefAprilTag = {6, 7, 8, 9, 10, 11};
 
@@ -63,18 +65,6 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         publisher.set(drivetrain.getState().Pose);
         debug();
-
-        updateAlignPose(false);
-        drivetrain.addVisionMeasurement(getPose2d(), getTimeStamp());
-
-        // if (hasTargets() && updateFirst) {
-        //     addVisionPose();
-        //     // updateAlignPose();
-        //     counter++;
-        //     updateFirst = false;
-        // } else if (!hasTargets() && !updateFirst) {
-        //     updateFirst = true;
-        // }
     }
 
     public Pose2d getPoseLeft() {
@@ -109,7 +99,7 @@ public class Vision extends SubsystemBase {
     }
     
     public Pose2d getPoseRight() {
-        updateAlignPose(true);
+        ;
         fiducialID = getTargetTag();
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
@@ -201,16 +191,23 @@ public class Vision extends SubsystemBase {
 
     public double getTX() {
         if (hasTargets()) {
-            
+            return LimelightHelper.getTX(name);
+        } else {
+            return 0.0;
         }
     }
 
-    public void updateAlignPose(boolean vision) {
-        if (LimelightHelper.getTV(name) && vision) {
+    public void updateAlignPose() {
+        if (LimelightHelper.getTV(name) && updatePose) {
             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            drivetrain.alignRobotPose = estimate.pose;
-        } else {
-            drivetrain.alignRobotPose = drivetrain.getAutoBuilderPose();
+            drivetrain.resetPose(estimate.pose);
+        }
+    }
+
+    public void updateAlignPose(boolean override) {
+        if (LimelightHelper.getTV(name)) {
+            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+            drivetrain.resetPose(estimate.pose);
         }
     }
 
@@ -249,15 +246,15 @@ public class Vision extends SubsystemBase {
         return false;
     }
 
-    public Pose2d addVisionPose() {
-        if (hasTargets()) {
-            Pose2d pose = getPose2d();
-            drivetrain.addVisionMeasurement(pose, getTimeStamp());
-            return pose;
-        } else {
-            return drivetrain.getAutoBuilderPose();
-        }
-    }
+    // public Pose2d addVisionPose() {
+    //     if (hasTargets()) {
+    //         Pose2d pose = getPose2d();
+    //         drivetrain.addVisionMeasurement(pose, getTimeStamp());
+    //         return pose;
+    //     } else {
+    //         return drivetrain.getAutoBuilderPose();
+    //     }
+    // }
 
     public Pose2d resetPose() {
         if (hasTargets()) {

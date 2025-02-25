@@ -85,7 +85,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
-    public Pose2d alignRobotPose = new Pose2d();
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Align Pose", Pose2d.struct).publish();
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
@@ -108,7 +107,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         try {
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
-                () -> getAlignPose2d(),   // Supplier of current robot pose
+                () -> getState().Pose,   // Supplier of current robot pose
                 this::resetPose,         // Consumer for seeding pose against auto
                 () -> getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
@@ -292,63 +291,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return new Rotation2d(Math.toRadians(getPigeon2().getYaw().getValueAsDouble()));
     }
 
-    public Pose2d getAlignPose2d() {
-        return this.alignRobotPose;
-    }
-
-    // public Command followPath(String side) {
-    //     PathPlannerPath path;
-    //     try {
-    //         if (side.equals("left")) {
-    //             path = vision.getAlignPathLeft();
-    //         } else {
-    //             path = vision.getAlignPathRight();
-    //         }
-    //         BiConsumer<ChassisSpeeds, DriveFeedforwards> driveOutput = drive();
-            
-    //         return new FollowPathCommand(
-    //             path,
-    //             () -> this.getState().Pose, 
-    //             this::getCurrentRobotChassisSpeeds, 
-    //             this::getCurrentRobotChassisSpeeds,
-    //             new PPHolonomicDriveController( 
-    //                     new PIDConstants(5.0, 0.0, 0.0), 
-    //                     new PIDConstants(5.0, 0.0, 0.0)
-    //             ),
-    //             Constants.Drivetrain.robotConfig,
-    //             () -> {
-    //                 var alliance = DriverStation.getAlliance();
-    //                 if (alliance.isPresent()) {
-    //                     return alliance.get() == DriverStation.Alliance.Red;
-    //                 }
-    //                 return false;
-    //             }, 
-    //             this
-                
-    //         );
-    //     } catch (Exception e) {
-    //         DriverStation.reportError("Error: " + e.getMessage(), e.getStackTrace());
-    //         return Commands.none();
-    //     }
-        
-
-    // }
-
-    // private void configurePathPlanner(){
-    //     double driveBaseRadius = 13.125; //meters is 0.3334, 13.125
-        
-    //     AutoBuilder.configureHolonomic(
-    //         () -> this.getState().Pose, 
-    //         this::seedFieldRelative, 
-    //         getCurrentRobotChassisSpeeds(), 
-    //         m_kinematics.toChassisSpeeds(getModuleStates()), 
-    //         new PPHolonomicDriveController(PP_PID_Translation, //Tune 
-    //                                         PP_PID_Rotation), 
-    //         Constants.Drivetrain.robotConfig,
-    //         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, 
-    //         this);
-    // }
-    
     public Pose2d getAutoBuilderPose() {
         return getState().Pose;
     }
@@ -365,49 +307,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void resetTeleopPose(Pose2d pose) {
         this.resetPose(pose);
     }
-    
-    // public Command followGeneratedPath(String side) {
-    //     System.out.println("ENTERENTERENTERENTERENTERENTERENTERENTERENTER");
-    //     try{
-    //         if (vision.hasReefTargets() || true){
-    //             System.out.println("PASSEDPASSEDPASSEDPASSEDPASSEDPASSEDPASSEDPASSED");
-    //             PathPlannerPath path;
-    //             if (side.equals("left")) {
-    //                 path = vision.getAlignPathLeft();
-    //             } else {
-    //                 path = vision.getAlignPathLeft();
-    //             }
-    //             // path = vision.getAlignPathRight();
-    //             return new FollowPathCommand(
-    //                 path, 
-    //                 () -> getState().Pose, 
-    //                 () -> getState().Speeds, 
-    //                 (speeds, feedforwards) -> setControl(
-    //                 m_pathApplyRobotSpeeds.withSpeeds(speeds)
-    //                     .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-    //                     .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-    //                 ), 
-    //                 new PPHolonomicDriveController(
-    //                 // PID constants for translation
-    //                 new PIDConstants(7, 0, 0),
-    //                 // PID constants for rotation
-    //                 new PIDConstants(3, 0, 0)
-    //                 ), 
-    //                 RobotConfig.fromGUISettings(), 
-    //                 () -> false, 
-    //                 this
-    //             );
-    //         }
-    //         else {
-    //             System.out.println("FAILEDFAILEDFAILEDFAILEDFAILEDFAILEDFAILED");
-    //             return new InstantCommand(() -> System.out.println("haha"));
-    //             }
-    //     } catch (Exception e) {
-    //         DriverStation.reportError("Brokeeeeeeeeefefjeoifjoai gmoiajgmoisadjifoda noifpa" + e.getMessage(), e.getStackTrace());
-    //         return new InstantCommand(() -> System.out.println("Denielle likes toudching little kids " + e.getMessage()));
-    //     }
-    // }
-    
 
     @Override
     public void periodic() {
@@ -428,7 +327,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        publisher.set(getAlignPose2d());
+        publisher.set(getState().Pose);
     }
 
     public Command autopath(){
