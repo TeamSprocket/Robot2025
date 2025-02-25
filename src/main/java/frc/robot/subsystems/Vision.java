@@ -36,6 +36,13 @@ public class Vision extends SubsystemBase {
 
     Pose2d testPose = new Pose2d();
 
+    public enum AlignStates{
+        ALIGNING,
+        NONE
+    }
+
+    AlignStates currentAlignState = AlignStates.NONE;
+
     Alliance allianceColor = Alliance.Blue;
 
     public boolean updatePose = false;
@@ -78,20 +85,22 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         testPose = getPoseTesting();
-        publisher.set(drivetrain.getState().Pose);
-        publisher2.set(getPoseTesting());
-        if (timer.get() > 0.2) {
-            updateAlignPose(true);
+
+        if (timer.get() > 0.2 && currentAlignState == AlignStates.ALIGNING) {
+            updateAlignPose();
+            // System.out.println("UPDATING");
             timer.reset();
             timer.start();
-            
         }
         
         debug();
     }
 
+    public void setAlignState(AlignStates alignState) {
+        currentAlignState = alignState;
+    }
+
     public Pose2d getPoseLeft() {
-        resetPose();
         fiducialID = getTargetTag();
         endpointL = new Pose2d();
         switch ((int)fiducialID) {
@@ -122,7 +131,6 @@ public class Vision extends SubsystemBase {
     }
     
     public Pose2d getPoseRight() {
-        ;
         fiducialID = getTargetTag();
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
@@ -159,9 +167,10 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getPoseTesting() {
         testPose = new Pose2d(
-            ShuffleboardIO.getDouble("Alignment X"), 
-            ShuffleboardIO.getDouble("Alignment Y"), 
-            Rotation2d.fromDegrees(180));
+            // ShuffleboardIO.getDouble("Alignment X"), 
+            // ShuffleboardIO.getDouble("Alignment Y"), 
+            // Rotation2d.fromDegrees(180));
+            3,4.2,Rotation2d.fromDegrees(0));
         return testPose;
     }
 
@@ -228,14 +237,14 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public void updateAlignPose() {
-        if (LimelightHelper.getTV(name) && updatePose) {
-            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            drivetrain.resetPose(estimate.pose);
-        }
-    }
+    // public void updateAlignPose() {
+    //     if (LimelightHelper.getTV(name) && updatePose) {
+    //         estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+    //         drivetrain.resetPose(estimate.pose);
+    //     }
+    // }
 
-    public void updateAlignPose(boolean override) {
+    public void updateAlignPose() {
         if (LimelightHelper.getTV(name)) {
             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
             drivetrain.resetPose(estimate.pose);
@@ -308,6 +317,10 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("dist to right", distToAprilRight);
         SmartDashboard.putNumber("times reset", counter);
         SmartDashboard.putBoolean("has targets", hasTargets());
+        SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
+
+        publisher.set(drivetrain.getState().Pose);
+        publisher2.set(getPoseTesting());
      }
 
 }

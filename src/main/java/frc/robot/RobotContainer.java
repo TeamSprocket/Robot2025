@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Superstructure.SSStates;
+import frc.robot.subsystems.Vision.AlignStates;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.Telemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
@@ -101,14 +102,18 @@ public class RobotContainer {
     driver.b().whileTrue(drivetrain.applyRequest(() ->
         point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
     ));
-    driver.x().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, getRotationalAlignSpeed()))));
-    driver.y().whileTrue(new InstantCommand(() -> vision.updateAlignPose(true)));
+    driver.x().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, getRotationalAlignSpeed())))
+    .andThen(Commands.waitUntil(() -> Util.inRange(getRotationalAlignSpeed(), -0.1, 0.1)))
+    .andThen(Commands.print("OFHADGHAISDHFIASDHFUADS")));
+    driver.y().whileTrue(new InstantCommand(() -> vision.updateAlignPose()));
+    // TODO: turn this into a sequence
+
     driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.1, 0.0, 0.0))));
     driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.1, 0.0, 0.0))));
     driver.povRight().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, -0.1, 0.0))));
     driver.povLeft().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0.1, 0.0))));
     
-    driver.rightBumper().whileTrue(new InstantCommand(() -> vision.updateAlignPose(true)));
+    // driver.rightBumper().whileTrue(new InstantCommand(() -> vision.updateAlignPose()));
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -120,7 +125,9 @@ public class RobotContainer {
       vision.getPoseTesting(),
       new PathConstraints(2, 2, 3, 2), 
       0.0)
-      .andThen(Commands.print("RIGHT"))
+      .alongWith(Commands.print("RIGHT"))
+      .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+      .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
     );
 
     // driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
@@ -135,9 +142,6 @@ public class RobotContainer {
     new Trigger(operator.leftTrigger())
       .whileTrue(superstructure.setState(SSStates.INTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
-    // new Trigger(operator.leftTrigger())
-    //   .onFalse(new InstantCommand(()->outtake.runOuttake(0.4))
-    //   .andThen(superstructure.setState(SSStates.STOWED)));
     
     new Trigger(operator.button(8)) // method 1
       .whileTrue(superstructure.setState(SSStates.EJECT))
@@ -208,51 +212,52 @@ public class RobotContainer {
     double targetRotation = currentRotation + vision.getTX();
     
     double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
+    System.out.println(targetSpeed);
     return targetSpeed;
   }
 
-  private void applyAlignSpeeds() {
-    drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
-      .withSpeeds(new ChassisSpeeds(
-          0, 
-        0, 
-        getRotationalAlignSpeed()
-      ))
-    );
-  }
+//   private void applyAlignSpeeds() {
+//     drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
+//       .withSpeeds(new ChassisSpeeds(
+//           0, 
+//         0, 
+//         getRotationalAlignSpeed()
+//       ))
+//     );
+//   }
 
-  public Command align(String direction) {
-    if (direction.equals("left")) {
-      return Commands.sequence(
-        new InstantCommand(() -> vision.updateAlignPose(true)), 
-        new InstantCommand(() -> applyAlignSpeeds()),
-        new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-        new RunCommand(() -> 
-          AutoBuilder.pathfindToPose(
-            vision.getPoseRight(),
-            new PathConstraints(2, 2, 3, 2), 
-            0.0
-          )
-        .andThen(Commands.print("LEFT"))
-        )
-      );
-    } else if (direction.equals("right")) {
-      return Commands.sequence(
-        new InstantCommand(() -> vision.updateAlignPose(true)), 
-        new InstantCommand(() -> applyAlignSpeeds()),
-        new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-        new RunCommand(() -> AutoBuilder.pathfindToPose(
-          vision.getPoseLeft(),
-          new PathConstraints(2, 2, 3, 2), 
-          0.0)
-          .andThen(Commands.print("RIGHT"))
-        )
-      );
-    } else {
-      return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
-    }
-  }
-}
+//   public Command align(String direction) {
+//     if (direction.equals("left")) {
+//       return Commands.sequence(
+//         new InstantCommand(() -> vision.updateAlignPose(true)), 
+//         new InstantCommand(() -> applyAlignSpeeds()),
+//         new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
+//         new RunCommand(() -> 
+//           AutoBuilder.pathfindToPose(
+//             vision.getPoseRight(),
+//             new PathConstraints(2, 2, 3, 2), 
+//             0.0
+//           )
+//         .andThen(Commands.print("LEFT"))
+//         )
+//       );
+//     } else if (direction.equals("right")) {
+//       return Commands.sequence(
+//         new InstantCommand(() -> vision.updateAlignPose(true)), 
+//         new InstantCommand(() -> applyAlignSpeeds()),
+//         new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
+//         new RunCommand(() -> AutoBuilder.pathfindToPose(
+//           vision.getPoseLeft(),
+//           new PathConstraints(2, 2, 3, 2), 
+//           0.0)
+//           .andThen(Commands.print("RIGHT"))
+//         )
+//       );
+//     } else {
+//       return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
+//     }
+//   }
+// }
 
   // private Command pathfind(String direction) {
   //   if (direction.equals("right")) {
@@ -265,4 +270,4 @@ public class RobotContainer {
   //         drivetrain.getState())
   //     );
   //   }
-  // }
+  }
