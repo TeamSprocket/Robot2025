@@ -48,8 +48,8 @@ public final class Constants {
     public static final Pose2d poseAlignBlueRight20 = new Pose2d(5.05, 5.38, Rotation2d.fromDegrees(240));
     public static final Pose2d poseAlignBlueLeft21 = new Pose2d(6.0, 3.85, Rotation2d.fromDegrees(180));
     public static final Pose2d poseAlignBlueRight21 = new Pose2d(6.0, 4.2, Rotation2d.fromDegrees(180));
-    public static final Pose2d poseAlignBlueLeft22 = new Pose2d(5.125, 2.675, Rotation2d.fromDegrees(120));
-    public static final Pose2d poseAlignBlueRight22 = new Pose2d(5.45, 2.86, Rotation2d.fromDegrees(120));
+    public static final Pose2d poseAlignBlueLeft22 = new Pose2d(4.86, 2.96, Rotation2d.fromDegrees(120));
+    public static final Pose2d poseAlignBlueRight22 = new Pose2d(5.17, 3.1, Rotation2d.fromDegrees(120));
 
 
 

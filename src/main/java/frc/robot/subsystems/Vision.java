@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,10 +25,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.util.LimelightHelper;
+import frc.util.ShuffleboardIO;
 import frc.util.Util;
 
 public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
+    StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Testing Pose", Pose2d.struct).publish();
+
+    Timer timer = new Timer();
+
+    Pose2d testPose = new Pose2d();
 
     Alliance allianceColor = Alliance.Blue;
 
@@ -59,11 +67,26 @@ public class Vision extends SubsystemBase {
 
     public Vision(CommandSwerveDrivetrain drive) {
         drivetrain = drive;
+        timer.reset();
+        timer.start();
+
+        
+        ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
+        ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
     }
 
     @Override
     public void periodic() {
+        testPose = getPoseTesting();
         publisher.set(drivetrain.getState().Pose);
+        publisher2.set(getPoseTesting());
+        if (timer.get() > 0.2) {
+            updateAlignPose(true);
+            timer.reset();
+            timer.start();
+            
+        }
+        
         debug();
     }
 
@@ -132,6 +155,14 @@ public class Vision extends SubsystemBase {
         // );
 
         return endpointR;
+    }
+
+    public Pose2d getPoseTesting() {
+        testPose = new Pose2d(
+            ShuffleboardIO.getDouble("Alignment X"), 
+            ShuffleboardIO.getDouble("Alignment Y"), 
+            Rotation2d.fromDegrees(180));
+        return testPose;
     }
 
     private int getTargetTag() {
