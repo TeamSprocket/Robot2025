@@ -104,6 +104,24 @@ public class Vision extends SubsystemBase {
         fiducialID = getTargetTag();
         endpointL = new Pose2d();
         switch ((int)fiducialID) {
+            case 6:
+                endpointL = Constants.Vision.poseAlignRedLeft6;
+                break;
+            case 7:
+                endpointL = Constants.Vision.poseAlignRedLeft7;
+                break;
+            case 8:
+                endpointL = Constants.Vision.poseAlignRedLeft8;
+                break;
+            case 9:
+                endpointL = Constants.Vision.poseAlignRedLeft9;
+                break;
+            case 10:
+                endpointL = Constants.Vision.poseAlignRedLeft10;
+                break;
+            case 11:
+                endpointL = Constants.Vision.poseAlignRedLeft11;
+                break;
             case 17:
                 endpointL = Constants.Vision.poseAlignBlueLeft17;
                 break;
@@ -134,6 +152,24 @@ public class Vision extends SubsystemBase {
         fiducialID = getTargetTag();
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
+            case 6:
+                endpointR = Constants.Vision.poseAlignRedRight6;
+                break;
+            case 7:
+                endpointR = Constants.Vision.poseAlignRedRight7;
+                break;
+            case 8:
+                endpointR = Constants.Vision.poseAlignRedRight8;
+                break;
+            case 9:
+                endpointR = Constants.Vision.poseAlignRedRight9;
+                break;
+            case 10:
+                endpointR = Constants.Vision.poseAlignRedRight10;
+                break;
+            case 11:
+                endpointR = Constants.Vision.poseAlignRedRight11;
+                break;
             case 17:
                 endpointR = Constants.Vision.poseAlignBlueRight17;
                 break;

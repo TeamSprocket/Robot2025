@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -216,48 +217,54 @@ public class RobotContainer {
     return targetSpeed;
   }
 
-//   private void applyAlignSpeeds() {
-//     drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
-//       .withSpeeds(new ChassisSpeeds(
-//           0, 
-//         0, 
-//         getRotationalAlignSpeed()
-//       ))
-//     );
-//   }
+  private void applyAlignSpeeds() {
+    drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
+      .withSpeeds(new ChassisSpeeds(
+          0, 
+        0, 
+        getRotationalAlignSpeed()
+      ))
+    );
+  }
 
-//   public Command align(String direction) {
-//     if (direction.equals("left")) {
-//       return Commands.sequence(
-//         new InstantCommand(() -> vision.updateAlignPose(true)), 
-//         new InstantCommand(() -> applyAlignSpeeds()),
-//         new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-//         new RunCommand(() -> 
-//           AutoBuilder.pathfindToPose(
-//             vision.getPoseRight(),
-//             new PathConstraints(2, 2, 3, 2), 
-//             0.0
-//           )
-//         .andThen(Commands.print("LEFT"))
-//         )
-//       );
-//     } else if (direction.equals("right")) {
-//       return Commands.sequence(
-//         new InstantCommand(() -> vision.updateAlignPose(true)), 
-//         new InstantCommand(() -> applyAlignSpeeds()),
-//         new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-//         new RunCommand(() -> AutoBuilder.pathfindToPose(
-//           vision.getPoseLeft(),
-//           new PathConstraints(2, 2, 3, 2), 
-//           0.0)
-//           .andThen(Commands.print("RIGHT"))
-//         )
-//       );
-//     } else {
-//       return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
-//     }
-//   }
-// }
+  public Command align(String direction) {
+    if (direction.equals("left")) {
+      return Commands.either(
+        new RunCommand(() -> applyAlignSpeeds()),
+        Commands.sequence(
+          new InstantCommand(() -> vision.updateAlignPose()), 
+          AutoBuilder.pathfindToPose(
+            vision.getPoseTesting(),
+            new PathConstraints(2, 2, 3, 2), 
+    0.0
+          )
+            .alongWith(Commands.print("RIGHT"))
+            .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+            .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+        ),
+        () -> !Util.inRange(vision.getTX(), 0.1, 0.1)
+      );
+    } else if (direction.equals("right")) {
+      return Commands.either(
+        new RunCommand(() -> applyAlignSpeeds()),
+        Commands.sequence(
+          new InstantCommand(() -> vision.updateAlignPose()), 
+          AutoBuilder.pathfindToPose(
+            vision.getPoseLeft(),
+            new PathConstraints(2, 2, 3, 2), 
+    0.0
+          )
+            .alongWith(Commands.print("RIGHT"))
+            .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+            .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+        ),
+        () -> !Util.inRange(vision.getTX(), 0.1, 0.1)
+      );
+    } else {
+      return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
+    }
+  }
+}
 
   // private Command pathfind(String direction) {
   //   if (direction.equals("right")) {
@@ -270,4 +277,3 @@ public class RobotContainer {
   //         drivetrain.getState())
   //     );
   //   }
-  }
