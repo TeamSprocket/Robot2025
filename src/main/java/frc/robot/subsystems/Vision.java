@@ -104,24 +104,6 @@ public class Vision extends SubsystemBase {
         fiducialID = getTargetTag();
         endpointL = new Pose2d();
         switch ((int)fiducialID) {
-            case 6:
-                endpointL = Constants.Vision.poseAlignRedLeft6;
-                break;
-            case 7:
-                endpointL = Constants.Vision.poseAlignRedLeft7;
-                break;
-            case 8:
-                endpointL = Constants.Vision.poseAlignRedLeft8;
-                break;
-            case 9:
-                endpointL = Constants.Vision.poseAlignRedLeft9;
-                break;
-            case 10:
-                endpointL = Constants.Vision.poseAlignRedLeft10;
-                break;
-            case 11:
-                endpointL = Constants.Vision.poseAlignRedLeft11;
-                break;
             case 17:
                 endpointL = Constants.Vision.poseAlignBlueLeft17;
                 break;
@@ -152,24 +134,6 @@ public class Vision extends SubsystemBase {
         fiducialID = getTargetTag();
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
-            case 6:
-                endpointR = Constants.Vision.poseAlignRedRight6;
-                break;
-            case 7:
-                endpointR = Constants.Vision.poseAlignRedRight7;
-                break;
-            case 8:
-                endpointR = Constants.Vision.poseAlignRedRight8;
-                break;
-            case 9:
-                endpointR = Constants.Vision.poseAlignRedRight9;
-                break;
-            case 10:
-                endpointR = Constants.Vision.poseAlignRedRight10;
-                break;
-            case 11:
-                endpointR = Constants.Vision.poseAlignRedRight11;
-                break;
             case 17:
                 endpointR = Constants.Vision.poseAlignBlueRight17;
                 break;
@@ -206,35 +170,38 @@ public class Vision extends SubsystemBase {
             // ShuffleboardIO.getDouble("Alignment X"), 
             // ShuffleboardIO.getDouble("Alignment Y"), 
             // Rotation2d.fromDegrees(180));
-            3,4.2,Rotation2d.fromDegrees(0));
+            12.684, 3.078,Rotation2d.fromDegrees(60));
         return testPose;
+
+
     }
 
     private int getTargetTag() {
-      int tag = (int)LimelightHelper.getFiducialID(name);
-      boolean testRed = false;
-        for (int element : redReefAprilTag) {
-          if (element == tag) {
-              testRed = true;
-              break;
-          }
-      }
+    //   int tag = (int)LimelightHelper.getFiducialID(name);
+    //   boolean testRed = false;
+    //     for (int element : redReefAprilTag) {
+    //       if (element == tag) {
+    //           testRed = true;
+    //           break;
+    //       }
+    //   }
 
-      boolean testBlue = false;
-      for (int element : blueReefAprilTag) {
-          if (element == tag) {
-              testBlue = true;
-              break;
-          }
-      }
+    //   boolean testBlue = false;
+    //   for (int element : blueReefAprilTag) {
+    //       if (element == tag) {
+    //           testBlue = true;
+    //           break;
+    //       }
+    //   }
 
-      if ((allianceColor == Alliance.Red) && testRed) {
-        return tag;
-      } else if ((allianceColor == Alliance.Blue) && testBlue) {
-        return tag;
-      } else {
-        return -1;
-      }
+    //   if ((allianceColor == Alliance.Red) && testRed) {
+    //     return tag;
+    //   } else if ((allianceColor == Alliance.Blue) && testBlue) {
+    //     return tag;
+    //   } else {
+    //     return -1;
+    //   }
+    return (int)LimelightHelper.getFiducialID(name);
     }
 
     /**
