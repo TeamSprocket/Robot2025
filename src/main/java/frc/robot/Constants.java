@@ -88,6 +88,9 @@ public final class Constants {
     public static final double kSpeedStowed = 0.0;
     public static final double kSpeedOuttake = 6;
     public static final double kSpeedAlgaeRemoval = -7.5;
+    public static final double kSpeedAlgaeCarry = -1.0;
+    public static final double kSpeedAlgaeScore = 5.0;
+
     public static final double kTuneSpeed = 0.3;
 
     public static final double kOuttakeS = 0.25; // 0.25
@@ -104,6 +107,7 @@ public final class Constants {
     
     public static final double kAngleStowed = 0.05;
     public static final double kAngleAlgaeRemove = 0.28;
+    public static final double kAngleAlgaeScore = 0.26;
     public static final double kAngleIntake = 0.44;
 
     public static final double kMotionMagicCruiseVelocity = 6;//2

@@ -30,7 +30,9 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     INTAKE,
     CORAL_OUTTAKE,
     CORAL1,
-    ALGAE_REMOVE
+    ALGAE_REMOVE,
+    ALGAE_CARRY,
+    ALGAE_SCORE
   }
 
   private OuttakeStates state = OuttakeStates.NONE;
@@ -98,6 +100,11 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeRemoval));
         // motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeRemoval));
         break;
+      case ALGAE_CARRY:
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeCarry));
+        break;
+      case ALGAE_SCORE:
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeCarry));
 
       case CORAL_OUTTAKE:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));

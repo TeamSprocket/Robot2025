@@ -29,7 +29,9 @@ public class Pivot extends SubsystemBase {
       NONE,
       STOWED,
       ALGAE_REMOVE,
-      INTAKE
+      INTAKE,
+      ALGAE_CARRY,
+      ALGAE_SCORE
     }
   
     public Pivot(){
@@ -90,6 +92,18 @@ public class Pivot extends SubsystemBase {
         motor.setNeutralMode(NeutralModeValue.Brake);
         motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleIntake));
         break;
+
+        case ALGAE_CARRY:
+        motor.setNeutralMode(NeutralModeValue.Brake);
+        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeRemove));
+        break;
+
+
+        case ALGAE_SCORE:
+        motor.setNeutralMode(NeutralModeValue.Coast);
+        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeScore));
+        break;
+        
       }
     }
 

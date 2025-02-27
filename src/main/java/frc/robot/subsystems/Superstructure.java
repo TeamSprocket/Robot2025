@@ -26,6 +26,8 @@ public class Superstructure extends SubsystemBase {
     CORAL_4,
     ALGAE_REMOVE_2,
     ALGAE_REMOVE_3,
+    ALGAE_CARRY,
+    ALGAE_SCORE,
     EJECT
   }
 
@@ -166,6 +168,27 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
+  private Command algaeCarry() {
+    return new InstantCommand(() -> {
+      intake.setState(IntakeStates.STOWED);
+      outtake.setState(OuttakeStates.ALGAE_CARRY);
+      elevator.setState(ElevatorStates.STOWED);
+      pivot.setState(PivotStates.ALGAE_CARRY);
+    });
+  }
+  private Command algaeScore() {
+    return new InstantCommand(()-> {
+      intake.setState(IntakeStates.STOWED);
+      outtake.setState(OuttakeStates.ALGAE_SCORE);
+      elevator.setState(ElevatorStates.STOWED);
+      pivot.setState(PivotStates.ALGAE_SCORE);
+      
+      
+    });
+
+  
+  }
+
   // ------ commands -------
   /**
    * Sets the superstructure target state
@@ -199,6 +222,12 @@ public class Superstructure extends SubsystemBase {
         
       case ALGAE_REMOVE_3:
         return algaeRemove3();
+      
+      case ALGAE_CARRY:
+        return algaeCarry();
+
+      case ALGAE_SCORE:
+        return algaeScore();
       
       case EJECT:
         return eject();
