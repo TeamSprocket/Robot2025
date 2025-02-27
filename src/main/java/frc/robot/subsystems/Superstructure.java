@@ -92,9 +92,9 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_2);
         pivot.setState(PivotStates.STOWED);
-      }),
-      new WaitUntilCommand(() -> elevator.atSetpoint()), 
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
+      })
+      // new WaitUntilCommand(() -> elevator.atSetpoint()), 
+      // new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
 
@@ -118,9 +118,9 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_4);
         pivot.setState(PivotStates.STOWED);
-      }),
-      new WaitUntilCommand(() -> elevator.atSetpoint()), 
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
+      })
+      // new WaitUntilCommand(() -> elevator.atSetpoint()), 
+      // new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
 
@@ -130,13 +130,12 @@ public class Superstructure extends SubsystemBase {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.ALGAE_REMOVE_2);
-        pivot.setState(PivotStates.ALGAE_REMOVE);
+        pivot.setState(PivotStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), 
       new InstantCommand(() -> {outtake.setState(OuttakeStates.ALGAE_REMOVE); pivot.setState(PivotStates.ALGAE_REMOVE);})
     );
   }
-
 
   private Command algaeRemove3() {
     return Commands.sequence(
@@ -168,7 +167,7 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
-  private Command algaeCarry() {
+  private Command algaeCarry() { // remove
     return new InstantCommand(() -> {
       intake.setState(IntakeStates.STOWED);
       outtake.setState(OuttakeStates.ALGAE_CARRY);
@@ -176,17 +175,14 @@ public class Superstructure extends SubsystemBase {
       pivot.setState(PivotStates.ALGAE_CARRY);
     });
   }
+
   private Command algaeScore() {
     return new InstantCommand(()-> {
       intake.setState(IntakeStates.STOWED);
       outtake.setState(OuttakeStates.ALGAE_SCORE);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.ALGAE_SCORE);
-      
-      
     });
-
-  
   }
 
   // ------ commands -------

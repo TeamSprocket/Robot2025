@@ -101,7 +101,7 @@ public class Vision extends SubsystemBase {
     }
 
     public Pose2d getPoseLeft() {
-        fiducialID = getTargetTag();
+        fiducialID = getTargetTagLeft();
         endpointL = new Pose2d();
         switch ((int)fiducialID) {
             case 17:
@@ -131,7 +131,7 @@ public class Vision extends SubsystemBase {
     }
     
     public Pose2d getPoseRight() {
-        fiducialID = getTargetTag();
+        fiducialID = getTargetTagRight();
         endpointR = new Pose2d();
         switch ((int)fiducialID) {
             case 17:
@@ -176,32 +176,80 @@ public class Vision extends SubsystemBase {
 
     }
 
-    private int getTargetTag() {
-    //   int tag = (int)LimelightHelper.getFiducialID(name);
-    //   boolean testRed = false;
-    //     for (int element : redReefAprilTag) {
-    //       if (element == tag) {
-    //           testRed = true;
-    //           break;
-    //       }
-    //   }
+    private int getTargetTagLeft() {
+      int tag = -1;
+      double minDistance = Integer.MAX_VALUE;
+      for (int i = 6; i <= 11; i++) {
+        Pose2d target = new Pose2d(1000, 1000, new Rotation2d(0));
+        if (i == 6) target = Constants.Vision.poseAlignRedLeft6;
+        else if (i == 7) target = Constants.Vision.poseAlignRedLeft7;
+        else if (i == 8) target = Constants.Vision.poseAlignRedLeft8;
+        else if (i== 9) target = Constants.Vision.poseAlignRedLeft9;
+        else if (i == 10) target = Constants.Vision.poseAlignRedLeft10;
+        else if (i == 11) target = Constants.Vision.poseAlignRedLeft11;
 
-    //   boolean testBlue = false;
-    //   for (int element : blueReefAprilTag) {
-    //       if (element == tag) {
-    //           testBlue = true;
-    //           break;
-    //       }
-    //   }
+        double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+        if (distance < minDistance) {
+            minDistance = distance;
+            tag = i;
+        }
+      }
 
-    //   if ((allianceColor == Alliance.Red) && testRed) {
-    //     return tag;
-    //   } else if ((allianceColor == Alliance.Blue) && testBlue) {
-    //     return tag;
-    //   } else {
-    //     return -1;
-    //   }
-    return (int)LimelightHelper.getFiducialID(name);
+      for (int i = 17; i <= 22; i++) {
+        Pose2d target = new Pose2d(1000, 1000, new Rotation2d(0));
+        if (i == 17) target = Constants.Vision.poseAlignBlueLeft17;
+        else if (i == 18) target = Constants.Vision.poseAlignBlueLeft18;
+        else if (i == 19) target = Constants.Vision.poseAlignBlueLeft19;
+        else if (i == 20) target = Constants.Vision.poseAlignBlueLeft20;
+        else if (i == 21) target = Constants.Vision.poseAlignBlueLeft21;
+        else if (i == 22) target = Constants.Vision.poseAlignBlueLeft22;
+
+        double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+        if (distance < minDistance) {
+            minDistance = distance;
+            tag = i;
+        }
+      }
+
+      return tag;
+    }
+
+    private int getTargetTagRight() {
+        int tag = -1;
+        double minDistance = Integer.MAX_VALUE;
+        for (int i = 6; i <= 11; i++) {
+          Pose2d target = new Pose2d(1000, 1000, new Rotation2d(0));
+          if (i == 6) target = Constants.Vision.poseAlignRedRight6;
+          else if (i == 7) target = Constants.Vision.poseAlignRedRight7;
+          else if (i == 8) target = Constants.Vision.poseAlignRedRight8;
+          else if (i== 9) target = Constants.Vision.poseAlignRedRight9;
+          else if (i == 10) target = Constants.Vision.poseAlignRedRight10;
+          else if (i == 11) target = Constants.Vision.poseAlignRedRight11;
+  
+          double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+          if (distance < minDistance) {
+              minDistance = distance;
+              tag = i;
+          }
+        }
+  
+        for (int i = 17; i <= 22; i++) {
+          Pose2d target = new Pose2d(1000, 1000, new Rotation2d(0));
+          if (i == 17) target = Constants.Vision.poseAlignBlueRight17;
+          else if (i == 18) target = Constants.Vision.poseAlignBlueRight18;
+          else if (i == 19) target = Constants.Vision.poseAlignBlueRight19;
+          else if (i == 20) target = Constants.Vision.poseAlignBlueRight20;
+          else if (i == 21) target = Constants.Vision.poseAlignBlueRight21;
+          else if (i == 22) target = Constants.Vision.poseAlignBlueRight22;
+  
+          double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+          if (distance < minDistance) {
+              minDistance = distance;
+              tag = i;
+          }
+        }
+
+        return tag;
     }
 
     /**

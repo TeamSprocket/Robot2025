@@ -21,7 +21,7 @@ import frc.robot.Constants;
 
 public class Outtake extends SubsystemBase {
 private final TalonFX motor1 = new TalonFX(14);
-// private final TalonFX motor2 = new TalonFX(0);
+
 private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
   public enum OuttakeStates {
@@ -88,27 +88,25 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
       case STOWED:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedStowed));
-        // motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedStowed));
         break;
 
       case INTAKE:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
-        // motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
         break;
 
       case ALGAE_REMOVE:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeRemoval));
-        // motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeRemoval));
         break;
+
       case ALGAE_CARRY:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeCarry));
         break;
+        
       case ALGAE_SCORE:
-        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeCarry));
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeScore));
 
       case CORAL_OUTTAKE:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
-        // motor2.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
         break;
       
       case CORAL1:

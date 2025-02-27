@@ -89,7 +89,7 @@ public final class Constants {
     public static final double kSpeedOuttake = 6;
     public static final double kSpeedAlgaeRemoval = -7.5;
     public static final double kSpeedAlgaeCarry = -1.0;
-    public static final double kSpeedAlgaeScore = 5.0;
+    public static final double kSpeedAlgaeScore = 1.0;
 
     public static final double kTuneSpeed = 0.3;
 
@@ -140,7 +140,7 @@ public final class Constants {
     public static final double kHeightShallowClimb = 0.0;
     public static final double kHeightDeepClimb = 0.0;
 
-    public static final double kMotionMagicCruiseVelocity = 5.0;
+    public static final double kMotionMagicCruiseVelocity = 6.5;
     public static final double kMotionMagicAcceleration = 10.0;
 
     public static final double kP = 40.0;

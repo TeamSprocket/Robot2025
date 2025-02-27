@@ -98,7 +98,6 @@ public class Pivot extends SubsystemBase {
         motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeRemove));
         break;
 
-
         case ALGAE_SCORE:
         motor.setNeutralMode(NeutralModeValue.Coast);
         motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeScore));
