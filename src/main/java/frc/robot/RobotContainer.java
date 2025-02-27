@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -104,7 +105,8 @@ public class RobotContainer {
     ));
     driver.x().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, getRotationalAlignSpeed())))
     .andThen(Commands.waitUntil(() -> Util.inRange(getRotationalAlignSpeed(), -0.1, 0.1)))
-    .andThen(Commands.print("OFHADGHAISDHFIASDHFUADS")));
+    // .andThen(Commands.print("OFHADGHAISDHFIASDHFUADS"))
+    );
     driver.y().whileTrue(new InstantCommand(() -> vision.updateAlignPose()));
     // TODO: turn this into a sequence
 
@@ -113,15 +115,14 @@ public class RobotContainer {
     driver.povRight().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, -0.2, 0.0))));
     driver.povLeft().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0.2, 0.0))));
     
-    // driver.rightBumper().whileTrue(new InstantCommand(() -> vision.updateAlignPose()));
-
     drivetrain.registerTelemetry(logger::telemeterize);
-
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-    driver.rightTrigger().onTrue(AutoBuilder.pathfindToPose(
+    driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+
+    driver.rightTrigger().onTrue(AutoBuilder.pathfindToPose( // try a while true instead of on true
       vision.getPoseRight(),
       new PathConstraints(2, 2, 3, 2), 
       0.0)
@@ -145,7 +146,7 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.INTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
     
-    new Trigger(operator.button(8)) // method 1
+    new Trigger(operator.button(8))
       .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
@@ -153,13 +154,15 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.CORAL_1))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.b()) // method 2
+    new Trigger(operator.b())
       .whileTrue(superstructure.setState(SSStates.CORAL_2))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger (operator.x())
-      .whileTrue(superstructure.setState(SSStates.CORAL_3))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+      .whileTrue(superstructure.setState(SSStates.CORAL_3));
+    new Trigger(operator.x())
+      .onFalse(new InstantCommand(()->outtake.runOuttake()).alongWith(new WaitCommand(1))
+      .andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger (operator.y())
       .whileTrue(superstructure.setState(SSStates.CORAL_4))
@@ -174,11 +177,11 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.povUp())
-      .whileTrue(new InstantCommand(()->outtake.runOuttake(2)))
+      .whileTrue(new InstantCommand(() -> outtake.runOuttake()))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.povDown())
-      .whileTrue(new InstantCommand(()->outtake.runOuttake(-2)))
+      .whileTrue(new InstantCommand(() -> outtake.runOuttake()))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
   }
@@ -214,7 +217,7 @@ public class RobotContainer {
     double targetRotation = currentRotation + vision.getTX();
     
     double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
-    System.out.println(targetSpeed);
+    // System.out.println(targetSpeed);
     return targetSpeed;
   }
 

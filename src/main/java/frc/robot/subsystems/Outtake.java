@@ -112,8 +112,8 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     // This method will be called once per scheduler run
   }
 
-  public void runOuttake(double percent) {
-    motor1.set(Constants.Outtake.kTuneSpeed);
+  public void runOuttake() {
+    state = OuttakeStates.CORAL_OUTTAKE;
   }
 
   public void setState(OuttakeStates state) {

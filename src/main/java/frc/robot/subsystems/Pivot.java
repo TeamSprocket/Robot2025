@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -81,10 +82,12 @@ public class Pivot extends SubsystemBase {
         break;
 
         case ALGAE_REMOVE:
+        motor.setNeutralMode(NeutralModeValue.Coast);
         motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeRemove));
         break;
 
         case INTAKE:
+        motor.setNeutralMode(NeutralModeValue.Brake);
         motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleIntake));
         break;
       }
