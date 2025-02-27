@@ -260,38 +260,76 @@ public class RobotContainer {
     );
   }
 
+  // public Command align(String direction) {
+  //   if (direction.equals("left")) {
+  //     return Commands.sequence(
+  //       new InstantCommand(() -> vision.updateAlignPose()), 
+  //       new InstantCommand(() -> applyAlignSpeeds()),
+  //       new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
+  //       new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)),
+
+  //       new RunCommand(() -> 
+  //         AutoBuilder.pathfindToPose(
+  //           vision.getPoseRight(),
+  //           new PathConstraints(2, 2, 3, 2), 
+  //           0.0
+  //         )
+  //       .andThen(Commands.print("LEFT"))
+  //       .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+  //       )
+  //     );
+  //   } else if (direction.equals("right")) {
+  //     return Commands.sequence(
+  //       new InstantCommand(() -> vision.updateAlignPose()), 
+  //       new InstantCommand(() -> applyAlignSpeeds()),
+  //       new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
+  //       new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)),
+
+  //       new RunCommand(() -> AutoBuilder.pathfindToPose(
+  //         vision.getPoseLeft(),
+  //         new PathConstraints(2, 2, 3, 2), 
+  //         0.0)
+  //         .andThen(Commands.print("RIGHT"))
+  //         .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+  //       )
+  //     );
+  //   } else {
+  //     return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
+  //   }
+  // }
+
   public Command align(String direction) {
     if (direction.equals("left")) {
-      return Commands.sequence(
-        new InstantCommand(() -> vision.updateAlignPose()), 
-        new InstantCommand(() -> applyAlignSpeeds()),
-        new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-        new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)),
-
-        new RunCommand(() -> 
+      return Commands.either(
+        new RunCommand(() -> applyAlignSpeeds()),
+        Commands.sequence(
+          new InstantCommand(() -> vision.updateAlignPose()), 
           AutoBuilder.pathfindToPose(
             vision.getPoseRight(),
             new PathConstraints(2, 2, 3, 2), 
-            0.0
+    0.0
           )
-        .andThen(Commands.print("LEFT"))
-        .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-        )
+            .alongWith(Commands.print("RIGHT"))
+            .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+            .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+        ),
+        () -> !Util.inRange(vision.getTX(), 0.1, 0.1)
       );
     } else if (direction.equals("right")) {
-      return Commands.sequence(
-        new InstantCommand(() -> vision.updateAlignPose()), 
-        new InstantCommand(() -> applyAlignSpeeds()),
-        new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-        new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)),
-
-        new RunCommand(() -> AutoBuilder.pathfindToPose(
-          vision.getPoseLeft(),
-          new PathConstraints(2, 2, 3, 2), 
-          0.0)
-          .andThen(Commands.print("RIGHT"))
-          .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-        )
+      return Commands.either(
+        new RunCommand(() -> applyAlignSpeeds()),
+        Commands.sequence(
+          new InstantCommand(() -> vision.updateAlignPose()), 
+          AutoBuilder.pathfindToPose(
+            vision.getPoseLeft(),
+            new PathConstraints(2, 2, 3, 2), 
+    0.0
+          )
+            .alongWith(Commands.print("RIGHT"))
+            .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+            .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+        ),
+        () -> !Util.inRange(vision.getTX(), 0.1, 0.1)
       );
     } else {
       return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
