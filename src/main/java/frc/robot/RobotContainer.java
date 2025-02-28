@@ -154,7 +154,12 @@ public class RobotContainer {
 
     // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
 
-    driver.rightTrigger().whileTrue(runPath());
+    driver.rightTrigger().whileTrue(runPath(
+      PathPlannerPath.waypointsFromPoses(
+        drivetrain.getState().Pose,
+        vision.getTargetTagRight()
+      )
+    ));
 
     // driver.rightTrigger() // TODO: test
     //   .onTrue(new InstantCommand(()-> targetPose = vision.getTargetTagRight())
@@ -175,15 +180,12 @@ public class RobotContainer {
     //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
     // );
 
-    driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
-      // vision.getTargetTagLeft(), 
-      vision.getPoseTesting(), // TODO: test to check if it goes to the right pose
-      new PathConstraints(2, 2, 3, 2), 
-      0.0)
-      .alongWith(Commands.print("LEFT"))
-      .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-      .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-    );
+    driver.leftTrigger().whileTrue(runPath(
+      PathPlannerPath.waypointsFromPoses(
+        drivetrain.getState().Pose,
+        vision.getTargetTagLeft()
+      )
+    ));
 
     // driver.rightTrigger()
     //   .whileTrue(align("right"))
@@ -255,7 +257,7 @@ public class RobotContainer {
     return superstructure;
   }
 
-  public Command runPath() {
+  public Command runPath(List<Waypoint> waypoints) {
     // return AutoBuilder.pathfindToPose(
     //   new Pose2d(vision.getTargetTagRight().getX(), vision.getTargetTagRight().getY(), vision.getTargetTagRight().getRotation()),
     //   new PathConstraints(2, 2, 3, 2), 
@@ -263,10 +265,6 @@ public class RobotContainer {
     //   .alongWith(Commands.print("RIGHT"))
     //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
     //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)));
-    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-      drivetrain.getState().Pose,
-      vision.getTargetTagRight()
-    );
     
     PathPlannerPath path = new PathPlannerPath(
       waypoints,
