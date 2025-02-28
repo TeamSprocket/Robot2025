@@ -99,11 +99,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.sequence(
-      drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-1.0, 0, 0))),
-      new WaitCommand(1),
-      drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, 0)))
-    );
+    return 
+      Commands.sequence(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(1.0, 0, 0))).withTimeout(1));
     // return null;
   }
 
@@ -152,38 +149,16 @@ public class RobotContainer {
 
     driver.button(8).whileTrue(new InstantCommand(() -> speedMultiplier = 1.0));
 
-    // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
-
-    driver.rightTrigger().whileTrue(runPath());
-
-    // driver.rightTrigger() // TODO: test
-    //   .onTrue(new InstantCommand(()-> targetPose = vision.getTargetTagRight())
-    //   .andThen(AutoBuilder.pathfindToPose(
-    //     targetPose,
-    //     new PathConstraints(2, 2, 3, 2), 
-    //     0.0)
-    //     .alongWith(Commands.print("RIGHT"))
-    //     .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-    //     .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))));
-
-    // driver.rightTrigger().onTrue(AutoBuilder.pathfindToPose( // TODO: test this
-    //   vision.getTargetTagRight(),
+    // driver.rightTrigger().whileTrue(runPath());
+    // driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
+    //   // vision.getTargetTagLeft(), 
+    //   vision.getPoseTesting(), // TODO: test to check if it goes to the right pose
     //   new PathConstraints(2, 2, 3, 2), 
     //   0.0)
-    //   .alongWith(Commands.print("RIGHT"))
+    //   .alongWith(Commands.print("LEFT"))
     //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
     //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
     // );
-
-    driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
-      // vision.getTargetTagLeft(), 
-      vision.getPoseTesting(), // TODO: test to check if it goes to the right pose
-      new PathConstraints(2, 2, 3, 2), 
-      0.0)
-      .alongWith(Commands.print("LEFT"))
-      .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-      .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-    );
 
     // driver.rightTrigger()
     //   .whileTrue(align("right"))
