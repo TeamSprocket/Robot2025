@@ -146,7 +146,7 @@ public class RobotContainer {
     // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
 
     driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
-      vision.getPoseRight(),
+      vision.getTargetTagRight(),
       new PathConstraints(2, 2, 3, 2), 
       0.0)
       .alongWith(Commands.print("RIGHT"))
@@ -155,7 +155,7 @@ public class RobotContainer {
     );
 
     driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
-      vision.getPoseLeft(), 
+      vision.getTargetTagLeft(), 
       new PathConstraints(2, 2, 3, 2), 
       0.0)
       .alongWith(Commands.print("LEFT"))
