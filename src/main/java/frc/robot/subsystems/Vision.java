@@ -36,6 +36,8 @@ public class Vision extends SubsystemBase {
 
     Pose2d testPose = new Pose2d();
 
+    Pose2d targetPose = new Pose2d();
+
     public enum AlignStates{
         ALIGNING,
         NONE
@@ -53,7 +55,7 @@ public class Vision extends SubsystemBase {
     String name = "limelight-front";
     int counter = 0;
     int tagOutside = 0;
-    Pose2d targetPoseOutside = new Pose2d();
+
 
     Pose2d lastPose = new Pose2d();
     double lastTimeStamp = 0.0;
@@ -179,10 +181,9 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getTargetTagLeft() {
       int tag = -1;
-      Pose2d targetPose = new Pose2d();
       double minDistance = Integer.MAX_VALUE;
       for (int i = 6; i <= 11; i++) {
-        Pose2d target = new Pose2d(1000, 1000, new Rotation2d(0));
+        Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
         if (i == 6) target = Constants.Vision.poseAlignRedLeft6;
         else if (i == 7) target = Constants.Vision.poseAlignRedLeft7;
         else if (i == 8) target = Constants.Vision.poseAlignRedLeft8;
@@ -199,7 +200,7 @@ public class Vision extends SubsystemBase {
       }
 
       for (int i = 17; i <= 22; i++) {
-        Pose2d target = new Pose2d(1000, 1000, new Rotation2d(0));
+        Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
         if (i == 17) target = Constants.Vision.poseAlignBlueLeft17;
         else if (i == 18) target = Constants.Vision.poseAlignBlueLeft18;
         else if (i == 19) target = Constants.Vision.poseAlignBlueLeft19;
@@ -216,17 +217,15 @@ public class Vision extends SubsystemBase {
       }
 
       tagOutside = tag;
-      targetPoseOutside = targetPose;
 
       return targetPose;
     }
 
     public Pose2d getTargetTagRight() {
         int tag = -1;
-        Pose2d targetPose = new Pose2d();
         double minDistance = Integer.MAX_VALUE;
         for (int i = 6; i <= 11; i++) {
-          Pose2d target = new Pose2d();
+            Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
           if (i == 6) target = Constants.Vision.poseAlignRedRight6;
           else if (i == 7) target = Constants.Vision.poseAlignRedRight7;
           else if (i == 8) target = Constants.Vision.poseAlignRedRight8;
@@ -243,7 +242,7 @@ public class Vision extends SubsystemBase {
         }
   
         for (int i = 17; i <= 22; i++) {
-          Pose2d target = new Pose2d();
+            Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
           if (i == 17) target = Constants.Vision.poseAlignBlueRight17;
           else if (i == 18) target = Constants.Vision.poseAlignBlueRight18;
           else if (i == 19) target = Constants.Vision.poseAlignBlueRight19;
@@ -260,7 +259,6 @@ public class Vision extends SubsystemBase {
         }
 
         tagOutside = tag;
-        targetPoseOutside = targetPose;
 
         return targetPose;
     }
