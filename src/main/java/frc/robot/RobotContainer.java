@@ -9,8 +9,14 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -36,6 +42,8 @@ import frc.robot.subsystems.swerve.Telemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
 import frc.util.Util;
 import static edu.wpi.first.units.Units.*;
+
+import java.util.List;
 
 public class RobotContainer {
   private final CommandXboxController driver = new CommandXboxController(0); // My joystick
@@ -92,7 +100,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return Commands.sequence(
-      drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(1.0, 0, 0))),
+      drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-1.0, 0, 0))),
       new WaitCommand(1),
       drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, 0)))
     );
@@ -146,14 +154,7 @@ public class RobotContainer {
 
     // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
 
-    driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
-      vision.getTargetTagRight(),
-      new PathConstraints(2, 2, 3, 2), 
-      0.0)
-      .alongWith(Commands.print("RIGHT"))
-      .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-      .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-    );
+    driver.rightTrigger().whileTrue(runPath());
 
     // driver.rightTrigger() // TODO: test
     //   .onTrue(new InstantCommand(()-> targetPose = vision.getTargetTagRight())
@@ -220,16 +221,10 @@ public class RobotContainer {
     new Trigger(operator.b())
       .whileTrue(superstructure.setState(SSStates.CORAL_2))
       .whileFalse(superstructure.setState(SSStates.STOWED));
-    // new Trigger(operator.b())
-    //   .onFalse(new InstantCommand(()->outtake.runOuttake()).alongWith(new WaitCommand(1))
-    //   .andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger (operator.x())
       .whileTrue(superstructure.setState(SSStates.CORAL_3))
       .whileFalse(superstructure.setState(SSStates.STOWED));
-    // new Trigger(operator.x())
-    //   .onFalse(new InstantCommand(()->outtake.runOuttake()).alongWith(new WaitCommand(1))
-    //   .andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger (operator.y())
       .whileTrue(superstructure.setState(SSStates.CORAL_4))
@@ -258,6 +253,30 @@ public class RobotContainer {
 
   public Superstructure getSuperstructure() {
     return superstructure;
+  }
+
+  public Command runPath() {
+    // return AutoBuilder.pathfindToPose(
+    //   new Pose2d(vision.getTargetTagRight().getX(), vision.getTargetTagRight().getY(), vision.getTargetTagRight().getRotation()),
+    //   new PathConstraints(2, 2, 3, 2), 
+    //   0.0)
+    //   .alongWith(Commands.print("RIGHT"))
+    //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+    //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)));
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+      drivetrain.getState().Pose,
+      vision.getTargetTagRight()
+    );
+    
+    PathPlannerPath path = new PathPlannerPath(
+      waypoints,
+      new PathConstraints(2, 2, 3, 2),
+      null,
+      new GoalEndState(0.0, vision.getTargetTagRight().getRotation())
+    );
+
+
+    return AutoBuilder.followPath(path);
   }
 
   public Command rumbleControllers() {

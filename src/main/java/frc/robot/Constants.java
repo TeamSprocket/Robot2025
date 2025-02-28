@@ -84,7 +84,7 @@ public final class Constants {
   public static final class Outtake {
     
     public static final double kSpeedStowed = 0.0;
-    public static final double kSpeedOuttake = 6;
+    public static final double kSpeedOuttake = 7;
     public static final double kSpeedAlgaeRemoval = -6.5;
     public static final double kSpeedAlgaeCarry = -6.0;
     public static final double kSpeedAlgaeScore = 1.0;
