@@ -154,28 +154,24 @@ public class RobotContainer {
 
     // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
 
-    driver.rightTrigger().whileTrue(runPathRight());
 
-    // driver.rightTrigger() // TODO: test
-    //   .onTrue(new InstantCommand(()-> targetPose = vision.getTargetTagRight())
-    //   .andThen(AutoBuilder.pathfindToPose(
-    //     targetPose,
-    //     new PathConstraints(2, 2, 3, 2), 
-    //     0.0)
-    //     .alongWith(Commands.print("RIGHT"))
-    //     .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-    //     .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))));
+    // driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
+    //   vision.getPoseRight(),
+    //   new PathConstraints(2, 2, 3, 2), 
+    //   0.0)
+    //   .alongWith(Commands.print("RIGHT"))
+    //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+    //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+    // );
 
-    // driver.rightTrigger().onTrue(AutoBuilder.pathfindToPose( // TODO: test this
-    //   vision.getTargetTagRight(),
+    // driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
+    //   vision.getPoseLeft(), 
     //   new PathConstraints(2, 2, 3, 2), 
     //   0.0)
     //   .alongWith(Commands.print("LEFT"))
     //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
     //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
     // );
-
-    driver.leftTrigger().whileTrue(runPathLeft());
 
     // driver.rightTrigger()
     //   .whileTrue(align("right"))
