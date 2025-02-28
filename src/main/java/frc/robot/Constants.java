@@ -51,8 +51,6 @@ public final class Constants {
     public static final Pose2d poseAlignBlueLeft22 = new Pose2d(4.86, 2.96, Rotation2d.fromDegrees(120));
     public static final Pose2d poseAlignBlueRight22 = new Pose2d(5.17, 3.1, Rotation2d.fromDegrees(120));
 
-
-
     public static final Pose2d poseAlignRedLeft10 = new Pose2d(12.059, 4.22, Rotation2d.fromDegrees(0));
     public static final Pose2d poseAlignRedRight10 = new Pose2d(12.157, 3.789, Rotation2d.fromDegrees(0));
     public static final Pose2d poseAlignRedLeft9 = new Pose2d(12.774, 4.761, Rotation2d.fromDegrees(300));
@@ -87,8 +85,8 @@ public final class Constants {
     
     public static final double kSpeedStowed = 0.0;
     public static final double kSpeedOuttake = 6;
-    public static final double kSpeedAlgaeRemoval = -7.5;
-    public static final double kSpeedAlgaeCarry = -1.0;
+    public static final double kSpeedAlgaeRemoval = -6.5;
+    public static final double kSpeedAlgaeCarry = -6.0;
     public static final double kSpeedAlgaeScore = 1.0;
 
     public static final double kTuneSpeed = 0.3;
@@ -113,7 +111,7 @@ public final class Constants {
     public static final double kMotionMagicCruiseVelocity = 6;//2
     public static final double kMotionMagicAcceleration = 7; //4
 
-    public static final double kP = 40;
+    public static final double kP = 50;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     public static final double kS = 0.24;
@@ -140,8 +138,8 @@ public final class Constants {
     public static final double kHeightShallowClimb = 0.0;
     public static final double kHeightDeepClimb = 0.0;
 
-    public static final double kMotionMagicCruiseVelocity = 6.5;
-    public static final double kMotionMagicAcceleration = 10.0;
+    public static final double kMotionMagicCruiseVelocity = 8.5;
+    public static final double kMotionMagicAcceleration = 12.0;
 
     public static final double kP = 40.0;
     public static final double kI = 0.0;

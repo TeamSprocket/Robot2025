@@ -45,8 +45,6 @@ public class Vision extends SubsystemBase {
 
     Alliance allianceColor = Alliance.Blue;
 
-    public boolean updatePose = false;
-
     private int[] blueReefAprilTag = {17, 18, 19, 20, 21, 22};
     private int[] redReefAprilTag = {6, 7, 8, 9, 10, 11};
 
@@ -54,14 +52,13 @@ public class Vision extends SubsystemBase {
 
     String name = "limelight-front";
     int counter = 0;
+    int tag = 0;
+    Pose2d targetPose = new Pose2d();
 
     Pose2d lastPose = new Pose2d();
     double lastTimeStamp = 0.0;
 
     LimelightHelper.PoseEstimate estimate;
-
-    Pose2d endpointL = new Pose2d();
-    Pose2d endpointR = new Pose2d();
 
     Command pathL;
     Command pathR;
@@ -102,67 +99,71 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getPoseLeft() {
         fiducialID = getTargetTagLeft();
-        endpointL = new Pose2d();
-        switch ((int)fiducialID) {
-            case 17:
-                endpointL = Constants.Vision.poseAlignBlueLeft17;
-                break;
-            case 18:
-                endpointL = Constants.Vision.poseAlignBlueLeft18;
-                break;
-            case 19:
-                endpointL = Constants.Vision.poseAlignBlueLeft19;
-                break;
-            case 20:
-                endpointL = Constants.Vision.poseAlignBlueLeft20;
-                break;
-            case 21:
-                endpointL = Constants.Vision.poseAlignBlueLeft21;
-                break;
-            case 22:
-                endpointL = Constants.Vision.poseAlignBlueLeft22;
-                break;
-            case -1:
-                endpointL = drivetrain.getAutoBuilderPose();
-                break;
-        }
 
-        return endpointL;
+        if (getTargetTagLeft() == 17) {
+            return Constants.Vision.poseAlignBlueLeft17;
+        } else if (getTargetTagLeft() == 18) {
+            return Constants.Vision.poseAlignBlueLeft18;
+        } else if (getTargetTagLeft() == 19) {
+            return Constants.Vision.poseAlignBlueLeft19;
+        } else if (getTargetTagLeft() == 20) {
+            return Constants.Vision.poseAlignBlueLeft19;
+        } else if (getTargetTagLeft() == 21) {
+            return Constants.Vision.poseAlignBlueLeft19;
+        } else if (getTargetTagLeft() == 22) {
+            return Constants.Vision.poseAlignBlueLeft19;
+        } else if (getTargetTagLeft() == 6) {
+            return Constants.Vision.poseAlignRedLeft6;
+        } else if (getTargetTagLeft() == 7) {
+            return Constants.Vision.poseAlignRedLeft7;
+        } else if (getTargetTagLeft() == 8) {
+            return Constants.Vision.poseAlignRedLeft8;
+        } else if (getTargetTagLeft() == 9) {
+            return Constants.Vision.poseAlignRedLeft9;
+        } else if (getTargetTagLeft() == 10) {
+            return Constants.Vision.poseAlignRedLeft10;
+        } else if (getTargetTagLeft() == 11) {
+            return Constants.Vision.poseAlignRedLeft11;
+        } else {
+            return drivetrain.getAutoBuilderPose();
+        }
     }
     
     public Pose2d getPoseRight() {
         fiducialID = getTargetTagRight();
-        endpointR = new Pose2d();
-        switch ((int)fiducialID) {
-            case 17:
-                endpointR = Constants.Vision.poseAlignBlueRight17;
-                break;
-            case 18:
-                endpointR = Constants.Vision.poseAlignBlueRight18;
-                break;
-            case 19:
-                endpointR = Constants.Vision.poseAlignBlueRight19;
-                break;
-            case 20:
-                endpointR = Constants.Vision.poseAlignBlueRight20;
-                break;
-            case 21:
-                endpointR = Constants.Vision.poseAlignBlueRight21;
-                break;
-            case 22:
-                endpointR = Constants.Vision.poseAlignBlueRight22;
-                break;
-            case -1:
-                endpointR = drivetrain.getAutoBuilderPose();
-                break;
+
+        if (getTargetTagRight() == 17) {
+            return Constants.Vision.poseAlignBlueRight17;
+        } else if (getTargetTagRight() == 18) {
+            return Constants.Vision.poseAlignBlueRight18;
+        } else if (getTargetTagRight() == 19) {
+            return Constants.Vision.poseAlignBlueRight19;
+        } else if (getTargetTagRight() == 20) {
+            return Constants.Vision.poseAlignBlueRight19;
+        } else if (getTargetTagRight() == 21) {
+            return Constants.Vision.poseAlignBlueRight19;
+        } else if (getTargetTagRight() == 22) {
+            return Constants.Vision.poseAlignBlueRight19;
+        } else if (getTargetTagRight() == 6) {
+            return Constants.Vision.poseAlignRedRight6;
+        } else if (getTargetTagRight() == 7) {
+            return Constants.Vision.poseAlignRedRight7;
+        } else if (getTargetTagRight() == 8) {
+            return Constants.Vision.poseAlignRedRight8;
+        } else if (getTargetTagRight() == 9) {
+            return Constants.Vision.poseAlignRedRight9;
+        } else if (getTargetTagRight() == 10) {
+            return Constants.Vision.poseAlignRedRight10;
+        } else if (getTargetTagRight() == 11) {
+            return Constants.Vision.poseAlignRedRight11;
+        } else {
+            return drivetrain.getAutoBuilderPose();
         }
 
         // AutoBuilder.pathfindToPose(
         //     endpointL,
         //     new PathConstraints(2, 2, 3, 2), 0.0
         // );
-
-        return endpointR;
     }
 
     public Pose2d getPoseTesting() {
@@ -178,6 +179,7 @@ public class Vision extends SubsystemBase {
 
     private int getTargetTagLeft() {
       int tag = -1;
+      Pose2d targetPose = new Pose2d();
       double minDistance = Integer.MAX_VALUE;
       for (int i = 6; i <= 11; i++) {
         Pose2d target = new Pose2d(1000, 1000, new Rotation2d(0));
@@ -192,6 +194,7 @@ public class Vision extends SubsystemBase {
         if (distance < minDistance) {
             minDistance = distance;
             tag = i;
+            targetPose = target;
         }
       }
 
@@ -208,8 +211,12 @@ public class Vision extends SubsystemBase {
         if (distance < minDistance) {
             minDistance = distance;
             tag = i;
+            targetPose = target;
         }
       }
+
+      this.tag = tag;
+      this.targetPose = targetPose;
 
       return tag;
     }
@@ -242,12 +249,14 @@ public class Vision extends SubsystemBase {
           else if (i == 21) target = Constants.Vision.poseAlignBlueRight21;
           else if (i == 22) target = Constants.Vision.poseAlignBlueRight22;
   
-          double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+          double distance = Util.distance(drivetrain.getAutoBuilderPose().getX(), drivetrain.getAutoBuilderPose().getY(), target.getX(), target.getY());
           if (distance < minDistance) {
               minDistance = distance;
               tag = i;
           }
         }
+
+        this.tag = tag;
 
         return tag;
     }
@@ -360,18 +369,16 @@ public class Vision extends SubsystemBase {
     private void debug() {
         SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
         SmartDashboard.putNumber("APRILTAG POSE", getPose2d().getX());
-        SmartDashboard.putNumber("END XL",endpointL.getX());
-        SmartDashboard.putNumber("END YL",endpointL.getY());
-        SmartDashboard.putNumber("END XR",endpointR.getX());
-        SmartDashboard.putNumber("END YR",endpointR.getY());
         SmartDashboard.putNumber("dist to left", distToAprilLeft);
         SmartDashboard.putNumber("dist to right", distToAprilRight);
         SmartDashboard.putNumber("times reset", counter);
+        SmartDashboard.putNumber("fiducial id",  getTargetTagRight());
         SmartDashboard.putBoolean("has targets", hasTargets());
         SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
+        SmartDashboard.putNumber("tag closest", tag);
 
         publisher.set(drivetrain.getState().Pose);
-        publisher2.set(getPoseTesting());
+        publisher2.set(getPoseRight());
      }
 
 }

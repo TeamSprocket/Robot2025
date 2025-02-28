@@ -118,9 +118,9 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_4);
         pivot.setState(PivotStates.STOWED);
-      })
-      // new WaitUntilCommand(() -> elevator.atSetpoint()), 
-      // new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
+      }),
+      new WaitUntilCommand(() -> elevator.atSetpoint()),
+      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
 
@@ -167,7 +167,7 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
-  private Command algaeCarry() { // remove
+  private Command algaeCarry() {
     return new InstantCommand(() -> {
       intake.setState(IntakeStates.STOWED);
       outtake.setState(OuttakeStates.ALGAE_CARRY);
