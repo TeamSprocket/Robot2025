@@ -68,6 +68,7 @@ public class RobotContainer {
   private PIDController pidRotationAlign = new PIDController(0.1, 0, 0);
 
   private Timer timer = new Timer();
+  private Pose2d targetPose = new Pose2d();
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
@@ -154,8 +155,28 @@ public class RobotContainer {
       .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
     );
 
+    // driver.rightTrigger() // TODO: test
+    //   .onTrue(new InstantCommand(()-> targetPose = vision.getTargetTagRight())
+    //   .andThen(AutoBuilder.pathfindToPose(
+    //     targetPose,
+    //     new PathConstraints(2, 2, 3, 2), 
+    //     0.0)
+    //     .alongWith(Commands.print("RIGHT"))
+    //     .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+    //     .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))));
+
+    // driver.rightTrigger().onTrue(AutoBuilder.pathfindToPose( // TODO: test this
+    //   vision.getTargetTagRight(),
+    //   new PathConstraints(2, 2, 3, 2), 
+    //   0.0)
+    //   .alongWith(Commands.print("RIGHT"))
+    //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
+    //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
+    // );
+
     driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
-      vision.getTargetTagLeft(), 
+      // vision.getTargetTagLeft(), 
+      vision.getPoseTesting(), // TODO: test to check if it goes to the right pose
       new PathConstraints(2, 2, 3, 2), 
       0.0)
       .alongWith(Commands.print("LEFT"))
@@ -180,9 +201,13 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.INTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
+    // new Trigger(operator.rightTrigger())
+    //   .whileTrue(superstructure.setState(SSStates.ALGAE_SCORE))
+    //   .whileFalse(superstructure.setState(SSStates.STOWED)); // TODO: test this
+
     new Trigger(operator.rightTrigger())
-      .whileTrue(superstructure.setState(SSStates.ALGAE_SCORE))
-      .whileFalse(superstructure.setState(SSStates.STOWED)); // TODO: test this
+      .whileTrue(new InstantCommand(()->outtake.runOuttake()))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
     
     new Trigger(operator.button(8))
       .whileTrue(superstructure.setState(SSStates.EJECT))
@@ -193,16 +218,18 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.b())
-      .whileTrue(superstructure.setState(SSStates.CORAL_2));
-    new Trigger(operator.b())
-      .onFalse(new InstantCommand(()->outtake.runOuttake()).alongWith(new WaitCommand(1))
-      .andThen(superstructure.setState(SSStates.STOWED)));
+      .whileTrue(superstructure.setState(SSStates.CORAL_2))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+    // new Trigger(operator.b())
+    //   .onFalse(new InstantCommand(()->outtake.runOuttake()).alongWith(new WaitCommand(1))
+    //   .andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger (operator.x())
-      .whileTrue(superstructure.setState(SSStates.CORAL_3));
-    new Trigger(operator.x())
-      .onFalse(new InstantCommand(()->outtake.runOuttake()).alongWith(new WaitCommand(1))
-      .andThen(superstructure.setState(SSStates.STOWED)));
+      .whileTrue(superstructure.setState(SSStates.CORAL_3))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+    // new Trigger(operator.x())
+    //   .onFalse(new InstantCommand(()->outtake.runOuttake()).alongWith(new WaitCommand(1))
+    //   .andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger (operator.y())
       .whileTrue(superstructure.setState(SSStates.CORAL_4))

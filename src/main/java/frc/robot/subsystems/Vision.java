@@ -30,7 +30,7 @@ import frc.util.Util;
 
 public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
-    StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Testing Pose", Pose2d.struct).publish();
+    StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
     Timer timer = new Timer();
 
@@ -70,6 +70,7 @@ public class Vision extends SubsystemBase {
     boolean updateFirst = true;
 
     double fiducialID;
+    
 
     public Vision(CommandSwerveDrivetrain drive) {
         drivetrain = drive;
@@ -175,8 +176,6 @@ public class Vision extends SubsystemBase {
             // Rotation2d.fromDegrees(180));
             12.684, 3.078,Rotation2d.fromDegrees(60));
         return testPose;
-
-
     }
 
     public Pose2d getTargetTagLeft() {
