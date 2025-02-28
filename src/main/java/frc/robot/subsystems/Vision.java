@@ -178,7 +178,7 @@ public class Vision extends SubsystemBase {
         return testPose;
     }
 
-    public Pose2d getTargetTagLeft() {
+    public int getTargetTagLeft() {
       int tag = -1;
       double minDistance = Integer.MAX_VALUE;
       for (int i = 6; i <= 11; i++) {
@@ -217,10 +217,10 @@ public class Vision extends SubsystemBase {
 
       tagOutside = tag;
 
-      return targetPose;
+      return tag;
     }
 
-    public Pose2d getTargetTagRight() {
+    public int getTargetTagRight() {
         int tag = -1;
         double minDistance = Integer.MAX_VALUE;
         for (int i = 6; i <= 11; i++) {
@@ -259,7 +259,7 @@ public class Vision extends SubsystemBase {
 
         tagOutside = tag;
 
-        return targetPose;
+        return tag;
     }
 
     /**
@@ -375,10 +375,10 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("times reset", counter);
         SmartDashboard.putBoolean("has targets", hasTargets());
         SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
-        SmartDashboard.putNumber("tag closest", tagOutside);
+        SmartDashboard.putNumber("tag closest", getTargetTagRight());
 
         publisher.set(drivetrain.getState().Pose);
-        publisher2.set(getTargetTagRight());
+        publisher2.set(new Pose2d());
      }
 
 }
