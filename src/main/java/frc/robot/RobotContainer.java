@@ -61,6 +61,9 @@ public class RobotContainer {
   double speedMultiplier = 1.0;
 
   int tag = 1;
+  Command pathAlign = new InstantCommand(() -> System.out.println("hi"));
+
+  PathConstraints constraints = new PathConstraints(2, 2, 3, 2);
 
   Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot);
 
@@ -154,7 +157,9 @@ public class RobotContainer {
 
     // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
 
-    driver.rightTrigger().whileTrue(runPathRight());
+    driver.rightTrigger().whileTrue(new RunCommand(() -> {
+
+    }));
 
     // driver.rightTrigger() // TODO: test
     //   .onTrue(new InstantCommand(()-> targetPose = vision.getTargetTagRight())
@@ -174,8 +179,43 @@ public class RobotContainer {
     //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
     //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
     // );
-
-    driver.leftTrigger().whileTrue(runPathLeft());
+    if (tag == 1) {
+      driver.leftTrigger().whileTrue(runPathLeft6());
+      driver.rightTrigger().whileTrue(runPathRight6());
+    } else if (tag == 2) {
+      driver.leftTrigger().whileTrue(runPathLeft7());
+      driver.rightTrigger().whileTrue(runPathRight7());
+    } else if (tag == 3) {
+      driver.leftTrigger().whileTrue(runPathLeft8());
+      driver.rightTrigger().whileTrue(runPathRight8());
+    } else if (tag == 4) {
+      driver.leftTrigger().whileTrue(runPathLeft9());
+      driver.rightTrigger().whileTrue(runPathRight9());
+    } else if (tag == 5) {
+      driver.leftTrigger().whileTrue(runPathLeft10());
+      driver.rightTrigger().whileTrue(runPathRight10());
+    } else if (tag == 6) {
+      driver.leftTrigger().whileTrue(runPathLeft11());
+      driver.rightTrigger().whileTrue(runPathRight11());
+    } else if (tag == 7) {
+      driver.leftTrigger().whileTrue(runPathLeft17());
+      driver.rightTrigger().whileTrue(runPathRight17());
+    } else if (tag == 8) {
+      driver.leftTrigger().whileTrue(runPathLeft18());
+      driver.rightTrigger().whileTrue(runPathRight18());
+    } else if (tag == 9) {
+      driver.leftTrigger().whileTrue(runPathLeft19());
+      driver.rightTrigger().whileTrue(runPathRight19());
+    } else if (tag == 10) {
+      driver.leftTrigger().whileTrue(runPathLeft20());
+      driver.rightTrigger().whileTrue(runPathRight20());
+    } else if (tag == 11) {
+      driver.leftTrigger().whileTrue(runPathLeft21());
+      driver.rightTrigger().whileTrue(runPathRight21());
+    } else if (tag == 12) {
+      driver.leftTrigger().whileTrue(runPathLeft22());
+      driver.rightTrigger().whileTrue(runPathRight22());
+    }
 
     // driver.rightTrigger()
     //   .whileTrue(align("right"))
@@ -247,333 +287,208 @@ public class RobotContainer {
     return superstructure;
   }
 
-  public Command runPathRight() {
-    // return AutoBuilder.pathfindToPose(
-    //   new Pose2d(vision.getTargetTagRight().getX(), vision.getTargetTagRight().getY(), vision.getTargetTagRight().getRotation()),
-    //   new PathConstraints(2, 2, 3, 2), 
-    //   0.0)
-    //   .alongWith(Commands.print("RIGHT"))
-    //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-    //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)));
-    PathConstraints constraints = new PathConstraints(2, 2, 3, 2);
-
-    int tag = vision.getTargetTagRight();
-    if (tag == 6) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedRight6
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedRight6.getRotation())
-        )
-      );
-    } else if (tag == 7) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedRight7
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedRight7.getRotation())
-        )
-      );
-    } else if (tag == 8) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedRight8
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedRight8.getRotation())
-        )
-      );
-    } else if (tag == 9) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedRight9
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedRight9.getRotation())
-        )
-      );
-    } else if (tag == 10) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedRight10
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedRight10.getRotation())
-        )
-      );
-    } else if (tag == 11) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedRight11
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedRight11.getRotation())
-        )
-      );
-    } else if (tag == 17) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueRight17
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueRight17.getRotation())
-        )
-      );
-    } else if (tag == 18) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueRight18
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueRight18.getRotation())
-        )
-      );
-    } else if (tag == 19) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueRight19
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueRight19.getRotation())
-        )
-      );
-    } else if (tag == 20) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueRight20
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueRight20.getRotation())
-        )
-      );
-    } else if (tag == 21) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueRight21
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueRight21.getRotation())
-        )
-      );
-    } else if (tag == 22) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueRight22
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueRight22.getRotation())
-        )
-      );
-    }
-    return (new InstantCommand(() -> System.out.println("TEST FAILED")));
+  private Command runPathLeft6() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedLeft6, 
+      constraints
+    );
+  }
+  
+  private Command runPathLeft7() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedLeft7, 
+      constraints
+    );
   }
 
-  public Command runPathLeft() {
-    // return AutoBuilder.pathfindToPose(
-    //   new Pose2d(vision.getTargetTagRight().getX(), vision.getTargetTagRight().getY(), vision.getTargetTagRight().getRotation()),
-    //   new PathConstraints(2, 2, 3, 2), 
-    //   0.0)
-    //   .alongWith(Commands.print("RIGHT"))
-    //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-    //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)));
-    PathConstraints constraints = new PathConstraints(2, 2, 3, 2);
-
-    int tag = vision.getTargetTagLeft();
-    if (tag == 6) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedLeft6
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedLeft6.getRotation())
-        )
-      );
-    } else if (tag == 7) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedLeft7
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedLeft7.getRotation())
-        )
-      );
-    } else if (tag == 8) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedLeft8
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedLeft8.getRotation())
-        )
-      );
-    } else if (tag == 9) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedLeft9
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedLeft9.getRotation())
-        )
-      );
-    } else if (tag == 10) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedLeft10
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedLeft10.getRotation())
-        )
-      );
-    } else if (tag == 11) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignRedLeft11
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignRedLeft11.getRotation())
-        )
-      );
-    } else if (tag == 17) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueLeft17
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueLeft17.getRotation())
-        )
-      );
-    } else if (tag == 18) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueLeft18
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueLeft18.getRotation())
-        )
-      );
-    } else if (tag == 19) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueLeft19
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueLeft19.getRotation())
-        )
-      );
-    } else if (tag == 20) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueLeft20
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueLeft20.getRotation())
-        )
-      );
-    } else if (tag == 21) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueLeft21
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueLeft21.getRotation())
-        )
-      );
-    } else if (tag == 22) {
-      return AutoBuilder.followPath(
-        new PathPlannerPath(
-          PathPlannerPath.waypointsFromPoses(
-            drivetrain.getState().Pose,
-            Constants.Vision.poseAlignBlueLeft22
-          ),
-          constraints,
-          null,
-          new GoalEndState(0.0, Constants.Vision.poseAlignBlueLeft22.getRotation())
-        )
-      );
-    }
-    return (new InstantCommand(() -> System.out.println("TEST FAILED")));
+  private Command runPathLeft8() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedLeft8, 
+      constraints
+    );
   }
 
+  private Command runPathLeft9() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedLeft9, 
+      constraints
+    );
+  }
+
+  private Command runPathLeft10() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedLeft10,
+      constraints
+    );
+  }
+
+  private Command runPathLeft11() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedLeft11,
+      constraints
+    );
+  }
+
+  private Command runPathLeft17() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueLeft17, 
+      constraints
+    );
+  }
+
+  private Command runPathLeft18() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueLeft18, 
+      constraints
+    );
+  }
+
+  private Command runPathLeft19() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueLeft19, 
+      constraints
+    );
+  }
+
+  private Command runPathLeft20() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueLeft20, 
+      constraints
+    );
+  }
+
+  private Command runPathLeft21() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueLeft21, 
+      constraints
+    );
+  }
+
+  private Command runPathLeft22() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueLeft22, 
+      constraints
+    );
+  }
+
+  private Command runPathRight6() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedLeft6, 
+      constraints
+    );
+  }
+  
+  private Command runPathRight7() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedRight7, 
+      constraints
+    );
+  }
+
+  private Command runPathRight8() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedRight8, 
+      constraints
+    );
+  }
+
+  private Command runPathRight9() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedRight9, 
+      constraints
+    );
+  }
+
+  private Command runPathRight10() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedRight10,
+      constraints
+    );
+  }
+
+  private Command runPathRight11() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignRedRight11,
+      constraints
+    );
+  }
+
+  private Command runPathRight17() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueRight17, 
+      constraints
+    );
+  }
+
+  private Command runPathRight18() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueRight18, 
+      constraints
+    );
+  }
+
+  private Command runPathRight19() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueRight19, 
+      constraints
+    );
+  }
+
+  private Command runPathRight20() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueRight20, 
+      constraints
+    );
+  }
+
+  private Command runPathRight21() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueRight21, 
+      constraints
+    );
+  }
+
+  private Command runPathRight22() {
+    return AutoBuilder.pathfindToPose(
+      Constants.Vision.poseAlignBlueRight22, 
+      constraints
+    );
+  }
 
   private void increaseTag() {
     if (tag < 12) tag++;
     else tag = 1;
+
+    if (tag == 1) pathAlign = runPathRight6();
+    else if (tag == 2) pathAlign = runPathRight7();
+    else if (tag == 3) pathAlign = runPathRight8();
+    else if (tag == 4) pathAlign = runPathRight9();
+    else if (tag == 5) pathAlign = runPathRight10();
+    else if (tag == 6) pathAlign = runPathRight11();
+    else if (tag == 7) pathAlign = runPathRight17();
+    else if (tag == 8) pathAlign = runPathRight18();
+    else if (tag == 9) pathAlign = runPathRight19();
+    else if (tag == 10) pathAlign = runPathRight20();
+    else if (tag == 11) pathAlign = runPathRight21();
+    else if (tag == 12) pathAlign = runPathRight22();
   }
 
   private void decreaseTag() {
     if (tag > 1) tag--;
     else tag = 12;
+
+    if (tag == 1) pathAlign = runPathRight6();
+    else if (tag == 2) pathAlign = runPathRight7();
+    else if (tag == 3) pathAlign = runPathRight8();
+    else if (tag == 4) pathAlign = runPathRight9();
+    else if (tag == 5) pathAlign = runPathRight10();
+    else if (tag == 6) pathAlign = runPathRight11();
+    else if (tag == 7) pathAlign = runPathRight17();
+    else if (tag == 8) pathAlign = runPathRight18();
+    else if (tag == 9) pathAlign = runPathRight19();
+    else if (tag == 10) pathAlign = runPathRight20();
+    else if (tag == 11) pathAlign = runPathRight21();
+    else if (tag == 12) pathAlign = runPathRight22();
   }
 
   public Command rumbleControllers() {
