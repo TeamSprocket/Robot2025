@@ -36,8 +36,6 @@ public class Vision extends SubsystemBase {
 
     Pose2d testPose = new Pose2d();
 
-    Pose2d targetPose = new Pose2d();
-
     public enum AlignStates{
         ALIGNING,
         NONE
@@ -178,89 +176,91 @@ public class Vision extends SubsystemBase {
         return testPose;
     }
 
-    // public int getTargetTagLeft() {
-    //   int tag = -1;
-    //   double minDistance = Integer.MAX_VALUE;
-    //   for (int i = 6; i <= 11; i++) {
-    //     Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
-    //     if (i == 6) target = Constants.Vision.poseAlignRedLeft6;
-    //     else if (i == 7) target = Constants.Vision.poseAlignRedLeft7;
-    //     else if (i == 8) target = Constants.Vision.poseAlignRedLeft8;
-    //     else if (i== 9) target = Constants.Vision.poseAlignRedLeft9;
-    //     else if (i == 10) target = Constants.Vision.poseAlignRedLeft10;
-    //     else if (i == 11) target = Constants.Vision.poseAlignRedLeft11;
+    public Pose2d getTargetTagLeft() {
+      int tag = -1;
+      double minDistance = Integer.MAX_VALUE;
+      Pose2d targetPose = new Pose2d();
+      for (int i = 6; i <= 11; i++) {
+        Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
+        if (i == 6) target = Constants.Vision.poseAlignRedLeft6;
+        else if (i == 7) target = Constants.Vision.poseAlignRedLeft7;
+        else if (i == 8) target = Constants.Vision.poseAlignRedLeft8;
+        else if (i== 9) target = Constants.Vision.poseAlignRedLeft9;
+        else if (i == 10) target = Constants.Vision.poseAlignRedLeft10;
+        else if (i == 11) target = Constants.Vision.poseAlignRedLeft11;
 
-    //     double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
-    //     if (distance < minDistance) {
-    //         minDistance = distance;
-    //         tag = i;
-    //         targetPose = target;
-    //     }
-    //   }
+        double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+        if (distance < minDistance) {
+            minDistance = distance;
+            tag = i;
+            targetPose = target;
+        }
+      }
 
-    //   for (int i = 17; i <= 22; i++) {
-    //     Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
-    //     if (i == 17) target = Constants.Vision.poseAlignBlueLeft17;
-    //     else if (i == 18) target = Constants.Vision.poseAlignBlueLeft18;
-    //     else if (i == 19) target = Constants.Vision.poseAlignBlueLeft19;
-    //     else if (i == 20) target = Constants.Vision.poseAlignBlueLeft20;
-    //     else if (i == 21) target = Constants.Vision.poseAlignBlueLeft21;
-    //     else if (i == 22) target = Constants.Vision.poseAlignBlueLeft22;
+      for (int i = 17; i <= 22; i++) {
+        Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
+        if (i == 17) target = Constants.Vision.poseAlignBlueLeft17;
+        else if (i == 18) target = Constants.Vision.poseAlignBlueLeft18;
+        else if (i == 19) target = Constants.Vision.poseAlignBlueLeft19;
+        else if (i == 20) target = Constants.Vision.poseAlignBlueLeft20;
+        else if (i == 21) target = Constants.Vision.poseAlignBlueLeft21;
+        else if (i == 22) target = Constants.Vision.poseAlignBlueLeft22;
 
-    //     double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
-    //     if (distance < minDistance) {
-    //         minDistance = distance;
-    //         tag = i;
-    //         targetPose = target;
-    //     }
-    //   }
+        double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+        if (distance < minDistance) {
+            minDistance = distance;
+            tag = i;
+            targetPose = target;
+        }
+      }
 
-    //   tagOutside = tag;
+      tagOutside = tag;
 
-    //   return tag;
-    // }
+      return targetPose;
+    }
 
-    // public int getTargetTagRight() {
-    //     int tag = -1;
-    //     double minDistance = Integer.MAX_VALUE;
-    //     for (int i = 6; i <= 11; i++) {
-    //         Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
-    //       if (i == 6) target = Constants.Vision.poseAlignRedRight6;
-    //       else if (i == 7) target = Constants.Vision.poseAlignRedRight7;
-    //       else if (i == 8) target = Constants.Vision.poseAlignRedRight8;
-    //       else if (i== 9) target = Constants.Vision.poseAlignRedRight9;
-    //       else if (i == 10) target = Constants.Vision.poseAlignRedRight10;
-    //       else if (i == 11) target = Constants.Vision.poseAlignRedRight11;
+    public Pose2d getTargetTagRight() {
+        int tag = -1;
+        double minDistance = Integer.MAX_VALUE;
+        Pose2d targetPose = new Pose2d();
+        for (int i = 6; i <= 11; i++) {
+            Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
+          if (i == 6) target = Constants.Vision.poseAlignRedRight6;
+          else if (i == 7) target = Constants.Vision.poseAlignRedRight7;
+          else if (i == 8) target = Constants.Vision.poseAlignRedRight8;
+          else if (i== 9) target = Constants.Vision.poseAlignRedRight9;
+          else if (i == 10) target = Constants.Vision.poseAlignRedRight10;
+          else if (i == 11) target = Constants.Vision.poseAlignRedRight11;
   
-    //       double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
-    //       if (distance < minDistance) {
-    //           minDistance = distance;
-    //           tag = i;
-    //           targetPose = target;
-    //       }
-    //     }
+          double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+          if (distance < minDistance) {
+              minDistance = distance;
+              tag = i;
+              targetPose = target;
+          }
+        }
   
-    //     for (int i = 17; i <= 22; i++) {
-    //         Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
-    //       if (i == 17) target = Constants.Vision.poseAlignBlueRight17;
-    //       else if (i == 18) target = Constants.Vision.poseAlignBlueRight18;
-    //       else if (i == 19) target = Constants.Vision.poseAlignBlueRight19;
-    //       else if (i == 20) target = Constants.Vision.poseAlignBlueRight20;
-    //       else if (i == 21) target = Constants.Vision.poseAlignBlueRight21;
-    //       else if (i == 22) target = Constants.Vision.poseAlignBlueRight22;
+        for (int i = 17; i <= 22; i++) {
+            Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
+          if (i == 17) target = Constants.Vision.poseAlignBlueRight17;
+          else if (i == 18) target = Constants.Vision.poseAlignBlueRight18;
+          else if (i == 19) target = Constants.Vision.poseAlignBlueRight19;
+          else if (i == 20) target = Constants.Vision.poseAlignBlueRight20;
+          else if (i == 21) target = Constants.Vision.poseAlignBlueRight21;
+          else if (i == 22) target = Constants.Vision.poseAlignBlueRight22;
   
-    //       double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
-    //       if (distance < minDistance) {
-    //           minDistance = distance;
-    //           tag = i;
-    //           targetPose = target;
-    //       }
-    //     }
+          double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+          if (distance < minDistance) {
+              minDistance = distance;
+              tag = i;
+              targetPose = target;
+          }
+        }
 
-    //     tagOutside = tag;
+        tagOutside = tag;
 
-    //     return tag;
-    // }
+        return targetPose;
+    }
 
     /**
      * @return {xCoord, yCoord, timestamp}
@@ -278,20 +278,6 @@ public class Vision extends SubsystemBase {
         } else {
             return new Translation2d(0.0, 0.0);
         }
-    }
-
-    public int getTag() {
-        return tagOutside;
-    }
-
-    public void increaseTag() {
-        if (tagOutside < 12) tagOutside++;
-        else tagOutside = 1;
-    }
-
-    public void decreaseTag() {
-        if (tagOutside > 1) tagOutside--;
-        else tagOutside = 12;
     }
 
     public Pose2d getPose2d() {
@@ -389,7 +375,6 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("times reset", counter);
         SmartDashboard.putBoolean("has targets", hasTargets());
         SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
-        SmartDashboard.putNumber("tag", getTag());
 
         publisher.set(drivetrain.getState().Pose);
         publisher2.set(new Pose2d());

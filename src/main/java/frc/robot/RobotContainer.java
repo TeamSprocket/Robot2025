@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.ApplyFieldSpeeds;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -78,6 +79,8 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
   private PIDController pidRotationAlign = new PIDController(0.1, 0, 0);
+  private PIDController pidXAlign = new PIDController(2, 0, 0);
+  private PIDController pidYAlign = new PIDController(2, 0, 0);
 
   private Timer timer = new Timer();
   private Pose2d targetPose = new Pose2d();
@@ -128,9 +131,6 @@ public class RobotContainer {
     driver.b().whileTrue(drivetrain.applyRequest(() ->
         point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
     ));
-    driver.x().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0, getRotationalAlignSpeed()))))
-      .onFalse(new InstantCommand(() -> vision.updateAlignPose()));
-    // TODO: turn this into a sequence
 
     driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.5, 0.0, 0.0))));
     driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))));
@@ -151,11 +151,21 @@ public class RobotContainer {
     // driver.y().onTrue(new InstantCommand(() -> speedMultiplier = 0.3))
     //   .onFalse(new InstantCommand(() -> speedMultiplier = 0.1));
 
-    driver.button(8).whileTrue(new InstantCommand(() -> vision.increaseTag()));
-    driver.button(7).whileTrue(new InstantCommand(() -> vision.decreaseTag()));
+    driver.rightTrigger().whileTrue(
+      drivetrain.applyRequest(
+        () -> new ApplyFieldSpeeds()
+          .withSpeeds(new ChassisSpeeds(getAlignOffsetsRight()[0], getAlignOffsetsRight()[1], getRotationalAlignSpeedRight()))
+      )
+    );
 
-    // driver.rightTrigger().whileTrue(runPathRight());
-    // driver.leftTrigger().whileTrue(runPathLeft());
+    driver.leftTrigger().whileTrue(
+      drivetrain.applyRequest(
+        () -> new ApplyFieldSpeeds()
+          .withSpeeds(new ChassisSpeeds(getAlignOffsetsLeft()[0], getAlignOffsetsRight()[1], getRotationalAlignSpeedLeft()))
+      )
+    );
+
+
 
     // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
 
@@ -249,237 +259,6 @@ public class RobotContainer {
     return superstructure;
   }
 
-  private Command runPathLeft() {
-    int tag = vision.getTag();
-    if (tag == 1) {
-      System.out.println("66666666666666666666");
-      return runPathLeft6();
-    } else if (tag == 2) {
-      System.out.println("77777777777777777777");
-      return runPathLeft7();
-    } else if (tag == 3) {
-      System.out.println("8888888888888888888888");
-      return runPathLeft8();
-    } else if (tag == 4) {
-      return runPathLeft9();
-    } else if (tag == 5) {
-      return runPathLeft10();
-    } else if (tag == 6) {
-      return runPathLeft11();
-    } else if (tag == 7) {
-      return runPathLeft17();
-    } else if (tag == 8) {
-      return runPathLeft18();
-    } else if (tag == 9) {
-      return runPathLeft19();
-    } else if (tag == 10) {
-      return runPathLeft20();
-    } else if (tag == 11) {
-      return runPathLeft21();
-    } else if (tag == 12) {
-      return runPathLeft22();
-    } 
-    return new InstantCommand(() -> System.out.println("fwsdfsfsdfs"));
-  }
-
-  private Command runPathRight() {
-    int tag = vision.getTag();
-    if (tag == 1) {
-      return runPathRight6();
-    } else if (tag == 2) {
-      return runPathRight7();
-    } else if (tag == 3) {
-      return runPathRight8();
-    } else if (tag == 4) {
-      return runPathRight9();
-    } else if (tag == 5) {
-      return runPathRight10();
-    } else if (tag == 6) {
-      return runPathRight11();
-    } else if (tag == 7) {
-      return runPathRight17();
-    } else if (tag == 8) {
-      return runPathRight18();
-    } else if (tag == 9) {
-      return runPathRight19();
-    } else if (tag == 10) {
-      return runPathRight20();
-    } else if (tag == 11) {
-      return runPathRight21();
-    } else if (tag == 12) {
-      return runPathRight22();
-    } 
-    return new InstantCommand(() -> System.out.println("fwsdfsfsdfs"));
-  }
-
-  private Command runPathLeft6() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedLeft6, 
-      constraints
-    );
-  }
-  
-  private Command runPathLeft7() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedLeft7, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft8() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedLeft8, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft9() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedLeft9, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft10() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedLeft10,
-      constraints
-    );
-  }
-
-  private Command runPathLeft11() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedLeft11,
-      constraints
-    );
-  }
-
-  private Command runPathLeft17() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueLeft17, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft18() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueLeft18, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft19() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueLeft19, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft20() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueLeft20, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft21() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueLeft21, 
-      constraints
-    );
-  }
-
-  private Command runPathLeft22() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueLeft22, 
-      constraints
-    );
-  }
-
-  private Command runPathRight6() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedLeft6, 
-      constraints
-    );
-  }
-  
-  private Command runPathRight7() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedRight7, 
-      constraints
-    );
-  }
-
-  private Command runPathRight8() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedRight8, 
-      constraints
-    );
-  }
-
-  private Command runPathRight9() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedRight9, 
-      constraints
-    );
-  }
-
-  private Command runPathRight10() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedRight10,
-      constraints
-    );
-  }
-
-  private Command runPathRight11() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignRedRight11,
-      constraints
-    );
-  }
-
-  private Command runPathRight17() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueRight17, 
-      constraints
-    );
-  }
-
-  private Command runPathRight18() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueRight18, 
-      constraints
-    );
-  }
-
-  private Command runPathRight19() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueRight19, 
-      constraints
-    );
-  }
-
-  private Command runPathRight20() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueRight20, 
-      constraints
-    );
-  }
-
-  private Command runPathRight21() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueRight21, 
-      constraints
-    );
-  }
-
-  private Command runPathRight22() {
-    return AutoBuilder.pathfindToPose(
-      Constants.Vision.poseAlignBlueRight22, 
-      constraints
-    );
-  }
-
   
 
   public Command rumbleControllers() {
@@ -501,25 +280,49 @@ public class RobotContainer {
     );
   }
 
+  public double[] getAlignOffsetsRight() {
+    double[] values = {
+      pidXAlign.calculate(vision.getTargetTagRight().getX(), drivetrain.getState().Pose.getX()),
+      pidYAlign.calculate(vision.getTargetTagRight().getY(), drivetrain.getState().Pose.getY())
+    };
+    return values;
+  }
+
+  public double[] getAlignOffsetsLeft() {
+    double[] values = {
+      pidXAlign.calculate(vision.getTargetTagLeft().getX(), drivetrain.getState().Pose.getX()),
+      pidYAlign.calculate(vision.getTargetTagLeft().getY(), drivetrain.getState().Pose.getY())
+    };
+    return values;
+  }
   
-  public double getRotationalAlignSpeed() {
+  public double getRotationalAlignSpeedRight() {
     double currentRotation = drivetrain.getYaw().getRadians();
-    double targetRotation = currentRotation + vision.getTX();
+    double targetRotation = vision.getTargetTagRight().getRotation().getRadians();
     
     double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
     // System.out.println(targetSpeed);
     return targetSpeed;
   }
 
-  private void applyAlignSpeeds() {
-    drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
-      .withSpeeds(new ChassisSpeeds(
-          0, 
-        0, 
-        getRotationalAlignSpeed()
-      ))
-    );
+  public double getRotationalAlignSpeedLeft() {
+    double currentRotation = drivetrain.getYaw().getRadians();
+    double targetRotation = vision.getTargetTagLeft().getRotation().getRadians();
+    
+    double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
+    // System.out.println(targetSpeed);
+    return targetSpeed;
   }
+
+  // private void applyAlignSpeeds() {
+  //   drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
+  //     .withSpeeds(new ChassisSpeeds(
+  //         0, 
+  //       0, 
+  //       getRotationalAlignSpeed()
+  //     ))
+  //   );
+  // }
 
   public Command leave() {
     return AutoBuilder.pathfindToPose(
