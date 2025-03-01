@@ -60,7 +60,6 @@ public class RobotContainer {
 
   double speedMultiplier = 1.0;
 
-  int tag = 1;
   Command pathAlign = new InstantCommand(() -> System.out.println("hi"));
 
   PathConstraints constraints = new PathConstraints(2, 2, 3, 2);
@@ -152,8 +151,11 @@ public class RobotContainer {
     // driver.y().onTrue(new InstantCommand(() -> speedMultiplier = 0.3))
     //   .onFalse(new InstantCommand(() -> speedMultiplier = 0.1));
 
-    driver.button(8).whileTrue(new InstantCommand(() -> increaseTag()));
-    driver.button(7).whileTrue(new InstantCommand(() -> decreaseTag()));
+    driver.button(8).whileTrue(new InstantCommand(() -> vision.increaseTag()));
+    driver.button(7).whileTrue(new InstantCommand(() -> vision.decreaseTag()));
+
+    // driver.rightTrigger().whileTrue(runPathRight());
+    // driver.leftTrigger().whileTrue(runPathLeft());
 
     // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
 
@@ -175,43 +177,7 @@ public class RobotContainer {
     //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
     //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
     // );
-    if (tag == 1) {
-      driver.leftTrigger().whileTrue(runPathLeft6());
-      driver.rightTrigger().whileTrue(runPathRight6());
-    } else if (tag == 2) {
-      driver.leftTrigger().whileTrue(runPathLeft7());
-      driver.rightTrigger().whileTrue(runPathRight7());
-    } else if (tag == 3) {
-      driver.leftTrigger().whileTrue(runPathLeft8());
-      driver.rightTrigger().whileTrue(runPathRight8());
-    } else if (tag == 4) {
-      driver.leftTrigger().whileTrue(runPathLeft9());
-      driver.rightTrigger().whileTrue(runPathRight9());
-    } else if (tag == 5) {
-      driver.leftTrigger().whileTrue(runPathLeft10());
-      driver.rightTrigger().whileTrue(runPathRight10());
-    } else if (tag == 6) {
-      driver.leftTrigger().whileTrue(runPathLeft11());
-      driver.rightTrigger().whileTrue(runPathRight11());
-    } else if (tag == 7) {
-      driver.leftTrigger().whileTrue(runPathLeft17());
-      driver.rightTrigger().whileTrue(runPathRight17());
-    } else if (tag == 8) {
-      driver.leftTrigger().whileTrue(runPathLeft18());
-      driver.rightTrigger().whileTrue(runPathRight18());
-    } else if (tag == 9) {
-      driver.leftTrigger().whileTrue(runPathLeft19());
-      driver.rightTrigger().whileTrue(runPathRight19());
-    } else if (tag == 10) {
-      driver.leftTrigger().whileTrue(runPathLeft20());
-      driver.rightTrigger().whileTrue(runPathRight20());
-    } else if (tag == 11) {
-      driver.leftTrigger().whileTrue(runPathLeft21());
-      driver.rightTrigger().whileTrue(runPathRight21());
-    } else if (tag == 12) {
-      driver.leftTrigger().whileTrue(runPathLeft22());
-      driver.rightTrigger().whileTrue(runPathRight22());
-    }
+   
 
     // driver.rightTrigger()
     //   .whileTrue(align("right"))
@@ -281,6 +247,69 @@ public class RobotContainer {
 
   public Superstructure getSuperstructure() {
     return superstructure;
+  }
+
+  private Command runPathLeft() {
+    int tag = vision.getTag();
+    if (tag == 1) {
+      System.out.println("66666666666666666666");
+      return runPathLeft6();
+    } else if (tag == 2) {
+      System.out.println("77777777777777777777");
+      return runPathLeft7();
+    } else if (tag == 3) {
+      System.out.println("8888888888888888888888");
+      return runPathLeft8();
+    } else if (tag == 4) {
+      return runPathLeft9();
+    } else if (tag == 5) {
+      return runPathLeft10();
+    } else if (tag == 6) {
+      return runPathLeft11();
+    } else if (tag == 7) {
+      return runPathLeft17();
+    } else if (tag == 8) {
+      return runPathLeft18();
+    } else if (tag == 9) {
+      return runPathLeft19();
+    } else if (tag == 10) {
+      return runPathLeft20();
+    } else if (tag == 11) {
+      return runPathLeft21();
+    } else if (tag == 12) {
+      return runPathLeft22();
+    } 
+    return new InstantCommand(() -> System.out.println("fwsdfsfsdfs"));
+  }
+
+  private Command runPathRight() {
+    int tag = vision.getTag();
+    if (tag == 1) {
+      return runPathRight6();
+    } else if (tag == 2) {
+      return runPathRight7();
+    } else if (tag == 3) {
+      return runPathRight8();
+    } else if (tag == 4) {
+      return runPathRight9();
+    } else if (tag == 5) {
+      return runPathRight10();
+    } else if (tag == 6) {
+      return runPathRight11();
+    } else if (tag == 7) {
+      return runPathRight17();
+    } else if (tag == 8) {
+      return runPathRight18();
+    } else if (tag == 9) {
+      return runPathRight19();
+    } else if (tag == 10) {
+      return runPathRight20();
+    } else if (tag == 11) {
+      return runPathRight21();
+    } else if (tag == 12) {
+      return runPathRight22();
+    } 
+    return new InstantCommand(() -> System.out.println("fwsdfsfsdfs"));
   }
 
   private Command runPathLeft6() {
@@ -451,41 +480,7 @@ public class RobotContainer {
     );
   }
 
-  private void increaseTag() {
-    if (tag < 12) tag++;
-    else tag = 1;
-
-    if (tag == 1) pathAlign = runPathRight6();
-    else if (tag == 2) pathAlign = runPathRight7();
-    else if (tag == 3) pathAlign = runPathRight8();
-    else if (tag == 4) pathAlign = runPathRight9();
-    else if (tag == 5) pathAlign = runPathRight10();
-    else if (tag == 6) pathAlign = runPathRight11();
-    else if (tag == 7) pathAlign = runPathRight17();
-    else if (tag == 8) pathAlign = runPathRight18();
-    else if (tag == 9) pathAlign = runPathRight19();
-    else if (tag == 10) pathAlign = runPathRight20();
-    else if (tag == 11) pathAlign = runPathRight21();
-    else if (tag == 12) pathAlign = runPathRight22();
-  }
-
-  private void decreaseTag() {
-    if (tag > 1) tag--;
-    else tag = 12;
-
-    if (tag == 1) pathAlign = runPathRight6();
-    else if (tag == 2) pathAlign = runPathRight7();
-    else if (tag == 3) pathAlign = runPathRight8();
-    else if (tag == 4) pathAlign = runPathRight9();
-    else if (tag == 5) pathAlign = runPathRight10();
-    else if (tag == 6) pathAlign = runPathRight11();
-    else if (tag == 7) pathAlign = runPathRight17();
-    else if (tag == 8) pathAlign = runPathRight18();
-    else if (tag == 9) pathAlign = runPathRight19();
-    else if (tag == 10) pathAlign = runPathRight20();
-    else if (tag == 11) pathAlign = runPathRight21();
-    else if (tag == 12) pathAlign = runPathRight22();
-  }
+  
 
   public Command rumbleControllers() {
     return Commands.runOnce(() ->
