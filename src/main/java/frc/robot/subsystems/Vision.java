@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.hal.AllianceStationID;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -31,6 +32,10 @@ import frc.util.Util;
 public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
+
+    private PIDController pidRotationAlign = new PIDController(0.1, 0, 0);
+    private PIDController pidXAlign = new PIDController(12, 0, 0);
+    private PIDController pidYAlign = new PIDController(12, 0, 0);
 
     Timer timer = new Timer();
 
@@ -83,6 +88,9 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         testPose = getPoseTesting();
+
+        SmartDashboard.putNumber("Target Speed X", getAlignOffsetsRight()[0]);
+        SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 
         if (timer.get() > 0.2 && currentAlignState == AlignStates.ALIGNING) {
             updateAlignPose();
@@ -366,6 +374,60 @@ public class Vision extends SubsystemBase {
             return drivetrain.getAutoBuilderPose();
         }
     }
+
+    public double[] getAlignOffsetsRight() {
+        double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
+        double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
+
+        if (Util.inRange(speedX, -0.05, 0.05)) {
+            speedX = 0.0;
+        }
+
+        if (Util.inRange(speedY, -0.05, 0.05)) {
+            speedY = 0.0;
+        }
+        
+        double[] values = {
+          speedX, speedY
+        };
+        return values;
+      }
+    
+      public double[] getAlignOffsetsLeft() {
+        double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
+        double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
+
+        if (Util.inRange(speedX, -0.05, 0.05)) {
+            speedX = 0.0;
+        }
+
+        if (Util.inRange(speedY, -0.05, 0.05)) {
+            speedY = 0.0;
+        }
+
+        double[] values = {
+          speedX, speedY
+        };
+        return values;
+      }
+      
+      public double getRotationalAlignSpeedRight() {
+        double currentRotation = drivetrain.getYaw().getRadians();
+        double targetRotation = getTargetTagRight().getRotation().getRadians();
+        
+        double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
+        // System.out.println(targetSpeed);
+        return targetSpeed;
+      }
+    
+      public double getRotationalAlignSpeedLeft() {
+        double currentRotation = drivetrain.getYaw().getRadians();
+        double targetRotation = getTargetTagLeft().getRotation().getRadians();
+        
+        double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
+        // System.out.println(targetSpeed);
+        return targetSpeed;
+      }
     
     private void debug() {
         SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
@@ -377,7 +439,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
 
         publisher.set(drivetrain.getState().Pose);
-        publisher2.set(new Pose2d());
+        publisher2.set(getTargetTagRight());
      }
 
 }

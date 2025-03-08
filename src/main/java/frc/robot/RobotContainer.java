@@ -78,9 +78,6 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
-  private PIDController pidRotationAlign = new PIDController(0.1, 0, 0);
-  private PIDController pidXAlign = new PIDController(2, 0, 0);
-  private PIDController pidYAlign = new PIDController(2, 0, 0);
 
   private Timer timer = new Timer();
   private Pose2d targetPose = new Pose2d();
@@ -143,10 +140,7 @@ public class RobotContainer {
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
     driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.y().onTrue(new InstantCommand(() -> {
-      if (speedMultiplier == 1) speedMultiplier = 0.3;
-      else speedMultiplier = 1;
-    }));
+    driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
 
     // driver.y().onTrue(new InstantCommand(() -> speedMultiplier = 0.3))
     //   .onFalse(new InstantCommand(() -> speedMultiplier = 0.1));
@@ -154,15 +148,15 @@ public class RobotContainer {
     driver.rightTrigger().whileTrue(
       drivetrain.applyRequest(
         () -> new ApplyFieldSpeeds()
-          .withSpeeds(new ChassisSpeeds(getAlignOffsetsRight()[0], getAlignOffsetsRight()[1], getRotationalAlignSpeedRight()))
-      )
+          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedLeft()))
+      ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
     );
 
     driver.leftTrigger().whileTrue(
       drivetrain.applyRequest(
         () -> new ApplyFieldSpeeds()
-          .withSpeeds(new ChassisSpeeds(getAlignOffsetsLeft()[0], getAlignOffsetsRight()[1], getRotationalAlignSpeedLeft()))
-      )
+          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedLeft()))
+        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
     );
 
 
@@ -278,40 +272,6 @@ public class RobotContainer {
         )
       )
     );
-  }
-
-  public double[] getAlignOffsetsRight() {
-    double[] values = {
-      pidXAlign.calculate(vision.getTargetTagRight().getX(), drivetrain.getState().Pose.getX()),
-      pidYAlign.calculate(vision.getTargetTagRight().getY(), drivetrain.getState().Pose.getY())
-    };
-    return values;
-  }
-
-  public double[] getAlignOffsetsLeft() {
-    double[] values = {
-      pidXAlign.calculate(vision.getTargetTagLeft().getX(), drivetrain.getState().Pose.getX()),
-      pidYAlign.calculate(vision.getTargetTagLeft().getY(), drivetrain.getState().Pose.getY())
-    };
-    return values;
-  }
-  
-  public double getRotationalAlignSpeedRight() {
-    double currentRotation = drivetrain.getYaw().getRadians();
-    double targetRotation = vision.getTargetTagRight().getRotation().getRadians();
-    
-    double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
-    // System.out.println(targetSpeed);
-    return targetSpeed;
-  }
-
-  public double getRotationalAlignSpeedLeft() {
-    double currentRotation = drivetrain.getYaw().getRadians();
-    double targetRotation = vision.getTargetTagLeft().getRotation().getRadians();
-    
-    double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
-    // System.out.println(targetSpeed);
-    return targetSpeed;
   }
 
   // private void applyAlignSpeeds() {
