@@ -43,7 +43,8 @@ public class RobotContainer {
 
   private final TunerConstants tunerConst = new TunerConstants();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
+  private final Climb climb = new Climb();
+  
   Elevator elevator = new Elevator();
   Intake intake = new Intake();
   Outtake outtake = new Outtake();
@@ -132,6 +133,13 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
     driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    driver.x().whileTrue(new InstantCommand(()-> climb.runMotor()).alongWith(Commands.print("JFjdfoaejiofajewiofjaewiofjaweofjaewojfioaewjWJIAWJFAJFIAWJFWA")))
+    .whileFalse(new InstantCommand(()->climb.stopMotor()).alongWith(Commands.print("OFFOFFFOFFFOFFFOFFFOFFFOFOFOOFFFOFOOOFOOOFFFOFOOOFOOOFOOOOFOOOOOF")));
+
+
+
+
+
 
     driver.y().onTrue(new InstantCommand(() -> {
       if (speedMultiplier == 1) speedMultiplier = 0.3;
