@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -24,13 +25,13 @@ public class Climb extends SubsystemBase {
   private final TalonFX climbfollowpivot = new TalonFX(1);
   private final TalonFX algaeroll = new TalonFX(2);
 
-  private States State = States.NONE;   
+  private ClimbStates State = ClimbStates.NONE;   
 
-  public enum States {
+  public enum ClimbStates {
     NONE,
     STOWED,
-    GET,
-    GIVE,
+    PICKUP,
+    SCORE,
     CLIMB
   }
 
@@ -55,7 +56,6 @@ public class Climb extends SubsystemBase {
         .withKS(Constants.Climb.kAlgaeS)
         .withKV(Constants.Climb.kAlgaeV)
         .withKA(Constants.Climb.kAlgaeA)
-        .withKG(Constants.Climb.kAlgaeG)
         .withKP(Constants.Climb.kAlgaeP)
         .withKI(Constants.Climb.kAlgaeI)
         .withKD(Constants.Climb.kAlgaeD)
@@ -65,6 +65,7 @@ public class Climb extends SubsystemBase {
         new FeedbackConfigs()
           .withSensorToMechanismRatio(Constants.Climb.kClimbGearRatio)
     );
+
     ClimbConfig.withMotionMagic(new MotionMagicConfigs()
         .withMotionMagicAcceleration(Constants.Climb.kMotionMagicAcceleration)
         .withMotionMagicCruiseVelocity(Constants.Climb.kMotionMagicCruiseVelocity)
@@ -82,11 +83,10 @@ public class Climb extends SubsystemBase {
     algaeroll.setNeutralMode(NeutralModeValue.Brake);
 
     climbfollowpivot.getConfigurator().apply(
-            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
-        );
+      new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
+    );
 
     climbfollowpivot.setControl(new StrictFollower(climbpivot.getDeviceID()));
-
   }
 
   @Override
@@ -103,12 +103,12 @@ public class Climb extends SubsystemBase {
         algaeroll.setControl(velocityVoltage.withVelocity(0));
         break;
 
-      case GET:
+      case PICKUP:
         climbpivot.setControl(climbmmv.withPosition(0.0));
         algaeroll.setControl(velocityVoltage.withVelocity(0));
         break;
 
-      case GIVE:
+      case SCORE:
         climbpivot.setControl(climbmmv.withPosition(0.0));
         algaeroll.setControl(velocityVoltage.withVelocity(0));
         break;
@@ -118,5 +118,9 @@ public class Climb extends SubsystemBase {
         algaeroll.setControl(velocityVoltage.withVelocity(0));
         break;
     }
+  }
+
+  public void setState(ClimbStates state) {
+    this.State = state;
   }
 }
