@@ -65,6 +65,10 @@ public class Climb extends SubsystemBase {
         new FeedbackConfigs()
           .withSensorToMechanismRatio(Constants.Climb.kClimbGearRatio)
     );
+    ClimbConfig.withMotionMagic(new MotionMagicConfigs()
+        .withMotionMagicAcceleration(Constants.Climb.kMotionMagicAcceleration)
+        .withMotionMagicCruiseVelocity(Constants.Climb.kMotionMagicCruiseVelocity)
+      );
 
     AlgaeConfig.withFeedback(
       new FeedbackConfigs()
@@ -77,9 +81,11 @@ public class Climb extends SubsystemBase {
     algaeroll.getConfigurator().apply(AlgaeConfig);
     algaeroll.setNeutralMode(NeutralModeValue.Brake);
 
+    climbfollowpivot.getConfigurator().apply(
+            new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive)
+        );
+
     climbfollowpivot.setControl(new StrictFollower(climbpivot.getDeviceID()));
-    climbpivot.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
-climbfollowpivot.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
   }
 
