@@ -96,18 +96,17 @@ public class RobotContainer {
     );
     configureBindings();
     // initNamedCommands();
-    // initAutons();
+    initAutons();
   }
   
  public void initAutons() {
 
-    // ------ path planner ------
-
     autoChooser = new AutoChooser();
 
     autoChooser.addCmd("toReef", this::goToReef);
+    autoChooser.addCmd("toReefL4", this::moveToReefL4);
 
-    SmartDashboard.putData(autoChooser);
+    SmartDashboard.putData("Select Auto", autoChooser);
     
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
@@ -128,6 +127,22 @@ public class RobotContainer {
 
   public Command goToReef() {
     return autoFactory.trajectoryCmd("New Path");
+  }
+
+  public Command scoreL4() {
+    return superstructure.setState(SSStates.CORAL_4);
+  }
+
+  public Command stowed() {
+    return superstructure.setState(SSStates.STOWED);
+  }
+
+  public Command moveToReefL4() {
+    return Commands.sequence(
+      goToReef(),
+      scoreL4(),
+      stowed()
+    );
   }
   
 
