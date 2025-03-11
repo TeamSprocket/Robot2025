@@ -3,48 +3,45 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyFieldSpeeds;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
 
-import edu.wpi.first.math.controller.PIDController;
+import choreo.auto.AutoChooser;
+import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.SSStates;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.AlignStates;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.Telemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
-import frc.util.Util;
-import static edu.wpi.first.units.Units.*;
-
-import java.util.List;
 
 public class RobotContainer {
   private final CommandXboxController driver = new CommandXboxController(0); // My joystick
@@ -52,6 +49,8 @@ public class RobotContainer {
 
   private final TunerConstants tunerConst = new TunerConstants();
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+  public final AutoFactory autoFactory;
 
   Elevator elevator = new Elevator();
   Intake intake = new Intake();
@@ -82,35 +81,55 @@ public class RobotContainer {
   private Timer timer = new Timer();
   private Pose2d targetPose = new Pose2d();
 
-  public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
+  // public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
+
+  private AutoChooser autoChooser;
 
   public RobotContainer() {
-    drivetrain.configureAutoBuilder();
+
+    autoFactory = new AutoFactory(
+      drivetrain::getAutoBuilderPose,
+      drivetrain::resetTeleopPose,
+      drivetrain::followTrajectory,
+      true,
+      drivetrain
+    );
     configureBindings();
-    initNamedCommands();
-    initAutons();
+    // initNamedCommands();
+    // initAutons();
   }
   
  public void initAutons() {
 
     // ------ path planner ------
 
-    autonChooser = AutoBuilder.buildAutoChooser();
-    autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    autonChooser.addOption("Leave Auton", leave());
+    autoChooser = new AutoChooser();
 
-    SmartDashboard.putData("Auto Routine Selector", autonChooser);
+    autoChooser.addCmd("toReef", this::goToReef);
+
+    SmartDashboard.putData(autoChooser);
+    
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+
+
+    // autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
+    // autonChooser.addOjkhfjhvfption("Leave Auton", leave());
+
+    // SmartDashboard.putData("Auto Routine Selector", autonChooser);
   }
 
   public Command getAutonomousCommand() {
-    return 
-      Commands.sequence(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-1.0, 0, 0))).withTimeout(1.5));
-    // return null;
+    return autoChooser.selectedCommand();
   }
 
-  public void initNamedCommands() {
+  // public void initNamedCommands() {
 
+  // }
+
+  public Command goToReef() {
+    return autoFactory.trajectoryCmd("New Path");
   }
+  
 
   public void configureBindings() {
     // --------------------=Driver=--------------------

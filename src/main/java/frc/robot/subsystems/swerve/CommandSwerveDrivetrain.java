@@ -26,8 +26,10 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.DriveFeedforwards;
 
-
+import choreo.trajectory.SwerveSample;
+// import choreo.trajectory.Swervepath;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -70,6 +72,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PIDConstants PP_PID_Translation = new PIDConstants(0.25, 0, 0); //0.25, 0, 0
     PIDConstants PP_PID_Rotation = new PIDConstants(1.85, 0, 0.65); //1.85, 0, 0.65
 
+    private final PIDController C_PID_Translation = new PIDController(0.25, 0.0, 0.0);
+    private final PIDController C_PID_Rotation = new PIDController(1.85, 0.0, 0.65);
+
     // Vision vision = new Vision();
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
@@ -103,34 +108,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         )
     );
 
-    public void configureAutoBuilder() {
-        try {
-            var config = RobotConfig.fromGUISettings();
-            AutoBuilder.configure(
-                () -> getState().Pose,   // Supplier of current robot pose
-                this::resetPose,         // Consumer for seeding pose against auto
-                () -> getState().Speeds, // Supplier of current robot speeds
-                // Consumer of ChassisSpeeds and feedforwards to drive the robot
-                (speeds, feedforwards) -> setControl(
-                    m_pathApplyRobotSpeeds.withSpeeds(speeds)
-                        .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                        .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                ),
-                new PPHolonomicDriveController(
-                    // PID constants for translation
-                    new PIDConstants(3.0, 0, 0.0), //5.0, 0, 0.1
-                    // PID constants for rotation
-                    new PIDConstants(5.0, 0, 0.2) //6 0 0
-                ),
-                config,
+    // public void configureAutoBuilder() {
+    //     try {
+    //         var config = RobotConfig.fromGUISettings();
+    //         AutoBuilder.configure(
+    //             () -> getState().Pose,   // Supplier of current robot pose
+    //             this::resetPose,         // Consumer for seeding pose against auto
+    //             () -> getState().Speeds, // Supplier of current robot speeds
+    //             // Consumer of ChassisSpeeds and feedforwards to drive the robot
+    //             (speeds, feedforwards) -> setControl(
+    //                 m_pathApplyRobotSpeeds.withSpeeds(speeds)
+    //                     .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+    //                     .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+    //             ),
+    //             new PPHolonomicDriveController(
+    //                 // PID constants for translation
+    //                 new PIDConstants(3.0, 0, 0.0), //5.0, 0, 0.1
+    //                 // PID constants for rotation
+    //                 new PIDConstants(5.0, 0, 0.2) //6 0 0
+    //             ),
+    //             config,
                
-                () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-                this 
-            );
-        } catch (Exception ex) {
-            DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
-        }
-    }
+    //             () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+    //             this 
+    //         );
+    //     } catch (Exception ex) {
+    //         DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+    //     }
+    // }
 
     /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
     private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
@@ -294,6 +299,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Pose2d getAutoBuilderPose() {
         return getState().Pose;
     }
+    
+    // public void driveFieldRelative(ChassisSpeeds setSpeeds) {
+    //     m_kinematics.
+    
+    // }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
@@ -330,35 +340,50 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         publisher.set(getState().Pose);
     }
 
-    public Command autopath(){
-        try{
-            PathPlannerPath apath = PathPlannerPath.fromPathFile("curvypath");
-            Command path = AutoBuilder.followPath(PathPlannerPath.fromPathFile("curvypath"));
-            return new FollowPathCommand(
-                        apath, 
-                        () -> getState().Pose, 
-                        () -> getState().Speeds, 
-                        (speeds, feedforwards) -> setControl(
-                        m_pathApplyRobotSpeeds.withSpeeds(speeds)
-                            .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                        ), 
-                        new PPHolonomicDriveController(
-                        // PID constants for translation
-                        new PIDConstants(3, 0, 0.1), //p:12.5, d:0.1
+    public void followTrajectory(SwerveSample path) {
+        Pose2d pose = getAutoBuilderPose();
 
-                        // PID constants for rotation
-                        new PIDConstants(5, 0, 0.2)
-                        ), 
-                        RobotConfig.fromGUISettings(),
-                        () -> false, 
-                        this
-                    );
-        } catch (Exception e) {
-            DriverStation.reportError("Broken" + e.getMessage(), e.getStackTrace());
-                return null;
-        }
+        // Generate the next speeds for the robot
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            path.vx + C_PID_Translation.calculate(pose.getX(), path.x),
+            path.vy + C_PID_Translation.calculate(pose.getY(), path.y),
+            path.omega + C_PID_Rotation.calculate(pose.getRotation().getRadians(), path.heading)
+        );
+
+        // Apply the generated speeds
+        m_pathApplyRobotSpeeds.withSpeeds(speeds);
+
     }
+
+    // public Command autopath(){
+    //     try{
+    //         PathPlannerPath apath = PathPlannerPath.fromPathFile("curvypath");
+    //         Command path = AutoBuilder.followPath(PathPlannerPath.fromPathFile("curvypath"));
+    //         return new FollowPathCommand(
+    //                     apath, 
+    //                     () -> getState().Pose, 
+    //                     () -> getState().Speeds, 
+    //                     (speeds, feedforwards) -> setControl(
+    //                     m_pathApplyRobotSpeeds.withSpeeds(speeds)
+    //                         .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+    //                         .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+    //                     ), 
+    //                     new PPHolonomicDriveController(
+    //                     // PID constants for translation
+    //                     new PIDConstants(3, 0, 0.1), //p:12.5, d:0.1
+
+    //                     // PID constants for rotation
+    //                     new PIDConstants(5, 0, 0.2)
+    //                     ), 
+    //                     RobotConfig.fromGUISettings(),
+    //                     () -> false, 
+    //                     this
+    //                 );
+    //     } catch (Exception e) {
+    //         DriverStation.reportError("Broken" + e.getMessage(), e.getStackTrace());
+    //             return null;
+    //     }
+    // }
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
