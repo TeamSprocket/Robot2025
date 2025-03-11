@@ -151,4 +151,26 @@ public final class Constants {
 
     public static final double kElevatorGearRatio = 5.77;
   }
+  public static class Climb
+  {
+    public static final double kClimbS = 0.0;
+    public static final double kClimbV = 0.0;
+    public static final double kClimbA = 0.0;
+    public static final double kClimbG = 0.0;
+    public static final double kClimbP = 0.0;
+    public static final double kClimbI = 0.0;
+    public static final double kClimbD = 0.0;
+
+
+    public static final double kAlgaeS = 0.0;
+    public static final double kAlgaeV = 0.0;
+    public static final double kAlgaeA = 0.0;
+    public static final double kAlgaeG = 0.0;
+    public static final double kAlgaeP = 0.0;
+    public static final double kAlgaeI = 0.0;
+    public static final double kAlgaeD = 0.0;
+
+    public static final double kClimbGearRatio = 0.0;
+    public static final double kAlgaeGearRatio = 0.0;
+  }
 }
