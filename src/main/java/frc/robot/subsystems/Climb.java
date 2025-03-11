@@ -1,15 +1,14 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.Constants;
@@ -18,15 +17,14 @@ import frc.robot.subsystems.Climb;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climb extends SubsystemBase {
-  MotionMagicVoltage climbVelocity = new MotionMagicVoltage(0);
+  MotionMagicVoltage climbmmv = new MotionMagicVoltage(0);
   private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
-  
+
   private final TalonFX climbpivot = new TalonFX(0);
   private final TalonFX climbfollowpivot = new TalonFX(1);
   private final TalonFX algaeroll = new TalonFX(2);
-}
 
-  private States State = States.NONE;
+  private States State = States.NONE;   
 
   public enum States {
     NONE,
@@ -35,11 +33,9 @@ public class Climb extends SubsystemBase {
     GIVE,
     CLIMB
   }
-  
+
   /** Creates a new Climb. */
-  public Climb() 
-  {
-    
+  public Climb() {
     TalonFXConfiguration ClimbConfig = new TalonFXConfiguration();
     TalonFXConfiguration AlgaeConfig = new TalonFXConfiguration();
 
@@ -50,7 +46,7 @@ public class Climb extends SubsystemBase {
         .withKA(Constants.Climb.kClimbA)
         .withKG(Constants.Climb.kClimbG)
         .withKP(Constants.Climb.kClimbP)
-        .withKI(Constants.Climb.kClimbI)
+        .withKI(Constants.Climb.kClimbI) 
         .withKD(Constants.Climb.kClimbD)
     );
 
@@ -64,8 +60,6 @@ public class Climb extends SubsystemBase {
         .withKI(Constants.Climb.kAlgaeI)
         .withKD(Constants.Climb.kAlgaeD)
     );
-
-    
 
     ClimbConfig.withFeedback(
         new FeedbackConfigs()
@@ -84,28 +78,39 @@ public class Climb extends SubsystemBase {
     algaeroll.setNeutralMode(NeutralModeValue.Brake);
 
     climbfollowpivot.setControl(new StrictFollower(climbpivot.getDeviceID()));
-
-    
+    climbpivot.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+climbfollowpivot.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
   }
-  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    switch (State)
-    {
+    switch (State) {
       case NONE:
-        climbpivot.setControl(velocityVoltage.withVelocity(0));
-        algaepivot.setControl(velocityVoltage.withVelocity(0));
+        climbpivot.setControl(climbmmv.withPosition(0.0));
         algaeroll.setControl(velocityVoltage.withVelocity(0));
-      
+        break;
+
       case STOWED:
+        climbpivot.setControl(climbmmv.withPosition(0.0));
+        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        break;
 
       case GET:
-      case GIVE:
-      case CLIMB:
+        climbpivot.setControl(climbmmv.withPosition(0.0));
+        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        break;
 
+      case GIVE:
+        climbpivot.setControl(climbmmv.withPosition(0.0));
+        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        break;
+
+      case CLIMB:
+        climbpivot.setControl(climbmmv.withPosition(0.0));
+        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        break;
     }
   }
 }
