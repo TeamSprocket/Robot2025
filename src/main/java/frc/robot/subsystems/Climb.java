@@ -94,28 +94,28 @@ public class Climb extends SubsystemBase {
     // This method will be called once per scheduler run
     switch (State) {
       case NONE:
-        climbpivot.setControl(climbmmv.withPosition(0.0));
-        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        climbpivot.set(0);
+        algaeroll.set(0);
         break;
 
       case STOWED:
-        climbpivot.setControl(climbmmv.withPosition(0.0));
-        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbStowed));
+        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeStowed));
         break;
 
       case GET:
-        climbpivot.setControl(climbmmv.withPosition(0.0));
-        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbGet));
+        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeGet));
         break;
 
       case GIVE:
-        climbpivot.setControl(climbmmv.withPosition(0.0));
-        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbGive));
+        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeGive));
         break;
 
       case CLIMB:
-        climbpivot.setControl(climbmmv.withPosition(0.0));
-        algaeroll.setControl(velocityVoltage.withVelocity(0));
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbclimb);
+        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeClimb));
         break;
     }
   }

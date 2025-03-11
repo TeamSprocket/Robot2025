@@ -173,6 +173,16 @@ public final class Constants {
     public static final double kClimbGearRatio = 0.0;
     public static final double kAlgaeGearRatio = 0.0;
 
+    public static final double kClimbStowed = 0.0;
+    public static final double kAlgaeStowed = 0.0;
+    public static final double kClimbGet = 0.0;
+    public static final double kAlgaeGet = 0.0;
+    public static final double kClimbGive = 0.0;
+    public static final double kAlgaeGive = 0.0;
+    public static final double kClimbclimb = 0.0;
+    public static final double kAlgaeClimb = 0.0;
+
+
     public static final double kMotionMagicAcceleration = 0.0;
     public static final double kMotionMagicCruiseVelocity = 0.0;
   }
