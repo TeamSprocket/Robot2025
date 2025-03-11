@@ -4,16 +4,33 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Superstructure.SSStates;
 
 public class Robot extends TimedRobot {
+  private final XboxController controller = new XboxController(0);
+  final TalonFX climbTest = new TalonFX(0);
+  final TalonFX climbTest2 = new TalonFX(0);
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  
+  // private void configMotors(){
+  //   TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
+  //   climbTest.getConfigurator().apply(talonFXConfigs, 0);
+  //   climbTest2.getConfigurator().apply(talonFXConfigs, 0);
+  // }
+
 
   @Override
   public void robotInit() {
@@ -62,6 +79,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    
     m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
 
     if (m_autonomousCommand != null) {
@@ -71,7 +90,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+  
+  if (controller.getAButton()) {
+   climbTest.set(0.1);
+   climbTest2.set(0.1);
+  }
+  else {
+    climbTest.set(0.0);
+    climbTest2.set(0);
+   }
+   
+      
 }
+    
+
+
 
   @Override
   public void teleopExit() {}
