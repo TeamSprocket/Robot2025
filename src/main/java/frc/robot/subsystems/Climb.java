@@ -115,7 +115,7 @@ public class Climb extends SubsystemBase {
         break;
 
       case CLIMB:
-        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbclimb));
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbDeep));
         algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeClimb));
         break;
     }
