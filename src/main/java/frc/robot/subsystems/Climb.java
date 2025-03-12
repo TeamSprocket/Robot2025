@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -24,13 +25,13 @@ public class Climb extends SubsystemBase {
   private final TalonFX climbfollowpivot = new TalonFX(1);
   private final TalonFX algaeroll = new TalonFX(2);
 
-  private States State = States.NONE;   
+  private ClimbStates State = ClimbStates.NONE;    
 
-  public enum States {
+  public enum ClimbStates {
     NONE,
     STOWED,
-    GET,
-    GIVE,
+    PICKUP,
+    SCORE,
     CLIMB
   }
 
@@ -103,18 +104,18 @@ public class Climb extends SubsystemBase {
         algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeStowed));
         break;
 
-      case GET:
-        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbGet));
-        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeGet));
+      case PICKUP:
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbPickup));
+        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaePickup));
         break;
 
-      case GIVE:
-        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbGive));
-        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeGive));
+        case SCORE:
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbScore));
+        algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeScore));
         break;
 
       case CLIMB:
-        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbclimb);
+        climbpivot.setControl(climbmmv.withPosition(Constants.Climb.kClimbclimb));
         algaeroll.setControl(velocityVoltage.withVelocity(Constants.Climb.kAlgaeClimb));
         break;
     }
