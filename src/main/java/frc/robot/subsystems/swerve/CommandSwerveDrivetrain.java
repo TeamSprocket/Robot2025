@@ -69,11 +69,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     SwerveDriveKinematics m_kinematics;
 
-    PIDConstants PP_PID_Translation = new PIDConstants(0.25, 0, 0); //0.25, 0, 0
+    PIDConstants PP_PID_Translation = new PIDConstants(0.15, 0, 0); //0.25, 0, 0
     PIDConstants PP_PID_Rotation = new PIDConstants(1.85, 0, 0.65); //1.85, 0, 0.65
 
     private final PIDController C_PID_Translation = new PIDController(0.25, 0.0, 0.0);
-    private final PIDController C_PID_Rotation = new PIDController(1.85, 0.0, 0.65);
+    private final PIDController C_PID_Rotation = new PIDController(2.0, 0.0, 0.0);
 
     // Vision vision = new Vision();
 
@@ -351,7 +351,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         );
 
         // Apply the generated speeds
-        m_pathApplyRobotSpeeds.withSpeeds(speeds);
+        
+
+        setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
+
+        System.out.println(path.vx);
+        System.out.println(path.vy);
 
     }
 

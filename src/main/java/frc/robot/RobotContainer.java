@@ -101,10 +101,12 @@ public class RobotContainer {
   
  public void initAutons() {
 
+
     autoChooser = new AutoChooser();
 
     autoChooser.addCmd("toReef", this::goToReef);
     autoChooser.addCmd("toReefL4", this::moveToReefL4);
+    autoChooser.addCmd("testCircle", this::testCircle);
 
     SmartDashboard.putData("Select Auto", autoChooser);
     
@@ -121,12 +123,12 @@ public class RobotContainer {
     return autoChooser.selectedCommand();
   }
 
-  // public void initNamedCommands() {
-
-  // }
-
   public Command goToReef() {
     return autoFactory.trajectoryCmd("New Path");
+  }
+
+  public Command testCircle() {
+    return autoFactory.trajectoryCmd("Circle");
   }
 
   public Command scoreL4() {
@@ -162,6 +164,8 @@ public class RobotContainer {
     driver.b().whileTrue(drivetrain.applyRequest(() ->
         point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
     ));
+
+    driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(1.23, 3.88, new Rotation2d(0)))));
 
     driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.5, 0.0, 0.0))));
     driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))));

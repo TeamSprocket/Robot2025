@@ -1,5 +1,5 @@
 {
- "name":"project",
+ "name":"robot",
  "version":1,
  "type":"Swerve",
  "variables":{
@@ -9,39 +9,39 @@
  "config":{
   "frontLeft":{
    "x":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"17 in",
+    "val":0.4318
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"17 in",
+    "val":0.4318
    }
   },
   "backLeft":{
    "x":{
-    "exp":"-11 in",
-    "val":-0.2794
+    "exp":"-17 in",
+    "val":-0.4318
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"17 in",
+    "val":0.4318
    }
   },
   "mass":{
-   "exp":"150 lbs",
-   "val":68.0388555
+   "exp":"55 lbs",
+   "val":24.947580350000003
   },
   "inertia":{
-   "exp":"6 kg m ^ 2",
-   "val":6.0
+   "exp":"2 kg m ^ 2",
+   "val":2.0
   },
   "gearing":{
    "exp":"6.5",
    "val":6.5
   },
   "radius":{
-   "exp":"2 in",
-   "val":0.0508
+   "exp":"1.85 in",
+   "val":0.04699
   },
   "vmax":{
    "exp":"6000 RPM",
@@ -52,21 +52,21 @@
    "val":1.2
   },
   "cof":{
-   "exp":"1.5",
-   "val":1.5
+   "exp":"0.8",
+   "val":0.8
   },
   "bumper":{
    "front":{
-    "exp":"16 in",
-    "val":0.4064
+    "exp":"17 in",
+    "val":0.4318
    },
    "side":{
-    "exp":"16 in",
-    "val":0.4064
+    "exp":"17 in",
+    "val":0.4318
    },
    "back":{
-    "exp":"16 in",
-    "val":0.4064
+    "exp":"17 in",
+    "val":0.4318
    }
   },
   "differentialTrackWidth":{
