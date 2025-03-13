@@ -53,6 +53,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
+import frc.util.Util;
 import frc.robot.Constants;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.*;
@@ -348,6 +349,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Auton PID X", pidOutputX);
         SmartDashboard.putNumber("Auton PID Y", pidOutputY);
         SmartDashboard.putNumber("Auton PID Omega", pidOutputOmega);
+        SmartDashboard.putNumber("PID return", getOmegaPID());
     }
 
     public void followTrajectory(SwerveSample path) {
@@ -365,7 +367,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         ChassisSpeeds speeds = new ChassisSpeeds(
             path.vx + C_PID_Translation.calculate(pose.getX(), path.x),
             path.vy + C_PID_Translation.calculate(pose.getY(), path.y),
-            path.omega + C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading)
+            path.omega + getOmegaPID()
+            // C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading)
 
             // path.vx,
             // path.vy,
@@ -378,13 +381,26 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         setControl(m_pathApplyFieldSpeeds.withSpeeds(speeds));
 
     }
-
-    public double getContinuousRadians(double radians) {
+    public double getContinuousRadians ( double radians){
         if (radians < 0) {
-            radians = radians + 2 * Math.PI;
-            // * (Math.abs(radians) / 360 + 1)
+            radians += 2 * Math.PI * (Math.abs(radians) / 360 + 1);;
+            // * (Math.abs(radians) / 360 + 1
         }
         return radians;
+    }
+
+             
+    
+    public double getOmegaPID() {
+        Pose2d pose = getAutoBuilderPose();
+
+        double roboRotation = getContinuousRadians(pose.getRotation().getRadians());
+        double heading = pathHeading;
+        if (Math.abs(roboRotation-heading)> Math.PI) {
+            heading = 2 * Math.PI - heading;
+            // * (Math.abs(radians) / 360 + 1)
+        }
+        return C_PID_Translation.calculate(roboRotation,heading) ;
     }
 
     // public Command autopath(){
