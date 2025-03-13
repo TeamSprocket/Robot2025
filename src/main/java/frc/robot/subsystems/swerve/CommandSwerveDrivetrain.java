@@ -73,7 +73,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PIDConstants PP_PID_Rotation = new PIDConstants(1.85, 0, 0.65); //1.85, 0, 0.65
 
     private final PIDController C_PID_Translation = new PIDController(8, 0.0, 0.0); //10 0 0
-    private final PIDController C_PID_Rotation = new PIDController(0.5, 0.0, 0.0);  //0.2 0 0
+    private final PIDController C_PID_Rotation = new PIDController(0.018, 0.0, 0.0);  //0.2 0 0
 
     // Vision vision = new Vision();
 
@@ -88,9 +88,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+    private final SwerveRequest.ApplyFieldSpeeds m_pathApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
 
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Align Pose", Pose2d.struct).publish();
+    private double pathX = 0.0;
+    private double pathY = 0.0;
+    private double pathHeading = 0.0;
+    private double pidOutputX = 0.0;
+    private double pidOutputY = 0.0;
+    private double pidOutputOmega = 0.0;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -337,33 +343,46 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        publisher.set(getState().Pose);
+        publisher.set(new Pose2d(pathX, pathY, new Rotation2d(pathHeading)));
+
+        SmartDashboard.putNumber("Auton PID X", pidOutputX);
+        SmartDashboard.putNumber("Auton PID Y", pidOutputY);
+        SmartDashboard.putNumber("Auton PID Omega", pidOutputOmega);
     }
 
     public void followTrajectory(SwerveSample path) {
         Pose2d pose = getAutoBuilderPose();
 
+        pathX = path.x;
+        pathY = path.y;
+        pathHeading = path.heading;
+
+        pidOutputX = C_PID_Translation.calculate(pose.getX(), path.x);
+        pidOutputY = C_PID_Translation.calculate(pose.getY(), path.y);
+        pidOutputOmega = C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading);
+        
         // Generate the next speeds for the robot
         ChassisSpeeds speeds = new ChassisSpeeds(
             path.vx + C_PID_Translation.calculate(pose.getX(), path.x),
             path.vy + C_PID_Translation.calculate(pose.getY(), path.y),
             path.omega + C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading)
+
+            // path.vx,
+            // path.vy,
+            // path.omega
         );
 
         // Apply the generated speeds
         
 
-        setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
-
-        System.out.println(pose.getRotation().getRadians());
-        System.out.println(path.heading);
-        
+        setControl(m_pathApplyFieldSpeeds.withSpeeds(speeds));
 
     }
 
     public double getContinuousRadians(double radians) {
         if (radians < 0) {
-            radians += 2 * Math.PI * (Math.abs(radians) / 360 + 1);
+            radians = radians + 2 * Math.PI;
+            // * (Math.abs(radians) / 360 + 1)
         }
         return radians;
     }
