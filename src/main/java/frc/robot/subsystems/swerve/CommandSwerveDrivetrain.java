@@ -72,8 +72,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PIDConstants PP_PID_Translation = new PIDConstants(0.15, 0, 0); //0.25, 0, 0
     PIDConstants PP_PID_Rotation = new PIDConstants(1.85, 0, 0.65); //1.85, 0, 0.65
 
-    private final PIDController C_PID_Translation = new PIDController(0.25, 0.0, 0.0);
-    private final PIDController C_PID_Rotation = new PIDController(2.0, 0.0, 0.0);
+    private final PIDController C_PID_Translation = new PIDController(8, 0.0, 0.0); //10 0 0
+    private final PIDController C_PID_Rotation = new PIDController(0.5, 0.0, 0.0);  //0.2 0 0
 
     // Vision vision = new Vision();
 
@@ -347,7 +347,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         ChassisSpeeds speeds = new ChassisSpeeds(
             path.vx + C_PID_Translation.calculate(pose.getX(), path.x),
             path.vy + C_PID_Translation.calculate(pose.getY(), path.y),
-            path.omega + C_PID_Rotation.calculate(pose.getRotation().getRadians(), path.heading)
+            path.omega + C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading)
         );
 
         // Apply the generated speeds
@@ -355,9 +355,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
 
-        System.out.println(path.vx);
-        System.out.println(path.vy);
+        System.out.println(pose.getRotation().getRadians());
+        System.out.println(path.heading);
+        
 
+    }
+
+    public double getContinuousRadians(double radians) {
+        if (radians < 0) {
+            radians += 2 * Math.PI * (Math.abs(radians) % 360 + 1);
+        }
+        return radians;
     }
 
     // public Command autopath(){

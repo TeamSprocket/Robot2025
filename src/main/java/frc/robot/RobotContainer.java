@@ -107,6 +107,7 @@ public class RobotContainer {
     autoChooser.addCmd("toReef", this::goToReef);
     autoChooser.addCmd("toReefL4", this::moveToReefL4);
     autoChooser.addCmd("testCircle", this::testCircle);
+    autoChooser.addCmd("rotationTest", this::rotationTest);
 
     SmartDashboard.putData("Select Auto", autoChooser);
     
@@ -125,6 +126,10 @@ public class RobotContainer {
 
   public Command goToReef() {
     return autoFactory.trajectoryCmd("New Path");
+  }
+
+  public Command rotationTest() {
+    return Commands.sequence(autoFactory.resetOdometry("Rotation"), autoFactory.trajectoryCmd("Rotation"));
   }
 
   public Command testCircle() {
@@ -176,7 +181,7 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-    driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    // driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
     driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
 
