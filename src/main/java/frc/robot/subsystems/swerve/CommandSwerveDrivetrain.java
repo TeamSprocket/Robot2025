@@ -363,7 +363,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double getContinuousRadians(double radians) {
         if (radians < 0) {
-            radians += 2 * Math.PI * (Math.abs(radians) % 360 + 1);
+            radians += 2 * Math.PI * (Math.abs(radians) / 360 + 1);
         }
         return radians;
     }
