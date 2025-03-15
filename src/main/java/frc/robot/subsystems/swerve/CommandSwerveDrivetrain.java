@@ -73,8 +73,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PIDConstants PP_PID_Translation = new PIDConstants(0.15, 0, 0); //0.25, 0, 0
     PIDConstants PP_PID_Rotation = new PIDConstants(1.85, 0, 0.65); //1.85, 0, 0.65
 
-    private final PIDController C_PID_Translation = new PIDController(8, 0.0, 0.0); //10 0 0
-    private final PIDController C_PID_Rotation = new PIDController(0.018, 0.0, 0.0);  //0.2 0 0
+    private PIDController C_PID_Translation = new PIDController(8, 0.0, 0.0); //10 0 0
+    private PIDController C_PID_Rotation = new PIDController(50, 0, 1);  //0.2 0 0
+
+    // C_PID_Rotation.enableContinuousInput(0,10);
 
     // Vision vision = new Vision();
 
@@ -353,6 +355,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void followTrajectory(SwerveSample path) {
+        C_PID_Rotation.enableContinuousInput(0, 2 * Math.PI);
         Pose2d pose = getAutoBuilderPose();
 
         pathX = path.x;
@@ -386,6 +389,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             radians += 2 * Math.PI * (Math.abs(radians) / 360 + 1);;
             // * (Math.abs(radians) / 360 + 1
         }
+        // if (radians > 2*Math.PI) {
+        //     radians -= 
+        // }
+        
         return radians;
     }
 
@@ -396,9 +403,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         double roboRotation = getContinuousRadians(pose.getRotation().getRadians());
         double heading = pathHeading;
-        if (Math.abs(roboRotation-heading)> Math.PI) {
-            heading = 2 * Math.PI - heading;
-            // * (Math.abs(radians) / 360 + 1)
+        if (Math.abs(roboRotation-heading) > Math.PI) {
+            if (heading > roboRotation) roboRotation = roboRotation + 2 * Math.PI;
+            if (heading < roboRotation) roboRotation = roboRotation - 2 * Math.PI; 
         }
         return C_PID_Translation.calculate(roboRotation,heading) ;
     }
