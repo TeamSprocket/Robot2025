@@ -33,9 +33,9 @@ public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
-    private PIDController pidRotationAlign = new PIDController(0.1, 0, 0);
-    private PIDController pidXAlign = new PIDController(12, 0, 0);
-    private PIDController pidYAlign = new PIDController(12, 0, 0);
+    private PIDController pidRotationAlign = new PIDController(2, 0, 0);
+    private PIDController pidXAlign = new PIDController(2.5, 0, 0);
+    private PIDController pidYAlign = new PIDController(2.5, 0, 0);
 
     Timer timer = new Timer();
 
@@ -193,7 +193,7 @@ public class Vision extends SubsystemBase {
         if (i == 6) target = Constants.Vision.poseAlignRedLeft6;
         else if (i == 7) target = Constants.Vision.poseAlignRedLeft7;
         else if (i == 8) target = Constants.Vision.poseAlignRedLeft8;
-        else if (i== 9) target = Constants.Vision.poseAlignRedLeft9;
+        else if (i == 9) target = Constants.Vision.poseAlignRedLeft9;
         else if (i == 10) target = Constants.Vision.poseAlignRedLeft10;
         else if (i == 11) target = Constants.Vision.poseAlignRedLeft11;
 
@@ -397,11 +397,11 @@ public class Vision extends SubsystemBase {
         double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
         double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
 
-        if (Util.inRange(speedX, -0.05, 0.05)) {
+        if (Util.inRange(speedX, -0.0001, 0.0001)) {
             speedX = 0.0;
         }
 
-        if (Util.inRange(speedY, -0.05, 0.05)) {
+        if (Util.inRange(speedY, -0.0001, 0.0001)) {
             speedY = 0.0;
         }
 
@@ -412,19 +412,23 @@ public class Vision extends SubsystemBase {
       }
       
       public double getRotationalAlignSpeedRight() {
-        double currentRotation = drivetrain.getYaw().getRadians();
+        pidRotationAlign.enableContinuousInput(0, 2*Math.PI);
+        double currentRotation = drivetrain.getState().Pose.getRotation().getRadians();
         double targetRotation = getTargetTagRight().getRotation().getRadians();
         
-        double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
+        double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
         // System.out.println(targetSpeed);
         return targetSpeed;
       }
     
       public double getRotationalAlignSpeedLeft() {
-        double currentRotation = drivetrain.getYaw().getRadians();
+        pidRotationAlign.enableContinuousInput(0, 2*Math.PI);
+        double currentRotation = drivetrain.getState().Pose.getRotation().getRadians();
         double targetRotation = getTargetTagLeft().getRotation().getRadians();
         
-        double targetSpeed = -1 * pidRotationAlign.calculate(currentRotation, targetRotation);
+        double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
+        System.out.println(currentRotation);
+        System.out.println(targetRotation);
         // System.out.println(targetSpeed);
         return targetSpeed;
       }
