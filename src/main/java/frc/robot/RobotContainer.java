@@ -16,6 +16,8 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -100,17 +102,19 @@ public class RobotContainer {
   }
   
  public void initAutons() {
-
+    
 
     autoChooser = new AutoChooser();
 
-    autoChooser.addCmd("toReef", this::goToReef);
-    autoChooser.addCmd("toReefL4", this::moveToReefL4);
-    autoChooser.addCmd("testCircle", this::testCircle);
-    autoChooser.addCmd("rotationTest", this::rotationTest);
-    autoChooser.addCmd("test1", this::test);
-    autoChooser.addCmd("test2", this::test2);
-    autoChooser.addCmd("testBoth", this::testBoth);
+    autoChooser.addRoutine("routine", this::routine);
+
+    // autoChooser.addCmd("toReef", this::goToReef);
+    // autoChooser.addCmd("toReefL4", this::moveToReefL4);
+    // autoChooser.addCmd("testCircle", this::testCircle);
+    // autoChooser.addCmd("rotationTest", this::rotationTest);
+    // autoChooser.addCmd("test1", this::test);
+    // autoChooser.addCmd("test2", this::test2);
+    // autoChooser.addCmd("testBoth", this::testBoth);
 
     SmartDashboard.putData("Select Auto", autoChooser);
     
@@ -121,6 +125,21 @@ public class RobotContainer {
     // autonChooser.addOjkhfjhvfption("Leave Auton", leave());
 
     // SmartDashboard.putData("Auto Routine Selector", autonChooser);
+  }
+
+  public AutoRoutine routine() {
+    AutoRoutine routine = autoFactory.newRoutine("Routine");
+    AutoTrajectory traj1 = routine.trajectory("New Path");
+
+    routine.active().onTrue(
+      Commands.sequence(
+        traj1.resetOdometry(),
+        traj1.cmd(),
+        new InstantCommand(() -> superstructure.setState(SSStates.PRINTTEST1))
+      )
+    );
+
+    return routine;
   }
 
   public Command getAutonomousCommand() {
