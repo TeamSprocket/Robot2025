@@ -21,7 +21,7 @@ import frc.robot.subsystems.Superstructure.SSStates;
 public class Robot extends TimedRobot {
   private final XboxController controller = new XboxController(0);
   final TalonFX climbTest = new TalonFX(0);
-  final TalonFX climbTest2 = new TalonFX(0);
+  //final TalonFX climbTest2 = new TalonFX(0);
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   
@@ -93,14 +93,12 @@ public class Robot extends TimedRobot {
   
   if (controller.getAButton()) {
    climbTest.set(0.1);
-   climbTest2.set(0.1);
+   //climbTest2.set(0.1);
   }
   else {
     climbTest.set(0.0);
-    climbTest2.set(0);
+    //climbTest2.set(0);
    }
-   
-      
 }
     
 
