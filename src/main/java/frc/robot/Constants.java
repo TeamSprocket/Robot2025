@@ -39,11 +39,11 @@ public final class Constants {
     public static final double kdistanceOffset = 0.7642; // 0.5992
 
     public static final Pose2d poseAlignBlueLeft17 = new Pose2d(3.808, 3.290, Rotation2d.fromDegrees(60));
-    public static final Pose2d poseAlignBlueRight17 = new Pose2d(4.075, 3.096, Rotation2d.fromDegrees(60));
-    public static final Pose2d poseAlignBlueLeft18 = new Pose2d(3.4, 4.15, Rotation2d.fromDegrees(0));
-    public static final Pose2d poseAlignBlueRight18 = new Pose2d(3.4, 3.97, Rotation2d.fromDegrees(0));
-    public static final Pose2d poseAlignBlueLeft19 = new Pose2d(4.15, 5.04, Rotation2d.fromDegrees(300));
-    public static final Pose2d poseAlignBlueRight19 = new Pose2d(3.85, 4.9, Rotation2d.fromDegrees(300));
+    public static final Pose2d poseAlignBlueRight17 = new Pose2d(4.09, 3.05, Rotation2d.fromDegrees(60));
+    public static final Pose2d poseAlignBlueLeft18 = new Pose2d(3.4, 4.25, Rotation2d.fromDegrees(0));
+    public static final Pose2d poseAlignBlueRight18 = new Pose2d(3.4, 3.90, Rotation2d.fromDegrees(0));
+    public static final Pose2d poseAlignBlueLeft19 = new Pose2d(4.1, 5.02, Rotation2d.fromDegrees(300));
+    public static final Pose2d poseAlignBlueRight19 = new Pose2d(3.8, 4.9, Rotation2d.fromDegrees(300));
     public static final Pose2d poseAlignBlueLeft20 = new Pose2d(5.192, 4.82, Rotation2d.fromDegrees(240));
     public static final Pose2d poseAlignBlueRight20 = new Pose2d(4.887, 4.956, Rotation2d.fromDegrees(240));
     public static final Pose2d poseAlignBlueLeft21 = new Pose2d(5.484, 3.82, Rotation2d.fromDegrees(180));

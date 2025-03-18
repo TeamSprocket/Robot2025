@@ -85,10 +85,10 @@ public class RobotContainer {
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
   public RobotContainer() {
-    drivetrain.configureAutoBuilder();
+    // drivetrain.configureAutoBuilder();
     configureBindings();
-    initNamedCommands();
-    initAutons();
+    // initNamedCommands();
+    // initAutons();
   }
   
  public void initAutons() {
