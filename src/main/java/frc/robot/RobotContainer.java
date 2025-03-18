@@ -135,7 +135,8 @@ public class RobotContainer {
       Commands.sequence(
         traj1.resetOdometry(),
         traj1.cmd(),
-        new InstantCommand(() -> superstructure.setState(SSStates.PRINTTEST1))
+        superstructure.setState(SSStates.PRINTTEST1),
+        superstructure.setState(SSStates.PRINTTEST2)
       )
     );
 
