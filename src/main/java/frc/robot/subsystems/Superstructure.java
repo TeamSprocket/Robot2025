@@ -28,7 +28,9 @@ public class Superstructure extends SubsystemBase {
     ALGAE_REMOVE_3,
     ALGAE_CARRY,
     ALGAE_SCORE,
-    EJECT
+    EJECT,
+    PRINTTEST1,
+    PRINTTEST2
   }
 
   /**
@@ -185,6 +187,14 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
+  private Command printTest1() {
+    return new InstantCommand(() -> System.out.println("NUM1"));
+  }
+
+  private Command printTest2() {
+    return new InstantCommand(() -> System.out.println("NUM2"));
+  }
+
   // ------ commands -------
   /**
    * Sets the superstructure target state
@@ -227,6 +237,12 @@ public class Superstructure extends SubsystemBase {
       
       case EJECT:
         return eject();
+
+      case PRINTTEST1:
+        return printTest1();
+
+      case PRINTTEST2:
+        return printTest2();
 
         
       default:

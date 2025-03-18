@@ -108,6 +108,9 @@ public class RobotContainer {
     autoChooser.addCmd("toReefL4", this::moveToReefL4);
     autoChooser.addCmd("testCircle", this::testCircle);
     autoChooser.addCmd("rotationTest", this::rotationTest);
+    autoChooser.addCmd("test1", this::test);
+    autoChooser.addCmd("test2", this::test2);
+    autoChooser.addCmd("testBoth", this::testBoth);
 
     SmartDashboard.putData("Select Auto", autoChooser);
     
@@ -144,11 +147,26 @@ public class RobotContainer {
     return superstructure.setState(SSStates.STOWED);
   }
 
+  public Command test() {
+    return superstructure.setState(SSStates.PRINTTEST1);
+  }
+
+  public Command test2() {
+    return superstructure.setState(SSStates.PRINTTEST2);
+  }
+
   public Command moveToReefL4() {
     return Commands.sequence(
       goToReef(),
       scoreL4(),
       stowed()
+    );
+  }
+
+  public Command testBoth() {
+    return Commands.sequence(
+      test(),
+      test2()
     );
   }
   
