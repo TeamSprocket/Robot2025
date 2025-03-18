@@ -33,7 +33,7 @@ public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
-    private PIDController pidRotationAlign = new PIDController(2, 0, 0);
+    private PIDController pidRotationAlign = new PIDController(3.5, 0, 0);
     private PIDController pidXAlign = new PIDController(2.5, 0, 0);
     private PIDController pidYAlign = new PIDController(2.5, 0, 0);
 
