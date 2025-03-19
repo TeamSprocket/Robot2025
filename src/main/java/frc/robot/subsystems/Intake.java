@@ -83,6 +83,8 @@ public class Intake extends SubsystemBase {
       case EJECT:
         intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedEject));
         break;
+      
+      
     
 
       // This method will be called once per scheduler run
