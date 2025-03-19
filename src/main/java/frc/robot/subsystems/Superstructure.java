@@ -28,8 +28,7 @@ public class Superstructure extends SubsystemBase {
     ALGAE_REMOVE_3,
     ALGAE_CARRY,
     ALGAE_SCORE,
-    EJECT,
-    testElevator
+    EJECT
   }
 
   /**
@@ -186,12 +185,6 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
-  private Command elevatorTest() {
-    return new InstantCommand(()-> {
-      elevator.setState(ElevatorStates.TEST);
-    });
-  }
-
   // ------ commands -------
   /**
    * Sets the superstructure target state
@@ -234,10 +227,6 @@ public class Superstructure extends SubsystemBase {
       
       case EJECT:
         return eject();
-      
-      case testElevator:
-        return elevatorTest();
-    
 
         
       default:

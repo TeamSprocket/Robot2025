@@ -140,8 +140,6 @@ public class RobotContainer {
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
     driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    //driver.a().whileTrue(new InstantCommand(() ->  new superstructure().setState(SSStates.testElevator)));
-
     driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
 
     // driver.y().onTrue(new InstantCommand(() -> speedMultiplier = 0.3))
@@ -214,13 +212,9 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(driver.a())
-      .whileTrue(superstructure.setState(SSStates.testElevator))
+    new Trigger(operator.a())
+      .whileTrue(superstructure.setState(SSStates.CORAL_1))
       .whileFalse(superstructure.setState(SSStates.STOWED));
-
-    // new Trigger(operator.a())
-    //   .whileTrue(superstructure.setState(SSStates.CORAL_1))
-    //   .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.b())
       .whileTrue(superstructure.setState(SSStates.CORAL_2))

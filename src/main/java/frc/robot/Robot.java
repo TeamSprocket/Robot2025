@@ -14,15 +14,14 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Superstructure.SSStates;
 
 public class Robot extends TimedRobot {
-  private final CommandXboxController controller = new CommandXboxController(0);
-  final TalonFX climbTest = new TalonFX(10);
-  final TalonFX climbTest2 = new TalonFX(11);
+  private final XboxController controller = new XboxController(0);
+  final TalonFX climbTest = new TalonFX(0);
+  //final TalonFX climbTest2 = new TalonFX(0);
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   
@@ -82,7 +81,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     
-    m_robotContainer.getSuperstructure().setState(SSStates.testElevator);
+    m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
@@ -92,11 +91,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   
-  // controller.a().whileTrue(new InstantCommand(() -> climbTest.set(-0.1)));
-  // controller.a().whileFalse(new InstantCommand(() -> climbTest.set(0.0)));
-  // controller.b().whileTrue(new InstantCommand(() -> climbTest2.set(0.1)));
-  // controller.b().whileFalse(new InstantCommand(() -> climbTest2.set(0.0)));
-
+  if (controller.getAButton()) {
+   climbTest.set(0.1);
+   //climbTest2.set(0.1);
+  }
+  else {
+    climbTest.set(0.0);
+    //climbTest2.set(0);
+   }
 }
     
 

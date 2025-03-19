@@ -38,8 +38,7 @@ public class Elevator extends SubsystemBase {
         CORAL_3,
         CORAL_4,
         ALGAE_REMOVE_2,
-        ALGAE_REMOVE_3,
-        TEST
+        ALGAE_REMOVE_3
     }
 
     private ElevatorStates state = ElevatorStates.NONE;
@@ -93,12 +92,6 @@ public class Elevator extends SubsystemBase {
             case ALGAE_REMOVE_3:
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove3);
                 break;
-            case TEST:
-                moveToHeight(0.5);
-                //elevatorMotor.set(0.5);
-                break;
-                
-                
         }
 
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValueAsDouble());
