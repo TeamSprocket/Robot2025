@@ -141,13 +141,13 @@ public final class Constants {
     public static final double kMotionMagicCruiseVelocity = 8.5;
     public static final double kMotionMagicAcceleration = 12.0;
 
-    public static final double kP = 40.0;
+    public static final double kP = 40.0; // 40.0
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double kS = 0.105;
-    public static final double kV = 0.738;
-    public static final double kA = 0.001;
-    public static final double kG = 0.375;
+    public static final double kS = 0.1375; //0.105
+    public static final double kV = 0.769; //0.738
+    public static final double kA = 0.001; //0.001
+    public static final double kG = 0.3125; //0.375
 
     public static final double kElevatorGearRatio = 5.77;
   }
