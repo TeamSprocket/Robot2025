@@ -196,17 +196,15 @@ public class RobotContainer {
 
     // --------------------=Operator=--------------------
 
-    // new Trigger(operator.leftTrigger())
-    //   .whileTrue(superstructure.setState(SSStates.INTAKE))
-    //   .whileFalse(superstructure.setState(SSStates.STOWED));
+    new Trigger(operator.leftTrigger())
+      .whileTrue(superstructure.setState(SSStates.INTAKE))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
 
     // new Trigger(operator.rightTrigger())
     //   .whileTrue(superstructure.setState(SSStates.ALGAE_SCORE))
     //   .whileFalse(superstructure.setState(SSStates.STOWED)); // TODO: test this
 
-    new Trigger(operator.leftTrigger())
-    .whileTrue(superstructure.setState(SSStates.ELEVATOR_TEST))
-    .whileFalse(superstructure.setState(SSStates.STOWED));
+    
 
 
 
