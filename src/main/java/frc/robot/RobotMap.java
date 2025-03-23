@@ -47,7 +47,7 @@ public final class RobotMap {
   }
 
   public static final class AlgaePivot {
-    public static final int ALGAE_PIVOT = 12;
+    public static final int ALGAE_PIVOT = 14;
   }
 
   public static final class Intake {
@@ -55,7 +55,7 @@ public final class RobotMap {
   }
 
   public static final class Shooter {
-    public static final int ROLL_SHOOTER = 14;
+    public static final int ROLL_SHOOTER = 12;
     // DIO
     public static final int BEAM_BREAK = 0;
   }

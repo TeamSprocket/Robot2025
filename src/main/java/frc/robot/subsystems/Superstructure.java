@@ -116,9 +116,10 @@ public class Superstructure extends SubsystemBase {
         intake.setState(IntakeStates.STOWED); 
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_4);
-        pivot.setState(PivotStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()),
+      new InstantCommand(() -> pivot.setState(PivotStates.L4)),
+      new WaitUntilCommand(() -> pivot.atSetpoint()),
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }

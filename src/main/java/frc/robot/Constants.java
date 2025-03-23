@@ -91,10 +91,9 @@ public final class Constants {
 
     public static final double kTuneSpeed = 0.3;
 
-    public static final double kOuttakeS = 0.25; // 0.25
-    public static final double kOuttakeV = 0.0; // 0.153
+    public static final double kOuttakeS = 0.312; // 0.25
+    public static final double kOuttakeV = 0.1563; // 0.153
     public static final double kOuttakeA = 0.0; //nothing
-    public static final double kOuttakeG = 0.0; //nothing
     public static final double kOuttakeP = 0.0;
     public static final double kOuttakeI = 0.0;
     public static final double kOuttakeD = 0.0;
@@ -107,6 +106,7 @@ public final class Constants {
     public static final double kAngleAlgaeRemove = 0.28;
     public static final double kAngleAlgaeScore = 0.26;
     public static final double kAngleIntake = 0.44;
+    public static final double kAngleL4 = 0.26;
 
     public static final double kMotionMagicCruiseVelocity = 6;//2
     public static final double kMotionMagicAcceleration = 7; //4
@@ -129,8 +129,8 @@ public final class Constants {
     public static final double kHeightIntake = 0.0;
     public static final double kHeightHandoff = 0.0;
     public static final double kHeightCoral1 = 0.0;
-    public static final double kHeightCoral2 = 0.53; //0.95 CHECKECKCHECK
-    public static final double kHeightCoral3 = 2.22; //2.47 CHECKECKCHECK
+    public static final double kHeightCoral2 = 0.53; //0.95 
+    public static final double kHeightCoral3 = 2.22; //2.47 
     public static final double kHeightCoral4 = 5.04;
 
     public static final double kHeightAlgaeRemove2 = 1;

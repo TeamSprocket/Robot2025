@@ -18,9 +18,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotMap;
 
 public class Outtake extends SubsystemBase {
-private final TalonFX motor1 = new TalonFX(14);
+private final TalonFX motor1 = new TalonFX(RobotMap.Shooter.ROLL_SHOOTER);
 
 private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
@@ -44,11 +45,11 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
     talonFXConfigs.withSlot0(
       new Slot0Configs()
-      .withKP(0.0) //35
+      .withKP(Constants.Outtake.kOuttakeP) //35
       .withKI(0)
       .withKD(0)
-      .withKS(0.312) //0.312
-      .withKV(0.1563) //0.1563
+      .withKS(Constants.Outtake.kOuttakeS) //0.312
+      .withKV(Constants.Outtake.kOuttakeV) //0.1563
       .withKA(0));
 
       talonFXConfigs.withFeedback(

@@ -234,11 +234,11 @@ public class RobotContainer {
 
     new Trigger(operator.rightBumper())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_2))
-      .whileFalse(superstructure.setState(SSStates.ALGAE_CARRY));
+      .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.leftBumper())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3))
-      .whileFalse(superstructure.setState(SSStates.ALGAE_CARRY));
+      .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.povUp())
       .whileTrue(new InstantCommand(() -> outtake.runOuttake()))

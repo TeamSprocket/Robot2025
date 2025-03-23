@@ -16,11 +16,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotMap;
 import frc.util.*;
 
 public class Pivot extends SubsystemBase {
-    MotionMagicVoltage magVelocity = new MotionMagicVoltage(0);
-    private final TalonFX motor = new TalonFX(12);
+    MotionMagicVoltage mm = new MotionMagicVoltage(0);
+    private final TalonFX motor = new TalonFX(RobotMap.AlgaePivot.ALGAE_PIVOT);
     PivotStates currentState = PivotStates.NONE;
 
     private final SendableChooser<PivotStates> stateChooser = new SendableChooser<>();
@@ -31,6 +32,7 @@ public class Pivot extends SubsystemBase {
       ALGAE_REMOVE,
       INTAKE,
       ALGAE_CARRY,
+      L4,
       ALGAE_SCORE
     }
   
@@ -45,13 +47,13 @@ public class Pivot extends SubsystemBase {
       TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
       talonFXConfigs.withSlot0(
         new Slot0Configs()
-          .withKS(0.24)//0.24
-          .withKV(0.74)//
-          .withKA(0)//
-          .withKG(-0.42)//0.42
-          .withKP(40)
-          .withKI(0)
-          .withKD(0)
+          .withKS(Constants.Pivot.kS)//0.24
+          .withKV(Constants.Pivot.kV)//7
+          .withKA(Constants.Pivot.kA)//0.001
+          .withKG(Constants.Pivot.kG) //-0.42
+          .withKP(Constants.Pivot.kP)
+          .withKI(Constants.Pivot.kI)
+          .withKD(Constants.Pivot.kD)
           .withGravityType(GravityTypeValue.Arm_Cosine)
       );
 
@@ -66,7 +68,7 @@ public class Pivot extends SubsystemBase {
       );
 
       motor.getConfigurator().apply(talonFXConfigs, 0.050);
-      magVelocity.Slot = 0;
+      mm.Slot = 0;
     }
 
     @Override
@@ -76,33 +78,39 @@ public class Pivot extends SubsystemBase {
 
       switch(currentState){
         case NONE:
-        motor.setControl(magVelocity.withPosition(0));
+        motor.setControl(mm.withPosition(0));
         break;
 
         case STOWED:
-        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleStowed));
+        motor.setControl(mm.withPosition(Constants.Pivot.kAngleStowed));
         break;
 
         case ALGAE_REMOVE:
         motor.setNeutralMode(NeutralModeValue.Coast);
-        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeRemove));
+        motor.setControl(mm.withPosition(Constants.Pivot.kAngleAlgaeRemove));
         break;
 
         case INTAKE:
         motor.setNeutralMode(NeutralModeValue.Brake);
-        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleIntake));
+        motor.setControl(mm.withPosition(Constants.Pivot.kAngleIntake));
+        // motor.setVoltage(4);
         break;
 
         case ALGAE_CARRY:
         motor.setNeutralMode(NeutralModeValue.Brake);
-        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeRemove));
+        motor.setControl(mm.withPosition(Constants.Pivot.kAngleAlgaeRemove));
         break;
 
         case ALGAE_SCORE:
         motor.setNeutralMode(NeutralModeValue.Coast);
-        motor.setControl(magVelocity.withPosition(Constants.Pivot.kAngleAlgaeScore));
+        motor.setControl(mm.withPosition(Constants.Pivot.kAngleAlgaeScore));
         break;
-        
+
+        case L4:
+        motor.setNeutralMode(NeutralModeValue.Coast);
+        motor.setControl(mm.withPosition(Constants.Pivot.kAngleL4));
+        break;
+
       }
     }
 
@@ -112,6 +120,14 @@ public class Pivot extends SubsystemBase {
 
   public Command setStateCmd() {
     return new InstantCommand(() -> setState(PivotStates.STOWED));
+  }
+
+  public boolean atSetpoint() {
+    return Util.inRange(
+        motor.getPosition().getValueAsDouble() - mm.Position, 
+        -1 * Constants.Superstructure.kAtGoalTolerance, 
+        Constants.Superstructure.kAtGoalTolerance
+    );
   }
 
   public double getShooterPivotAngle() {
