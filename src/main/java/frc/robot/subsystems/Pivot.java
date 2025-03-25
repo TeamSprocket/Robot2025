@@ -35,6 +35,7 @@ public class Pivot extends SubsystemBase {
       L4,
       ALGAE_SCORE
     }
+
   
     public Pivot(){
       motor.setPosition(0);
@@ -83,6 +84,8 @@ public class Pivot extends SubsystemBase {
 
         case STOWED:
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleStowed));
+        
+       
         break;
 
         case ALGAE_REMOVE:
