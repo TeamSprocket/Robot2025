@@ -31,9 +31,7 @@ public class Pivot extends SubsystemBase {
       STOWED,
       ALGAE_REMOVE,
       INTAKE,
-      ALGAE_CARRY,
-      L4,
-      ALGAE_SCORE
+      L4
     }
 
   
@@ -74,7 +72,7 @@ public class Pivot extends SubsystemBase {
 
     @Override
     public void periodic() {
-      SmartDashboard.putString("State", currentState.toString());
+      SmartDashboard.putString("State [AP]", currentState.toString());
       // setState(stateChooser.getSelected());
 
       switch(currentState){
@@ -83,9 +81,8 @@ public class Pivot extends SubsystemBase {
         break;
 
         case STOWED:
+        motor.setNeutralMode(NeutralModeValue.Brake);
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleStowed));
-        
-       
         break;
 
         case ALGAE_REMOVE:
@@ -97,16 +94,6 @@ public class Pivot extends SubsystemBase {
         motor.setNeutralMode(NeutralModeValue.Brake);
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleIntake));
         // motor.setVoltage(4);
-        break;
-
-        case ALGAE_CARRY:
-        motor.setNeutralMode(NeutralModeValue.Brake);
-        motor.setControl(mm.withPosition(Constants.Pivot.kAngleAlgaeRemove));
-        break;
-
-        case ALGAE_SCORE:
-        motor.setNeutralMode(NeutralModeValue.Coast);
-        motor.setControl(mm.withPosition(Constants.Pivot.kAngleAlgaeScore));
         break;
 
         case L4:

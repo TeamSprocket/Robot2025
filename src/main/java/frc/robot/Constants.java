@@ -67,12 +67,12 @@ public final class Constants {
 
   public static final class Intake {
     
-    public static final double kSpeedIntake = 12;//20
+    public static final double kSpeedIntake = 9;//20
     public static final double kSpeedStowed = 0;
     public static final double kSpeedEject = -5;
 
-    public static final double kIntakeS = 0.182;
-    public static final double kIntakeV = 0.132;
+    public static final double kIntakeS = 0.3;
+    public static final double kIntakeV = 0.17; //0.132
     public static final double kIntakeA = 0.0;  
     public static final double kIntakeG = 0.0;
     public static final double kIntakeP = 0.0;
@@ -91,8 +91,8 @@ public final class Constants {
 
     public static final double kTuneSpeed = 0.3;
 
-    public static final double kOuttakeS = 0.312; // 0.25
-    public static final double kOuttakeV = 0.1563; // 0.153
+    public static final double kOuttakeS = 0.25; // 0.25
+    public static final double kOuttakeV = 0.2083; // 0.153
     public static final double kOuttakeA = 0.0; //nothing
     public static final double kOuttakeP = 0.0;
     public static final double kOuttakeI = 0.0;
@@ -102,22 +102,21 @@ public final class Constants {
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = 0.05;
+    public static final double kAngleStowed = 0.2;
     public static final double kAngleAlgaeRemove = 0.28;
-    public static final double kAngleAlgaeScore = 0.26;
-    public static final double kAngleIntake = 0.44;
+    public static final double kAngleIntake = 0.4;
     public static final double kAngleL4 = 0.26;
 
     public static final double kMotionMagicCruiseVelocity = 6;//2
     public static final double kMotionMagicAcceleration = 7; //4
 
-    public static final double kP = 0; //50
+    public static final double kP = 10; //50
     public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.16; //0.24 0.45 
-    public static final double kV = 0.5; //0.74 0.617
-    public static final double kA = 0.001;
-    public static final double kG = -0.45; //-0.42 0.45
+    public static final double kD = 0;
+    public static final double kS = 0.47; //0.16 //0.24 0.45 
+    public static final double kV = 0.5; // //0.5 //0.74 0.617
+    public static final double kA = 0.0;
+    public static final double kG = -0.45; // -0.45 //-0.42 0.45
 
     public static final double kPivotGearRatio = 2.75;
   }

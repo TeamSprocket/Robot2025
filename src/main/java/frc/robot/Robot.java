@@ -62,11 +62,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
   }
 
   @Override

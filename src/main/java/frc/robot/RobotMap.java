@@ -52,6 +52,11 @@ public final class RobotMap {
 
   public static final class Intake {
     public static final int ROLL_INTAKE = 13;
+    public static final int SERVO = 9;
+  }
+
+  public static final class Climb {
+    public static final int CLIMB_PIVOT = 16;
   }
 
   public static final class Shooter {

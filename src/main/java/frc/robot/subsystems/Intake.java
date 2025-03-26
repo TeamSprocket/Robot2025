@@ -9,8 +9,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,7 +19,8 @@ import frc.robot.RobotMap;
 public class Intake extends SubsystemBase {
 
   private final TalonFX intakemotor = new TalonFX(RobotMap.Intake.ROLL_INTAKE);
-  private Servo servo = new Servo(0);
+  private PWM pivotServo = new PWM(RobotMap.Intake.SERVO);
+
   private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private IntakeStates state = IntakeStates.NONE;
 
@@ -90,7 +90,7 @@ public class Intake extends SubsystemBase {
 
       case CLIMB:
         intakemotor.setControl(velocityVoltage.withVelocity(0));
-        servo.setAngle(90); // TODO: test
+        pivotServo.setPosition(0.5);
         break;
     
       // This method will be called once per scheduler run
