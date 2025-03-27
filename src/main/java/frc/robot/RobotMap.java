@@ -52,7 +52,7 @@ public final class RobotMap {
 
   public static final class Intake {
     public static final int ROLL_INTAKE = 13;
-    public static final int SERVO = 9;
+    public static final int SERVO = 0;
   }
 
   public static final class Climb {

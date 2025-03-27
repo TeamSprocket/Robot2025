@@ -19,7 +19,7 @@ import frc.robot.RobotMap;
 public class Intake extends SubsystemBase {
 
   private final TalonFX intakemotor = new TalonFX(RobotMap.Intake.ROLL_INTAKE);
-  private PWM pivotServo = new PWM(RobotMap.Intake.SERVO);
+  private final PWM servo = new PWM(0);
 
   private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private IntakeStates state = IntakeStates.NONE;
@@ -90,7 +90,7 @@ public class Intake extends SubsystemBase {
 
       case CLIMB:
         intakemotor.setControl(velocityVoltage.withVelocity(0));
-        pivotServo.setPosition(0.5);
+        servo.setPosition(1);
         break;
     
       // This method will be called once per scheduler run
