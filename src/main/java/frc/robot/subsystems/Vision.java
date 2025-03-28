@@ -4,6 +4,7 @@ import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.ctre.phoenix6.swerve.SwerveRequest.ApplyFieldSpeeds;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -14,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -101,6 +103,20 @@ public class Vision extends SubsystemBase {
         
         debug();
     }
+
+    public Command choreoAlignLeft() {
+    return drivetrain.applyRequest(
+        () -> new ApplyFieldSpeeds()
+          .withSpeeds(new ChassisSpeeds(this.getAlignOffsetsLeft()[0], this.getAlignOffsetsRight()[1], this.getRotationalAlignSpeedLeft()))
+        ).alongWith(new InstantCommand(()->this.setAlignState(AlignStates.ALIGNING)));
+  }
+  public Command choreoAlignRight() {
+    return drivetrain.applyRequest(
+      () -> new ApplyFieldSpeeds()
+        .withSpeeds(new ChassisSpeeds(this.getAlignOffsetsRight()[0], this.getAlignOffsetsRight()[1], this.getRotationalAlignSpeedLeft()))
+    ).alongWith(new InstantCommand(()->this.setAlignState(AlignStates.ALIGNING)));
+  }
+  
 
     public void setAlignState(AlignStates alignState) {
         currentAlignState = alignState;

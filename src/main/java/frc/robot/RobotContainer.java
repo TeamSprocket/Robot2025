@@ -135,8 +135,8 @@ public class RobotContainer {
       Commands.sequence(
         traj1.resetOdometry(),
         traj1.cmd(),
-        superstructure.setState(SSStates.PRINTTEST1),
-        superstructure.setState(SSStates.PRINTTEST2)
+        superstructure.setState(SSStates.ALIGN_LEFT),
+        superstructure.setState(SSStates.ALIGN_RIGHT)
       )
     );
 
@@ -167,13 +167,6 @@ public class RobotContainer {
     return superstructure.setState(SSStates.STOWED);
   }
 
-  public Command test() {
-    return superstructure.setState(SSStates.PRINTTEST1);
-  }
-
-  public Command test2() {
-    return superstructure.setState(SSStates.PRINTTEST2);
-  }
 
   public Command moveToReefL4() {
     return Commands.sequence(
@@ -183,11 +176,18 @@ public class RobotContainer {
     );
   }
 
-  public Command testBoth() {
-    return Commands.sequence(
-      test(),
-      test2()
-    );
+
+  public Command choreoAlignLeft() {
+    return drivetrain.applyRequest(
+        () -> new ApplyFieldSpeeds()
+          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsLeft()[1], vision.getRotationalAlignSpeedLeft()))
+        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)));
+  }
+  public Command choreoAlignRight() {
+    return drivetrain.applyRequest(
+      () -> new ApplyFieldSpeeds()
+        .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedRight()))
+    ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)));
   }
   
 
@@ -227,17 +227,11 @@ public class RobotContainer {
     //   .onFalse(new InstantCommand(() -> speedMultiplier = 0.1));
 
     driver.rightTrigger().whileTrue(
-      drivetrain.applyRequest(
-        () -> new ApplyFieldSpeeds()
-          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedLeft()))
-      ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
+      choreoAlignLeft()
     );
 
     driver.leftTrigger().whileTrue(
-      drivetrain.applyRequest(
-        () -> new ApplyFieldSpeeds()
-          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedLeft()))
-        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
+      choreoAlignRight()
     );
 
 
@@ -333,6 +327,10 @@ public class RobotContainer {
   public Superstructure getSuperstructure() {
     return superstructure;
   }
+
+  
+
+ 
 
   
 

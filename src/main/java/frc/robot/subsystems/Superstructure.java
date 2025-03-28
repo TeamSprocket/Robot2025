@@ -9,10 +9,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 import frc.robot.subsystems.Outtake.OuttakeStates;
 import frc.robot.subsystems.Pivot.PivotStates;
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.swerve.TunerConstants;
 
 public class Superstructure extends SubsystemBase {
 
@@ -29,8 +32,8 @@ public class Superstructure extends SubsystemBase {
     ALGAE_CARRY,
     ALGAE_SCORE,
     EJECT,
-    PRINTTEST1,
-    PRINTTEST2
+    ALIGN_LEFT,
+    ALIGN_RIGHT
   }
 
   /**
@@ -43,6 +46,10 @@ public class Superstructure extends SubsystemBase {
   public SSStates currentState = SSStates.NONE;
   public SSStates lastState = SSStates.NONE;
   public SSStates wantedState = SSStates.NONE;
+
+  public final CommandSwerveDrivetrain drivetrain;
+  Vision vision;
+
 
   Elevator elevator;
   Intake intake;
@@ -58,6 +65,10 @@ public class Superstructure extends SubsystemBase {
     this.intake = intake;
     this.pivot = pivot;
     this.outtake = outtake;
+    drivetrain = TunerConstants.createDrivetrain();
+    vision = new Vision(drivetrain);
+
+    
   }
   
   @Override
@@ -187,12 +198,12 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
-  private Command printTest1() {
-    return new InstantCommand(() -> System.out.println("NUM1"));
+  private Command alignLeft() {
+    return vision.choreoAlignLeft();
   }
 
-  private Command printTest2() {
-    return new InstantCommand(() -> System.out.println("NUM2"));
+  private Command alignRight() {
+    return vision.choreoAlignRight();
   }
 
   // ------ commands -------
@@ -238,11 +249,11 @@ public class Superstructure extends SubsystemBase {
       case EJECT:
         return eject();
 
-      case PRINTTEST1:
-        return printTest1();
+      case ALIGN_LEFT:
+        return alignLeft();
 
-      case PRINTTEST2:
-        return printTest2();
+      case ALIGN_RIGHT:
+        return alignRight();
 
         
       default:
