@@ -117,20 +117,38 @@ public class RobotContainer {
     // SmartDashboard.putData("Auto Routine Selector", autonChooser);
   }
 
+  // public AutoRoutine routine() {
+  //   AutoRoutine routine = autoFactory.newRoutine("Routine");
+  //   AutoTrajectory traj1 = routine.trajectory("test path");
+  //   AutoTrajectory traj2 = routine.trajectory("back out");
+
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+
   public AutoRoutine routine() {
     AutoRoutine routine = autoFactory.newRoutine("Routine");
-    AutoTrajectory traj1 = routine.trajectory("test path");
+    AutoTrajectory traj1 = routine.trajectory("removeAlgae");
 
     routine.active().onTrue(
       Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
         traj1.resetOdometry(),
         traj1.cmd()
       )
     );
 
-    traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(2)).andThen(superstructure.setState(SSStates.STOWED)));
     
-    traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
+    traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
+    traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
+    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED)));
+
+    
+    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
     // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3));
     // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
     return routine;
@@ -164,7 +182,8 @@ public class RobotContainer {
     drivetrain.applyRequest(() ->
         drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.5) // Drive forward with negative Y (forward)
             .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.5) // Drive left with negative X (left)
-            .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6) // Drive counterclockwise with negative X (left)
+            .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6
+            ) // Drive counterclockwise with negative X (left)
         )
     );
 
@@ -196,12 +215,17 @@ public class RobotContainer {
       ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
     );
 
+    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+
     driver.leftTrigger().whileTrue(
       drivetrain.applyRequest(
         () -> new ApplyFieldSpeeds()
           .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsLeft()[1], vision.getRotationalAlignSpeedLeft()))
         ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
     );
+
+    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+
 
 
 
@@ -243,14 +267,6 @@ public class RobotContainer {
     new Trigger(operator.leftTrigger())
       .whileTrue(superstructure.setState(SSStates.INTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
-
-    // new Trigger(operator.rightTrigger())
-    //   .whileTrue(superstructure.setState(SSStates.ALGAE_SCORE))
-    //   .whileFalse(superstructure.setState(SSStates.STOWED)); // TODO: test this
-
-    new Trigger(operator.rightTrigger())
-      .whileTrue(new InstantCommand(()->outtake.runOuttake()))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
     
     new Trigger(operator.button(8))
       .whileTrue(superstructure.setState(SSStates.EJECT))
@@ -262,15 +278,15 @@ public class RobotContainer {
 
     new Trigger(operator.b())
       .whileTrue(superstructure.setState(SSStates.CORAL_2))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+      .onFalse(new InstantCommand(() -> outtake.revertOuttake()).andThen(Commands.waitSeconds(0.3)).andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger (operator.x())
       .whileTrue(superstructure.setState(SSStates.CORAL_3))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+      .onFalse(new InstantCommand(() -> outtake.revertOuttake()).andThen(Commands.waitSeconds(0.3)).andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger (operator.y())
       .whileTrue(superstructure.setState(SSStates.CORAL_4))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+      .onFalse(new InstantCommand(() -> outtake.revertOuttake()).andThen(Commands.waitSeconds(0.3)).andThen(superstructure.setState(SSStates.STOWED)));
 
     new Trigger(operator.rightBumper())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_2))
@@ -285,7 +301,7 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.povDown())
-      .whileTrue(new InstantCommand(() -> outtake.runOuttake()))
+      .whileTrue(new InstantCommand(() -> outtake.revertOuttake()))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     // new Trigger(operator.povLeft())
@@ -318,6 +334,7 @@ public class RobotContainer {
 
   public void waitTime(double duration) {
     Timer timer = new Timer();
+    // timer.delay(duration);
     timer.start();
     while (timer.get() < duration) {
 

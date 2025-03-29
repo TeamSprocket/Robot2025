@@ -82,7 +82,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+    private final SwerveRequest.ApplyFieldSpeeds m_pathApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
 
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Align Pose", Pose2d.struct).publish();
 
@@ -348,6 +348,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             // path.vy,
             // path.omega
         );
+
+        setControl(m_pathApplyFieldSpeeds.withSpeeds(speeds));
+
     }
 
     private void startSimThread() {

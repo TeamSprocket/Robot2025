@@ -32,8 +32,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     CORAL_OUTTAKE,
     CORAL1,
     ALGAE_REMOVE,
-    ALGAE_CARRY,
-    ALGAE_SCORE
+    CORAL_RECLAIM
   }
 
   private OuttakeStates state = OuttakeStates.NONE;
@@ -80,8 +79,6 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     // setState(stateChooser.getSelected()); // TODO: remove this when done testing
 
     switch(state){
-      
-
       case NONE:
         motor1.setControl(velocityVoltage.withVelocity(0));
         // motor2.setControl(velocityVoltage.withVelocity(0));
@@ -92,22 +89,19 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         break;
 
       case INTAKE:
-        motor1.setControl(velocityVoltage.withVelocity(2));
+        motor1.setControl(velocityVoltage.withVelocity(3.5));
         break;
 
       case ALGAE_REMOVE:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeRemoval));
         break;
 
-      case ALGAE_CARRY:
-        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeCarry));
-        break;
-        
-      case ALGAE_SCORE:
-        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeScore));
-
       case CORAL_OUTTAKE:
-        motor1.setControl(velocityVoltage.withVelocity(6.5));
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
+        break;
+
+      case CORAL_RECLAIM:
+        motor1.setControl(velocityVoltage.withVelocity(-4));
         break;
       
       case CORAL1:
@@ -119,7 +113,11 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   }
 
   public void runOuttake() {
-    state = OuttakeStates.CORAL_OUTTAKE;
+    setState(OuttakeStates.CORAL_OUTTAKE);
+  }
+
+  public void revertOuttake() {
+    setState(OuttakeStates.CORAL_RECLAIM);
   }
 
   public void setState(OuttakeStates state) {
