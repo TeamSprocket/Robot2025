@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.util.LimelightHelper;
-import frc.util.ShuffleboardIO;
+// import frc.util.ShuffleboardIO;
 import frc.util.Util;
 
 public class Vision extends SubsystemBase {
@@ -83,8 +83,8 @@ public class Vision extends SubsystemBase {
         timer.start();
 
         
-        ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
-        ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
+        // ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
+        // ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
     }
 
     @Override

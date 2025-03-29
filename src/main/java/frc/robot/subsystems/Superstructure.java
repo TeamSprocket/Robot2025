@@ -31,9 +31,7 @@ public class Superstructure extends SubsystemBase {
     ALGAE_REMOVE_3,
     ALGAE_CARRY,
     ALGAE_SCORE,
-    EJECT,
-    ALIGN_LEFT,
-    ALIGN_RIGHT
+    EJECT
   }
 
   /**
@@ -46,9 +44,6 @@ public class Superstructure extends SubsystemBase {
   public SSStates currentState = SSStates.NONE;
   public SSStates lastState = SSStates.NONE;
   public SSStates wantedState = SSStates.NONE;
-
-  public final CommandSwerveDrivetrain drivetrain;
-  Vision vision;
 
 
   Elevator elevator;
@@ -65,15 +60,13 @@ public class Superstructure extends SubsystemBase {
     this.intake = intake;
     this.pivot = pivot;
     this.outtake = outtake;
-    drivetrain = TunerConstants.createDrivetrain();
-    vision = new Vision(drivetrain);
 
-    
   }
   
   @Override
   public void periodic() {
     SmartDashboard.putString("SUPERSTRUCTURE STATE CURRENT", currentState.toString());
+    SmartDashboard.putBoolean("elevator at set pose", elevator.atSetpoint());
   }
 
   // States
@@ -185,7 +178,7 @@ public class Superstructure extends SubsystemBase {
       intake.setState(IntakeStates.STOWED);
       outtake.setState(OuttakeStates.ALGAE_CARRY);
       elevator.setState(ElevatorStates.STOWED);
-      pivot.setState(PivotStates.ALGAE_CARRY);
+      pivot.setState(PivotStates.STOWED);
     });
   }
 
@@ -194,17 +187,17 @@ public class Superstructure extends SubsystemBase {
       intake.setState(IntakeStates.STOWED);
       outtake.setState(OuttakeStates.ALGAE_SCORE);
       elevator.setState(ElevatorStates.STOWED);
-      pivot.setState(PivotStates.ALGAE_SCORE);
+      pivot.setState(PivotStates.STOWED);
     });
   }
 
-  private Command alignLeft() {
-    return vision.choreoAlignLeft();
-  }
+  // private Command alignLeft() {
+  //   return vision.choreoAlignLeft();
+  // }
 
-  private Command alignRight() {
-    return vision.choreoAlignRight();
-  }
+  // private Command alignRight() {
+  //   return vision.choreoAlignRight();
+  // }
 
   // ------ commands -------
   /**
@@ -249,11 +242,11 @@ public class Superstructure extends SubsystemBase {
       case EJECT:
         return eject();
 
-      case ALIGN_LEFT:
-        return alignLeft();
+      // case ALIGN_LEFT:
+      //   return alignLeft();
 
-      case ALIGN_RIGHT:
-        return alignRight();
+      // case ALIGN_RIGHT:
+      //   return alignRight();
 
         
       default:

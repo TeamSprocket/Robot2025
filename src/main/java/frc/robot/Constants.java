@@ -54,7 +54,7 @@ public final class Constants {
     public static final Pose2d poseAlignRedLeft10 = new Pose2d(12.059, 4.22, Rotation2d.fromDegrees(0));
     public static final Pose2d poseAlignRedRight10 = new Pose2d(12.157, 3.789, Rotation2d.fromDegrees(0));
     public static final Pose2d poseAlignRedLeft9 = new Pose2d(12.774, 4.761, Rotation2d.fromDegrees(300));
-    public static final Pose2d poseAlignRedRight9 = new Pose2d(2.519, 4.691, Rotation2d.fromDegrees(300));
+    public static final Pose2d poseAlignRedRight9 = new Pose2d(12.519, 4.691, Rotation2d.fromDegrees(300));
     public static final Pose2d poseAlignRedLeft8 = new Pose2d(13.635, 4.750, Rotation2d.fromDegrees(240));
     public static final Pose2d poseAlignRedRight8 = new Pose2d(13.425, 4.980, Rotation2d.fromDegrees(240));
     public static final Pose2d poseAlignRedLeft7 = new Pose2d(14.025, 3.882, Rotation2d.fromDegrees(180));
@@ -103,21 +103,20 @@ public final class Constants {
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = 0.05;
-    public static final double kAngleAlgaeRemove = 0.28;
-    public static final double kAngleAlgaeScore = 0.26;
-    public static final double kAngleIntake = 0.44;
+    public static final double kAngleStowed = -0.22;
+    public static final double kAngleAlgaeRemove = -.04;
+    public static final double kAngleIntake = 0.105;
+    public static final double kAngleL4 = 0.06;
 
     public static final double kMotionMagicCruiseVelocity = 6;//2
     public static final double kMotionMagicAcceleration = 7; //4
-
-    public static final double kP = 50;
+    public static final double kP = 8; //50
     public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.24;
-    public static final double kV = 0.74;
+    public static final double kD = 1.2;
+    public static final double kS = 0.16; //0.24 0.45 
+    public static final double kV = 0.5; // //0.5 //0.74 0.617
     public static final double kA = 0.0;
-    public static final double kG = -0.42;
+    public static final double kG = -0.45; // -0.45 //-0.42 0.45
 
     public static final double kPivotGearRatio = 2.75;
   }

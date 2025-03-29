@@ -129,17 +129,19 @@ public class RobotContainer {
 
   public AutoRoutine routine() {
     AutoRoutine routine = autoFactory.newRoutine("Routine");
-    AutoTrajectory traj1 = routine.trajectory("New Path");
+    AutoTrajectory traj1 = routine.trajectory("test path");
 
     routine.active().onTrue(
       Commands.sequence(
         traj1.resetOdometry(),
-        traj1.cmd(),
-        superstructure.setState(SSStates.ALIGN_LEFT),
-        superstructure.setState(SSStates.ALIGN_RIGHT)
+        traj1.cmd()
+        // superstructure.setState(SSStates.CORAL_3),
+        // new WaitCommand(3),
+        // superstructure.setState(SSStates.STOWED)
       )
     );
-
+    
+    traj1.done().whileTrue(superstructure.setState(SSStates.CORAL_3).andThen(superstructure.setState(SSStates.STOWED)));
     return routine;
   }
 
