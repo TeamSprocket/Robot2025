@@ -56,11 +56,6 @@ public class RobotContainer {
   public final AutoFactory autoFactory;
 
   double speedMultiplier = 1.0;
-
-  Command pathAlign = new InstantCommand(() -> System.out.println("hi"));
-
-  // PathConstraints constraints = new PathConstraints(2, 2, 3, 2);
-
   Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot);
 
   // ------- Swerve Generated -------
@@ -132,8 +127,12 @@ public class RobotContainer {
         traj1.cmd()
       )
     );
+
+    traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(2)).andThen(superstructure.setState(SSStates.STOWED)));
     
-    traj1.done().whileTrue(superstructure.setState(SSStates.CORAL_3).andThen(superstructure.setState(SSStates.STOWED)));
+    traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
+    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3));
+    // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
     return routine;
   }
 
@@ -142,7 +141,19 @@ public class RobotContainer {
   }
 
   public void initNamedCommands() {
+  }
 
+  public Command choreoAlignLeft() {
+    return drivetrain.applyRequest(
+        () -> new ApplyFieldSpeeds()
+          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsLeft()[1], vision.getRotationalAlignSpeedLeft()))
+        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)));
+  }
+  public Command choreoAlignRight() {
+    return drivetrain.applyRequest(
+      () -> new ApplyFieldSpeeds()
+        .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedRight()))
+    ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)));
   }
 
   public void configureBindings() {
@@ -305,6 +316,17 @@ public class RobotContainer {
     );
   }
 
+  public void waitTime(double duration) {
+    Timer timer = new Timer();
+    timer.start();
+    while (timer.get() < duration) {
+
+    }
+    timer.stop();
+    timer.reset();
+    }
+  }
+
   // private void applyAlignSpeeds() {
   //   drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
   //     .withSpeeds(new ChassisSpeeds(
@@ -397,7 +419,7 @@ public class RobotContainer {
 //       return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
 //     }
 //   }
-}
+
 
   // private Command pathfind(String direction) {
   //   if (direction.equals("right")) {
