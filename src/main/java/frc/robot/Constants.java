@@ -67,9 +67,9 @@ public final class Constants {
 
   public static final class Intake {
     
-    public static final double kSpeedIntake = 9;//20
+    public static final double kSpeedIntake = -11;//20
     public static final double kSpeedStowed = 0;
-    public static final double kSpeedEject = -5;
+    public static final double kSpeedEject = 5;
 
     public static final double kIntakeS = 0.3;
     public static final double kIntakeV = 0.17; //0.132
@@ -102,18 +102,17 @@ public final class Constants {
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = 0.2;
-    public static final double kAngleAlgaeRemove = 0.28;
-    public static final double kAngleIntake = 0.4;
-    public static final double kAngleL4 = 0.26;
+    public static final double kAngleStowed = -0.22;
+    public static final double kAngleAlgaeRemove = -.04;
+    public static final double kAngleIntake = 0.105;
+    public static final double kAngleL4 = 0.06;
 
     public static final double kMotionMagicCruiseVelocity = 6;//2
     public static final double kMotionMagicAcceleration = 7; //4
-
-    public static final double kP = 10; //50
+    public static final double kP = 8; //50
     public static final double kI = 0.0;
-    public static final double kD = 0;
-    public static final double kS = 0.47; //0.16 //0.24 0.45 
+    public static final double kD = 1.2;
+    public static final double kS = 0.16; //0.24 0.45 
     public static final double kV = 0.5; // //0.5 //0.74 0.617
     public static final double kA = 0.0;
     public static final double kG = -0.45; // -0.45 //-0.42 0.45
@@ -130,7 +129,7 @@ public final class Constants {
     public static final double kHeightCoral1 = 0.0;
     public static final double kHeightCoral2 = 0.53; //0.95 
     public static final double kHeightCoral3 = 2.22; //2.47 
-    public static final double kHeightCoral4 = 5.04;
+    public static final double kHeightCoral4 = 4.81;
 
     public static final double kHeightAlgaeRemove2 = 1;
     public static final double kHeightAlgaeRemove3 = 2.7;

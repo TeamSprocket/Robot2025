@@ -189,10 +189,6 @@ public class RobotContainer {
     //   .whileTrue(superstructure.setState(SSStates.ALGAE_SCORE))
     //   .whileFalse(superstructure.setState(SSStates.STOWED)); // TODO: test this
 
-    
-
-
-
     new Trigger(operator.rightTrigger())
       .whileTrue(new InstantCommand(()->outtake.runOuttake()))
       .whileFalse(superstructure.setState(SSStates.STOWED));

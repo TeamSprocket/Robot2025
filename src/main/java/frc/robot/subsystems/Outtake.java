@@ -92,7 +92,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         break;
 
       case INTAKE:
-        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
+        motor1.setControl(velocityVoltage.withVelocity(2));
         break;
 
       case ALGAE_REMOVE:
@@ -107,7 +107,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedAlgaeScore));
 
       case CORAL_OUTTAKE:
-        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
+        motor1.setControl(velocityVoltage.withVelocity(6.5));
         break;
       
       case CORAL1:

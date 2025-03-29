@@ -36,7 +36,6 @@ public class Pivot extends SubsystemBase {
 
   
     public Pivot(){
-      motor.setPosition(0);
 
       stateChooser.setDefaultOption("NONE", PivotStates.NONE);
       stateChooser.addOption("STOWED", PivotStates.STOWED);
@@ -68,6 +67,8 @@ public class Pivot extends SubsystemBase {
 
       motor.getConfigurator().apply(talonFXConfigs, 0.050);
       mm.Slot = 0;
+
+      motor.setPosition(-0.2744);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class Pivot extends SubsystemBase {
 
       switch(currentState){
         case NONE:
-        motor.setControl(mm.withPosition(0));
+        motor.set(0);
         break;
 
         case STOWED:
