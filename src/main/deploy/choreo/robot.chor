@@ -1,0 +1,78 @@
+{
+ "name":"robot",
+ "version":1,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{},
+  "poses":{}
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"19 in",
+    "val":0.4826
+   },
+   "y":{
+    "exp":"19 in",
+    "val":0.4826
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-19 in",
+    "val":-0.4826
+   },
+   "y":{
+    "exp":"19 in",
+    "val":0.4826
+   }
+  },
+  "mass":{
+   "exp":"120 lbs",
+   "val":54.4310844
+  },
+  "inertia":{
+   "exp":"50 kg m ^ 2",
+   "val":50.0
+  },
+  "gearing":{
+   "exp":"6.5",
+   "val":6.5
+  },
+  "radius":{
+   "exp":"1.85 in",
+   "val":0.04699
+  },
+  "vmax":{
+   "exp":"6000 RPM",
+   "val":628.3185307179587
+  },
+  "tmax":{
+   "exp":"1.2 N * m",
+   "val":1.2
+  },
+  "cof":{
+   "exp":"0.8",
+   "val":0.8
+  },
+  "bumper":{
+   "front":{
+    "exp":"19 in",
+    "val":0.4826
+   },
+   "side":{
+    "exp":"19 in",
+    "val":0.4826
+   },
+   "back":{
+    "exp":"19 in",
+    "val":0.4826
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[]
+}

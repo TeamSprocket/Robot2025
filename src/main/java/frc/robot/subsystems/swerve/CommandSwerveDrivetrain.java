@@ -13,21 +13,10 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
-import com.pathplanner.lib.util.DriveFeedforwards;
 
-
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -67,8 +56,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     SwerveDriveKinematics m_kinematics;
 
-    PIDConstants PP_PID_Translation = new PIDConstants(0.25, 0, 0); //0.25, 0, 0
-    PIDConstants PP_PID_Rotation = new PIDConstants(1.85, 0, 0.65); //1.85, 0, 0.65
+    private PIDController C_PID_Translation = new PIDController(8, 0.0, 0.0); //10 0 0
+    private PIDController C_PID_Rotation = new PIDController(50, 0, 1);  //0.2 0 0
+
+    private double pathX = 0.0;
+    private double pathY = 0.0;
+    private double pathHeading = 0.0;
+    private double pidOutputX = 0.0;
+    private double pidOutputY = 0.0;
+    private double pidOutputOmega = 0.0;
+
+    // PIDConstants PP_PID_Translation = new PIDConstants(0.25, 0, 0); //0.25, 0, 0
+    // PIDConstants PP_PID_Rotation = new PIDConstants(1.85, 0, 0.65); //1.85, 0, 0.65
 
     // Vision vision = new Vision();
 
@@ -103,34 +102,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         )
     );
 
-    public void configureAutoBuilder() {
-        try {
-            var config = RobotConfig.fromGUISettings();
-            AutoBuilder.configure(
-                () -> getState().Pose,   // Supplier of current robot pose
-                this::resetPose,         // Consumer for seeding pose against auto
-                () -> getState().Speeds, // Supplier of current robot speeds
-                // Consumer of ChassisSpeeds and feedforwards to drive the robot
-                (speeds, feedforwards) -> setControl(
-                    m_pathApplyRobotSpeeds.withSpeeds(speeds)
-                        .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                        .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                ),
-                new PPHolonomicDriveController(
-                    // PID constants for translation
-                    new PIDConstants(3.0, 0, 0.0), //5.0, 0, 0.1
-                    // PID constants for rotation
-                    new PIDConstants(5.0, 0, 0.2) //6 0 0
-                ),
-                config,
-               
-                () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-                this 
-            );
-        } catch (Exception ex) {
-            DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
-        }
-    }
 
     /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
     private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
@@ -330,34 +301,53 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         publisher.set(getState().Pose);
     }
 
-    public Command autopath(){
-        try{
-            PathPlannerPath apath = PathPlannerPath.fromPathFile("curvypath");
-            Command path = AutoBuilder.followPath(PathPlannerPath.fromPathFile("curvypath"));
-            return new FollowPathCommand(
-                        apath, 
-                        () -> getState().Pose, 
-                        () -> getState().Speeds, 
-                        (speeds, feedforwards) -> setControl(
-                        m_pathApplyRobotSpeeds.withSpeeds(speeds)
-                            .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                        ), 
-                        new PPHolonomicDriveController(
-                        // PID constants for translation
-                        new PIDConstants(3, 0, 0.1), //p:12.5, d:0.1
-
-                        // PID constants for rotation
-                        new PIDConstants(5, 0, 0.2)
-                        ), 
-                        RobotConfig.fromGUISettings(),
-                        () -> false, 
-                        this
-                    );
-        } catch (Exception e) {
-            DriverStation.reportError("Broken" + e.getMessage(), e.getStackTrace());
-                return null;
+    public double getContinuousRadians ( double radians){
+        if (radians < 0) {
+            radians += 2 * Math.PI * (Math.abs(radians) / 360 + 1);;
+            // * (Math.abs(radians) / 360 + 1
         }
+        // if (radians > 2*Math.PI) {
+        //     radians -= 
+        // }
+        
+        return radians;
+    }
+
+    public double getOmegaPID() {
+        Pose2d pose = getAutoBuilderPose();
+
+        double roboRotation = getContinuousRadians(pose.getRotation().getRadians());
+        double heading = pathHeading;
+        if (Math.abs(roboRotation-heading) > Math.PI) {
+            if (heading > roboRotation) roboRotation = roboRotation + 2 * Math.PI;
+            if (heading < roboRotation) roboRotation = roboRotation - 2 * Math.PI; 
+        }
+        return C_PID_Translation.calculate(roboRotation,heading) ;
+    }
+
+    public void followTrajectory(SwerveSample path) {
+        C_PID_Rotation.enableContinuousInput(0, 2 * Math.PI);
+        Pose2d pose = getAutoBuilderPose();
+
+        pathX = path.x;
+        pathY = path.y;
+        pathHeading = path.heading;
+
+        pidOutputX = C_PID_Translation.calculate(pose.getX(), path.x);
+        pidOutputY = C_PID_Translation.calculate(pose.getY(), path.y);
+        pidOutputOmega = C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading);
+        
+        // Generate the next speeds for the robot
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            path.vx + C_PID_Translation.calculate(pose.getX(), path.x),
+            path.vy + C_PID_Translation.calculate(pose.getY(), path.y),
+            path.omega + getOmegaPID()
+            // C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading)
+
+            // path.vx,
+            // path.vy,
+            // path.omega
+        );
     }
 
     private void startSimThread() {

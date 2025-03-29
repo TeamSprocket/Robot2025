@@ -9,8 +9,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyFieldSpeeds;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
+// import com.pathplanner.lib.auto.AutoBuilder;
+// import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Superstructure.SSStates;
@@ -30,6 +31,14 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.Telemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
 import static edu.wpi.first.units.Units.*;
+
+// import com.pathplanner.lib.auto.AutoBuilder;
+// import com.pathplanner.lib.path.PathConstraints;
+
+import choreo.auto.AutoChooser;
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 
 public class RobotContainer {
   private final CommandXboxController driver = new CommandXboxController(0); // My joystick
@@ -44,11 +53,13 @@ public class RobotContainer {
   Pivot pivot = new Pivot();
   Vision vision = new Vision(drivetrain);
 
+  public final AutoFactory autoFactory;
+
   double speedMultiplier = 1.0;
 
   Command pathAlign = new InstantCommand(() -> System.out.println("hi"));
 
-  PathConstraints constraints = new PathConstraints(2, 2, 3, 2);
+  // PathConstraints constraints = new PathConstraints(2, 2, 3, 2);
 
   Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot);
 
@@ -67,30 +78,67 @@ public class RobotContainer {
   private Timer timer = new Timer();
   private Pose2d targetPose = new Pose2d();
 
+  private AutoChooser autoChooser;
+
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
   public RobotContainer() {
     // drivetrain.configureAutoBuilder();
+    autoFactory = new AutoFactory(
+      drivetrain::getAutoBuilderPose,
+      drivetrain::resetTeleopPose,
+      drivetrain::followTrajectory,
+      true,
+      drivetrain
+    );
     configureBindings();
     // initNamedCommands();
-    // initAutons();
+    initAutons();
   }
   
  public void initAutons() {
+    
 
-    // ------ path planner ------
+    autoChooser = new AutoChooser();
 
-    autonChooser = AutoBuilder.buildAutoChooser();
-    autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    autonChooser.addOption("Leave Auton", leave());
+    autoChooser.addRoutine("routine", this::routine);
 
-    SmartDashboard.putData("Auto Routine Selector", autonChooser);
+    // autoChooser.addCmd("toReef", this::goToReef);
+    // autoChooser.addCmd("toReefL4", this::moveToReefL4);
+    // autoChooser.addCmd("testCircle", this::testCircle);
+    // autoChooser.addCmd("rotationTest", this::rotationTest);
+    // autoChooser.addCmd("test1", this::test);
+    // autoChooser.addCmd("test2", this::test2);
+    // autoChooser.addCmd("testBoth", this::testBoth);
+
+    SmartDashboard.putData("Select Auto", autoChooser);
+    
+    RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+
+
+    // autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
+    // autonChooser.addOjkhfjhvfption("Leave Auton", leave());
+
+    // SmartDashboard.putData("Auto Routine Selector", autonChooser);
+  }
+
+  public AutoRoutine routine() {
+    AutoRoutine routine = autoFactory.newRoutine("Routine");
+    AutoTrajectory traj1 = routine.trajectory("test path");
+
+    routine.active().onTrue(
+      Commands.sequence(
+        traj1.resetOdometry(),
+        traj1.cmd()
+      )
+    );
+    
+    traj1.done().whileTrue(superstructure.setState(SSStates.CORAL_3).andThen(superstructure.setState(SSStates.STOWED)));
+    return routine;
   }
 
   public Command getAutonomousCommand() {
-    return 
-      Commands.sequence(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-1.0, 0, 0))).withTimeout(1.5));
-    // return null;
+    return autoChooser.selectedCommand();
   }
 
   public void initNamedCommands() {
@@ -267,12 +315,12 @@ public class RobotContainer {
   //   );
   // }
 
-  public Command leave() {
-    return AutoBuilder.pathfindToPose(
-            new Pose2d(drivetrain.getAutoBuilderPose().getX()+2, drivetrain.getAutoBuilderPose().getY(), drivetrain.getAutoBuilderPose().getRotation()),
-            new PathConstraints(2, 2, 3, 2), 
-    0.0);
-  }
+  // public Command leave() {
+  //   return AutoBuilder.pathfindToPose(
+  //           new Pose2d(drivetrain.getAutoBuilderPose().getX()+2, drivetrain.getAutoBuilderPose().getY(), drivetrain.getAutoBuilderPose().getRotation()),
+  //           new PathConstraints(2, 2, 3, 2), 
+  //   0.0);
+  // }
 
   // public Command align(String direction) {
   //   if (direction.equals("left")) {
