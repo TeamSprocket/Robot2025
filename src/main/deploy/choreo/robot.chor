@@ -3,7 +3,22 @@
  "version":1,
  "type":"Swerve",
  "variables":{
-  "expressions":{},
+  "expressions":{
+   "angVelo":{
+    "dimension":"AngVel",
+    "var":{
+     "exp":"3.14 rad / s",
+     "val":3.14
+    }
+   },
+   "velo":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
+    }
+   }
+  },
   "poses":{}
  },
  "config":{
