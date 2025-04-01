@@ -59,8 +59,8 @@ public final class RobotMap {
     public static final int CLIMB_PIVOT = 16;
   }
 
-  public static final class Shooter {
-    public static final int ROLL_SHOOTER = 12;
+  public static final class Outtake {
+    public static final int ROLL_OUTTAKE = 12;
     // DIO
     public static final int BEAM_BREAK = 0;
   }

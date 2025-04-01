@@ -67,7 +67,7 @@ public final class Constants {
 
   public static final class Intake {
     
-    public static final double kSpeedIntake = -11;//20
+    public static final double kSpeedIntake = -20;//20
     public static final double kSpeedStowed = 0;
     public static final double kSpeedEject = 5;
 
@@ -84,7 +84,7 @@ public final class Constants {
   public static final class Outtake {
     
     public static final double kSpeedStowed = 0.0;
-    public static final double kSpeedOuttake = 7;
+    public static final double kSpeedOuttake = 9;
     public static final double kSpeedAlgaeRemoval = -6.5;
     public static final double kSpeedAlgaeCarry = -6.0;
     public static final double kSpeedAlgaeScore = 1.0;
@@ -102,9 +102,9 @@ public final class Constants {
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = -0.22;
-    public static final double kAngleAlgaeRemove = -.04;
-    public static final double kAngleIntake = 0.105;
+    public static final double kAngleStowed = -0.17; //-0.22
+    public static final double kAngleAlgaeRemove = 0.04;
+    public static final double kAngleIntake = 0.224; //0.105
     public static final double kAngleL4 = 0.06;
 
     public static final double kMotionMagicCruiseVelocity = 6;//2
@@ -121,25 +121,25 @@ public final class Constants {
   }
 
   public static class Elevator {
-    public static final double kMAX_HEIGHT_UP = 6.0;
+    public static final double kMAX_HEIGHT_UP = 6.5;
 
     public static final double kHeightStowed = 0.0;
     public static final double kHeightIntake = 0.0;
     public static final double kHeightHandoff = 0.0;
     public static final double kHeightCoral1 = 0.0;
-    public static final double kHeightCoral2 = 0.48; //0.95 
-    public static final double kHeightCoral3 = 2.2; //2.47 
-    public static final double kHeightCoral4 = 4.9;
+    public static final double kHeightCoral2 = 1.65; //1.73
+    public static final double kHeightCoral3 = 3.32; //3.4
+    public static final double kHeightCoral4 = 5.8; //5.9
 
-    public static final double kHeightAlgaeRemove2 = 1;
-    public static final double kHeightAlgaeRemove3 = 2.7;
+    public static final double kHeightAlgaeRemove2 = 1.1; //1
+    public static final double kHeightAlgaeRemove3 = 2.8; //2.7
     public static final double kHeightShallowClimb = 0.0;
-    public static final double kHeightDeepClimb = 0.0;
+    public static final double kHeightDeepClimb = 0.0; 
 
-    public static final double kMotionMagicCruiseVelocity = 8.5;
-    public static final double kMotionMagicAcceleration = 12.0;
+    public static final double kMotionMagicCruiseVelocity = 10.0;
+    public static final double kMotionMagicAcceleration = 14.0;
 
-    public static final double kP = 40.0; // 40.0
+    public static final double kP = 45.0; // 40.0
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     public static final double kS = 0.1375; //0.105

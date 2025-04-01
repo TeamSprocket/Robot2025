@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,7 +22,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 
 public class Outtake extends SubsystemBase {
-private final TalonFX motor1 = new TalonFX(RobotMap.Shooter.ROLL_SHOOTER);
+private final TalonFX motor1 = new TalonFX(RobotMap.Outtake.ROLL_OUTTAKE);
 
 private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
@@ -55,6 +56,8 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         new FeedbackConfigs()
         .withSensorToMechanismRatio(Constants.Outtake.kOuttakeGearRatio)
       );
+
+    motor1.setNeutralMode(NeutralModeValue.Brake);
     
     motor1.getConfigurator().apply(talonFXConfigs, 0);
     // motor2.getConfigurator().apply(talonFXConfigs, 0);
@@ -75,6 +78,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
   @Override
   public void periodic() {
+    motor1.setNeutralMode(NeutralModeValue.Brake);
     SmartDashboard.putString("OUTTALKE STATE", state.toString());
     // setState(stateChooser.getSelected()); // TODO: remove this when done testing
 

@@ -278,15 +278,14 @@ public class RobotContainer {
 
     new Trigger(operator.b())
       .whileTrue(superstructure.setState(SSStates.CORAL_2))
-      .onFalse(new InstantCommand(() -> outtake.revertOuttake()).andThen(Commands.waitSeconds(0.3)).andThen(superstructure.setState(SSStates.STOWED)));
-
+      .onFalse(superstructure.setState(SSStates.STOWED));
+    
     new Trigger (operator.x())
       .whileTrue(superstructure.setState(SSStates.CORAL_3))
-      .onFalse(new InstantCommand(() -> outtake.revertOuttake()).andThen(Commands.waitSeconds(0.3)).andThen(superstructure.setState(SSStates.STOWED)));
-
+      .onFalse(superstructure.setState(SSStates.STOWED));
     new Trigger (operator.y())
       .whileTrue(superstructure.setState(SSStates.CORAL_4))
-      .onFalse(new InstantCommand(() -> outtake.revertOuttake()).andThen(Commands.waitSeconds(0.3)).andThen(superstructure.setState(SSStates.STOWED)));
+      .onFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.rightBumper())
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_2))
@@ -301,7 +300,7 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.povDown())
-      .whileTrue(new InstantCommand(() -> outtake.revertOuttake()))
+      .whileTrue(new InstantCommand(() -> outtake.revertOuttake()).alongWith(new InstantCommand(() -> intake.revertIntake())))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     // new Trigger(operator.povLeft())

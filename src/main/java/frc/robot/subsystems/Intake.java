@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.Outtake.OuttakeStates;
 
 public class Intake extends SubsystemBase {
 
@@ -31,7 +32,8 @@ public class Intake extends SubsystemBase {
     STOWED,
     INTAKE,
     EJECT,
-    CLIMB
+    CLIMB,
+    INTAKE_REVERSE
   }
 
   /** Creates a new Intake. */
@@ -92,7 +94,6 @@ public class Intake extends SubsystemBase {
         intakemotor.setControl(velocityVoltage.withVelocity(0));
         servo.setPosition(1);
         break;
-    
       // This method will be called once per scheduler run
     }
   }
@@ -107,6 +108,10 @@ public class Intake extends SubsystemBase {
 
   public IntakeStates getState() {
     return state;
+  }
+
+  public void revertIntake() {
+    setState(IntakeStates.EJECT);
   }
 
   public double getIntakeSpeed() {
