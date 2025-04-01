@@ -102,7 +102,7 @@ public final class Constants {
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = -0.17; //-0.22
+    public static final double kAngleStowed = -0.19; //-0.22
     public static final double kAngleAlgaeRemove = 0.04;
     public static final double kAngleIntake = 0.224; //0.105
     public static final double kAngleL4 = 0.06;
