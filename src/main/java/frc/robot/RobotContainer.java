@@ -78,6 +78,10 @@ public class RobotContainer {
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
+  double alignTimeout = 2.0; //TUNE
+  double intakeTimeout = 1.5; //TUNE
+  double scoreTimeout = 0.75; //TUNE
+
   public RobotContainer() {
     // drivetrain.configureAutoBuilder();
     autoFactory = new AutoFactory(
@@ -132,76 +136,76 @@ public class RobotContainer {
   //     )
   //   );
 
-  // public AutoRoutine routine() {
-  //   AutoRoutine routine = autoFactory.newRoutine("Routine");
-  //   AutoTrajectory traj1 = routine.trajectory("removeAlgae");
-
-  //   routine.active().onTrue(
-  //     Commands.sequence(
-  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-  //       traj1.resetOdometry(),
-  //       traj1.cmd()
-  //     )
-  //   );
-
-    
-  //   traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
-  //   traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
-  //   // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED)));
-
-    
-  //   // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
-  //   // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3));
-  //   // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
-  //   return routine;
-  // }
-
   public AutoRoutine routine() {
-    AutoRoutine routine = autoFactory.newRoutine("Routine");
+    AutoRoutine routine = autoFactory.newRoutine("Routine"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("removeAlgae"); //LOAD ALL PATHS HERE
 
     routine.active().onTrue(
       Commands.sequence(
-        superstructure.setState(SSStates.STOWED)
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)), //SEE IF THIS IS NECESSARY WHEN ON ACTUAL FIELD
+        traj1.resetOdometry(),
+        traj1.cmd()
       )
     );
 
+    
+    // traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
+    // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
+    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED)));
+
+    
+    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
+    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3));
+    // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
     return routine;
   }
 
+  // public AutoRoutine routine() {
+  //   AutoRoutine routine = autoFactory.newRoutine("Routine");
+
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       superstructure.setState(SSStates.STOWED)
+  //     )
+  //   );
+
+  //   return routine;
+  // }
+
   public Command alignLeft() {
-    return choreoAlignLeft().withTimeout(2);
+    return choreoAlignLeft().withTimeout(alignTimeout);
   }
 
   public Command alignRight() {
-    return choreoAlignRight().withTimeout(2);
+    return choreoAlignRight().withTimeout(alignTimeout);
   }
 
   public Command scoreL2Left() {
-    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL2Right() {
-    return alignRight().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignRight().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL3Left() {
-    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL3Right() {
-    return alignRight().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignRight().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL4Left() {
-    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL4Right() {
-    return alignRight().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignRight().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command intake() {
-    return superstructure.setState(SSStates.INTAKE).andThen(Commands.waitSeconds(1.5)).andThen(superstructure.setState(SSStates.STOWED));
+    return superstructure.setState(SSStates.INTAKE).andThen(Commands.waitSeconds(intakeTimeout)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command getAutonomousCommand() {
