@@ -168,16 +168,36 @@ public class RobotContainer {
     return routine;
   }
 
-  public Command scoreL2() {
-    return superstructure.setState(SSStates.CORAL_2).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  public Command alignLeft() {
+    return choreoAlignLeft().withTimeout(2);
   }
 
-  public Command scoreL3() {
-    return superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  public Command alignRight() {
+    return choreoAlignRight().withTimeout(2);
   }
 
-  public Command scoreL4() {
-    return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  public Command scoreL2Left() {
+    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command scoreL2Right() {
+    return alignRight().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command scoreL3Left() {
+    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command scoreL3Right() {
+    return alignRight().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command scoreL4Left() {
+    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command scoreL4Right() {
+    return alignRight().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command intake() {
