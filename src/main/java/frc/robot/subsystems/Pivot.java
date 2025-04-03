@@ -94,7 +94,6 @@ public class Pivot extends SubsystemBase {
         case INTAKE:
         motor.setNeutralMode(NeutralModeValue.Brake);
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleIntake));
-        // motor.setVoltage(4);
         break;
 
         case L4:

@@ -52,11 +52,12 @@ public class RobotContainer {
   Outtake outtake = new Outtake();
   Pivot pivot = new Pivot();
   Vision vision = new Vision(drivetrain);
+  Climb climb = new Climb();
 
   public final AutoFactory autoFactory;
 
   double speedMultiplier = 1.0;
-  Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot);
+  Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot, climb);
 
   // ------- Swerve Generated -------
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -87,6 +88,7 @@ public class RobotContainer {
       drivetrain
     );
     configureBindings();
+    
     // initNamedCommands();
     initAutons();
   }
@@ -130,28 +132,56 @@ public class RobotContainer {
   //     )
   //   );
 
+  // public AutoRoutine routine() {
+  //   AutoRoutine routine = autoFactory.newRoutine("Routine");
+  //   AutoTrajectory traj1 = routine.trajectory("removeAlgae");
+
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+
+    
+  //   traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
+  //   traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
+  //   // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED)));
+
+    
+  //   // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
+  //   // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3));
+  //   // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
+  //   return routine;
+  // }
+
   public AutoRoutine routine() {
     AutoRoutine routine = autoFactory.newRoutine("Routine");
-    AutoTrajectory traj1 = routine.trajectory("removeAlgae");
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-        traj1.resetOdometry(),
-        traj1.cmd()
+        superstructure.setState(SSStates.STOWED)
       )
     );
 
-    
-    traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
-    traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
-    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED)));
-
-    
-    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
-    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3));
-    // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
     return routine;
+  }
+
+  public Command scoreL2() {
+    return superstructure.setState(SSStates.CORAL_2).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command scoreL3() {
+    return superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command scoreL4() {
+    return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED));
+  }
+
+  public Command intake() {
+    return superstructure.setState(SSStates.INTAKE).andThen(Commands.waitSeconds(1.5)).andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command getAutonomousCommand() {
@@ -215,7 +245,7 @@ public class RobotContainer {
       ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
     );
 
-    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     driver.leftTrigger().whileTrue(
       drivetrain.applyRequest(
@@ -224,52 +254,12 @@ public class RobotContainer {
         ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)))
     );
 
-    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
-
-
-
-
-    // driver.rightBumper().onTrue(new InstantCommand(()->drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d(0)))));
-
-
-    // driver.rightTrigger().whileTrue(AutoBuilder.pathfindToPose(
-    //   vision.getPoseRight(),
-    //   new PathConstraints(2, 2, 3, 2), 
-    //   0.0)
-    //   .alongWith(Commands.print("RIGHT"))
-    //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-    //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-    // );
-
-    // driver.leftTrigger().whileTrue(AutoBuilder.pathfindToPose(
-    //   vision.getPoseLeft(), 
-    //   new PathConstraints(2, 2, 3, 2), 
-    //   0.0)
-    //   .alongWith(Commands.print("LEFT"))
-    //   .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-    //   .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-    // );
-   
-
-    // driver.rightTrigger()
-    //   .whileTrue(align("right"))
-    //   .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
-
-    // driver.leftTrigger()
-    //   .whileTrue(align("left"))
-    //   .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
-
-    // driver.rightTrigger().whileTrue(align("right"));
-    // driver.leftTrigger().whileTrue(align("left"));
+    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     // --------------------=Operator=--------------------
 
     new Trigger(operator.leftTrigger())
       .whileTrue(superstructure.setState(SSStates.INTAKE))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
-    
-    new Trigger(operator.button(8))
-      .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.a())
@@ -283,6 +273,10 @@ public class RobotContainer {
     new Trigger (operator.x())
       .whileTrue(superstructure.setState(SSStates.CORAL_3))
       .onFalse(superstructure.setState(SSStates.STOWED));
+    
+    new Trigger(() -> climb.notAtPosition())
+      .whileTrue(superstructure.setState(SSStates.STOWED));
+
     new Trigger (operator.y())
       .whileTrue(superstructure.setState(SSStates.CORAL_4))
       .onFalse(superstructure.setState(SSStates.STOWED));
@@ -300,12 +294,13 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.povDown())
-      .whileTrue(new InstantCommand(() -> outtake.revertOuttake()).alongWith(new InstantCommand(() -> intake.revertIntake())))
+      .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    // new Trigger(operator.povLeft())
-    //   .whileTrue(superstructure.setState(SSStates.ALGAE_CARRY))
-    //   .whileFalse(superstructure.setState(SSStates.STOWED));
+    new Trigger (operator.button(8).and(() -> climb.notAtPosition()))
+      .whileTrue(superstructure.setState(SSStates.CLIMB))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
   }
 
   public Superstructure getSuperstructure() {
@@ -342,110 +337,3 @@ public class RobotContainer {
     timer.reset();
     }
   }
-
-  // private void applyAlignSpeeds() {
-  //   drivetrain.applyRequest(() -> new ApplyRobotSpeeds()
-  //     .withSpeeds(new ChassisSpeeds(
-  //         0, 
-  //       0, 
-  //       getRotationalAlignSpeed()
-  //     ))
-  //   );
-  // }
-
-  // public Command leave() {
-  //   return AutoBuilder.pathfindToPose(
-  //           new Pose2d(drivetrain.getAutoBuilderPose().getX()+2, drivetrain.getAutoBuilderPose().getY(), drivetrain.getAutoBuilderPose().getRotation()),
-  //           new PathConstraints(2, 2, 3, 2), 
-  //   0.0);
-  // }
-
-  // public Command align(String direction) {
-  //   if (direction.equals("left")) {
-  //     return Commands.sequence(
-  //       new InstantCommand(() -> vision.updateAlignPose()), 
-  //       new InstantCommand(() -> applyAlignSpeeds()),
-  //       new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-  //       new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)),
-
-  //       new RunCommand(() -> 
-  //         AutoBuilder.pathfindToPose(
-  //           vision.getPoseRight(),
-  //           new PathConstraints(2, 2, 3, 2), 
-  //           0.0
-  //         )
-  //       .andThen(Commands.print("LEFT"))
-  //       .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-  //       )
-  //     );
-  //   } else if (direction.equals("right")) {
-  //     return Commands.sequence(
-  //       new InstantCommand(() -> vision.updateAlignPose()), 
-  //       new InstantCommand(() -> applyAlignSpeeds()),
-  //       new WaitUntilCommand(() -> Util.inRange(vision.getTX(), 0.1, 0.1)),
-  //       new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)),
-
-  //       new RunCommand(() -> AutoBuilder.pathfindToPose(
-  //         vision.getPoseLeft(),
-  //         new PathConstraints(2, 2, 3, 2), 
-  //         0.0)
-  //         .andThen(Commands.print("RIGHT"))
-  //         .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-  //       )
-  //     );
-  //   } else {
-  //     return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
-  //   }
-  // }
-
-//   public Command align(String direction) {
-//     System.out.println("DANIELLE STINKS");
-//     if (direction.equals("left")) {
-//       return Commands.either(
-//         new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING))
-//         .alongWith(new RunCommand(() -> applyAlignSpeeds()))
-//         .alongWith(new InstantCommand(() -> System.out.println("HAHAHAHAHAHAHAHAHA"))),
-//         Commands.sequence(
-//           new InstantCommand(() -> {vision.updateAlignPose(); System.out.println("BYPASSED CASE YAYYYY");}), 
-//           AutoBuilder.pathfindToPose(
-//             vision.getPoseRight(),
-//             new PathConstraints(2, 2, 3, 2), 
-//     0.0
-//           )
-//         ),
-//         () -> Util.inRange(vision.getTX(), 0.1, 0.1)
-//       );
-//     } else if (direction.equals("right")) {
-//       return Commands.either(
-//         new RunCommand(() -> applyAlignSpeeds()),
-//         Commands.sequence(
-//           new InstantCommand(() -> vision.updateAlignPose()), 
-//           AutoBuilder.pathfindToPose(
-//             vision.getPoseLeft(),
-//             new PathConstraints(2, 2, 3, 2), 
-//     0.0
-//           )
-//             .alongWith(Commands.print("RIGHT"))
-//             .alongWith(new InstantCommand(() -> vision.setAlignState(AlignStates.ALIGNING)))
-//             .andThen(new InstantCommand(() -> vision.setAlignState(AlignStates.NONE)))
-//         ),
-//         () -> !Util.inRange(vision.getTX(), 0.1, 0.1)
-//       );
-//     } else {
-//       return new InstantCommand(() -> System.out.println("ALIGN FAILED"));
-//     }
-//   }
-
-
-  // private Command pathfind(String direction) {
-  //   if (direction.equals("right")) {
-  //     return Commands.sequence(
-  //       new FunctionalCommand(
-  //         () -> applyAlignSpeeds(),
-  //         () -> applyAlignSpeeds(),
-  //         () -> System.out.println("pathfinding"),
-  //         Util.inRange(vision.getTX(), 0.1, 0.1),
-  //         drivetrain.getState())
-  //     );
-  //   }
-

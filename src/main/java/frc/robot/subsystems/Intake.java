@@ -32,8 +32,7 @@ public class Intake extends SubsystemBase {
     STOWED,
     INTAKE,
     EJECT,
-    CLIMB,
-    INTAKE_REVERSE
+    CLIMB
   }
 
   /** Creates a new Intake. */
@@ -72,27 +71,30 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putString("INTAKE STATE", state.toString());
     // setState(stateChooser.getSelected()); // TODO: remove later
-
     switch (state) {
       case NONE:
         intakemotor.setControl(velocityVoltage.withVelocity(0));
+        servo.setSpeed(0);
         break;
 
       case STOWED:
         intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedStowed));
+        servo.setSpeed(0);
         break;
           
       case INTAKE:
         intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedIntake));
+        servo.setSpeed(0);
         break;
 
       case EJECT:
         intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedEject));
+        servo.setSpeed(0);
         break;
 
       case CLIMB:
         intakemotor.setControl(velocityVoltage.withVelocity(0));
-        servo.setPosition(1);
+        servo.setSpeed(-1);
         break;
       // This method will be called once per scheduler run
     }
@@ -108,10 +110,6 @@ public class Intake extends SubsystemBase {
 
   public IntakeStates getState() {
     return state;
-  }
-
-  public void revertIntake() {
-    setState(IntakeStates.EJECT);
   }
 
   public double getIntakeSpeed() {

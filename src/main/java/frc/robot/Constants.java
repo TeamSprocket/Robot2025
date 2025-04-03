@@ -67,9 +67,9 @@ public final class Constants {
 
   public static final class Intake {
     
-    public static final double kSpeedIntake = -20;//20
+    public static final double kSpeedIntake = -20;//-15
     public static final double kSpeedStowed = 0;
-    public static final double kSpeedEject = 5;
+    public static final double kSpeedEject = 7;
 
     public static final double kIntakeS = 0.3;
     public static final double kIntakeV = 0.17; //0.132
@@ -86,8 +86,7 @@ public final class Constants {
     public static final double kSpeedStowed = 0.0;
     public static final double kSpeedOuttake = 9;
     public static final double kSpeedAlgaeRemoval = -6.5;
-    public static final double kSpeedAlgaeCarry = -6.0;
-    public static final double kSpeedAlgaeScore = 1.0;
+    public static final double kSpeedIntake = 4;
 
     public static final double kTuneSpeed = 0.3;
 
@@ -102,7 +101,7 @@ public final class Constants {
 
   public static final class Pivot {
     
-    public static final double kAngleStowed = -0.19; //-0.22
+    public static final double kAngleStowed = -0.14; //-0.22 -0.19
     public static final double kAngleAlgaeRemove = 0.04;
     public static final double kAngleIntake = 0.224; //0.105
     public static final double kAngleL4 = 0.06;
@@ -136,10 +135,10 @@ public final class Constants {
     public static final double kHeightShallowClimb = 0.0;
     public static final double kHeightDeepClimb = 0.0; 
 
-    public static final double kMotionMagicCruiseVelocity = 10.0;
-    public static final double kMotionMagicAcceleration = 14.0;
+    public static final double kMotionMagicCruiseVelocity = 25.0; //22
+    public static final double kMotionMagicAcceleration = 25.0; //24
 
-    public static final double kP = 45.0; // 40.0
+    public static final double kP = 65.0; // 40.0
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     public static final double kS = 0.1375; //0.105
@@ -148,5 +147,10 @@ public final class Constants {
     public static final double kG = 0.3125; //0.375
 
     public static final double kElevatorGearRatio = 5.77;
+  }
+
+  public static class Climb{
+    public static final double kClimbStowed = 0.0;
+    public static final double kClimbPosition = 490; 
   }
 }

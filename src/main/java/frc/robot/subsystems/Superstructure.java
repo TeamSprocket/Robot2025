@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.Climb.ClimbStates;
 import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 import frc.robot.subsystems.Outtake.OuttakeStates;
@@ -25,6 +26,7 @@ public class Superstructure extends SubsystemBase {
     CORAL_4,
     ALGAE_REMOVE_2,
     ALGAE_REMOVE_3,
+    CLIMB,
     EJECT
   }
 
@@ -36,23 +38,23 @@ public class Superstructure extends SubsystemBase {
    */
 
   public SSStates currentState = SSStates.NONE;
-  public SSStates lastState = SSStates.NONE;
-  public SSStates wantedState = SSStates.NONE;
 
   Elevator elevator;
   Intake intake;
   Pivot pivot;
   Outtake outtake;
+  Climb climb;
 
   private Timer timer = new Timer();
 
-  public Superstructure(Elevator elevator, Intake intake, Outtake outtake, Pivot pivot) {
+  public Superstructure(Elevator elevator, Intake intake, Outtake outtake, Pivot pivot, Climb climb) {
     timer.restart();
 
     this.elevator = elevator;
     this.intake = intake;
     this.pivot = pivot;
     this.outtake = outtake;
+    this.climb = climb;
   }
   
   @Override
@@ -68,6 +70,7 @@ public class Superstructure extends SubsystemBase {
       outtake.setState(OuttakeStates.STOWED);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.STOWED);
+      climb.setState(ClimbStates.STOWED);
     });
   }
 
@@ -77,6 +80,7 @@ public class Superstructure extends SubsystemBase {
       outtake.setState(OuttakeStates.INTAKE);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.INTAKE);
+      climb.setState(ClimbStates.STOWED);
     }),
     new WaitCommand(0.5),
     new InstantCommand(()->intake.setState(IntakeStates.INTAKE)));
@@ -89,6 +93,7 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_2);
         pivot.setState(PivotStates.STOWED);
+        climb.setState(ClimbStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), 
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
@@ -102,6 +107,7 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_3);
         pivot.setState(PivotStates.STOWED);
+        climb.setState(ClimbStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), 
       new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
@@ -115,6 +121,7 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.CORAL_4);
         pivot.setState(PivotStates.STOWED);
+        climb.setState(ClimbStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()),
       new WaitCommand(0.2),
@@ -132,6 +139,7 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.ALGAE_REMOVE_2);
         pivot.setState(PivotStates.STOWED);
+        climb.setState(ClimbStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), 
       new InstantCommand(() -> {outtake.setState(OuttakeStates.ALGAE_REMOVE); pivot.setState(PivotStates.ALGAE_REMOVE);})
@@ -145,6 +153,7 @@ public class Superstructure extends SubsystemBase {
         outtake.setState(OuttakeStates.STOWED);
         elevator.setState(ElevatorStates.ALGAE_REMOVE_3);
         pivot.setState(PivotStates.STOWED);
+        climb.setState(ClimbStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()), 
       new InstantCommand(() -> {outtake.setState(OuttakeStates.ALGAE_REMOVE); pivot.setState(PivotStates.ALGAE_REMOVE);})
@@ -154,17 +163,29 @@ public class Superstructure extends SubsystemBase {
   private Command eject() {
     return new InstantCommand(() -> {
       intake.setState(IntakeStates.EJECT);
-      outtake.setState(OuttakeStates.CORAL1);
+      outtake.setState(OuttakeStates.CORAL_RECLAIM);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.STOWED);
+      climb.setState(ClimbStates.STOWED);
     });
   }
+
   private Command coral1() {
     return new InstantCommand(() -> {
       intake.setState(IntakeStates.STOWED); 
       outtake.setState(OuttakeStates.CORAL1);
       elevator.setState(ElevatorStates.STOWED);
       pivot.setState(PivotStates.STOWED);
+      climb.setState(ClimbStates.STOWED);
+    });
+  }
+  private Command climb() {
+    return new InstantCommand(() -> {
+      climb.setState(ClimbStates.CLIMB);
+      intake.setState(IntakeStates.CLIMB);
+      outtake.setState(OuttakeStates.STOWED);
+      pivot.setState(PivotStates.STOWED);
+      elevator.setState(ElevatorStates.STOWED);
     });
   }
 
@@ -173,6 +194,17 @@ public class Superstructure extends SubsystemBase {
    * Sets the superstructure target state
    * @param currentState Target state
    */
+
+  public void setStowed() {
+    Commands.runOnce(() -> {
+      intake.setState(IntakeStates.STOWED);
+      outtake.setState(OuttakeStates.STOWED);
+      elevator.setState(ElevatorStates.STOWED);
+      pivot.setState(PivotStates.STOWED);
+      climb.setState(ClimbStates.STOWED);
+    });
+  }
+  
   public Command setState(SSStates wantedState) {
     switch (wantedState) {
       case NONE:
@@ -204,6 +236,9 @@ public class Superstructure extends SubsystemBase {
 
       case EJECT:
         return eject();
+      
+      case CLIMB:
+        return climb();
 
       default:
         return Commands.print("failed");

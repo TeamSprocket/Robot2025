@@ -14,6 +14,7 @@ import frc.robot.subsystems.Superstructure.SSStates;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  // private boolean run = false;
 
   @Override
   public void robotInit() {
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Timer.delay(0.05);
+    // m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) {
@@ -62,19 +64,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
-    m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
+    Timer.delay(0.05);
+    m_robotContainer.getSuperstructure().setStowed();
+    // Timer.delay(0.15);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.getSuperstructure().setStowed();
+    // m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
 
     
   }
 
   @Override
   public void teleopPeriodic() {
-}
+ 
+  }
 
   @Override
   public void teleopExit() {}

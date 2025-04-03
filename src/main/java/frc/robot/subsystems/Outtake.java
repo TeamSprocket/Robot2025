@@ -60,10 +60,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     motor1.setNeutralMode(NeutralModeValue.Brake);
     
     motor1.getConfigurator().apply(talonFXConfigs, 0);
-    // motor2.getConfigurator().apply(talonFXConfigs, 0);
     motor1.getVelocity();
-    // motor2.getVelocity(); 
-
   }
 
   /** Creates a new Outtake. */
@@ -85,7 +82,6 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     switch(state){
       case NONE:
         motor1.setControl(velocityVoltage.withVelocity(0));
-        // motor2.setControl(velocityVoltage.withVelocity(0));
         break;
 
       case STOWED:
@@ -93,7 +89,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         break;
 
       case INTAKE:
-        motor1.setControl(velocityVoltage.withVelocity(3.5));
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedIntake));
         break;
 
       case ALGAE_REMOVE:
