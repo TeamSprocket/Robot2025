@@ -40,8 +40,8 @@ public final class Constants {
 
     public static final Pose2d poseAlignBlueLeft17 = new Pose2d(3.84, 3.28, Rotation2d.fromDegrees(60));
     public static final Pose2d poseAlignBlueRight17 = new Pose2d(4.12, 3.07, Rotation2d.fromDegrees(60));
-    public static final Pose2d poseAlignBlueLeft18 = new Pose2d(3.5, 4.25, Rotation2d.fromDegrees(0));
-    public static final Pose2d poseAlignBlueRight18 = new Pose2d(3.55, 3.90, Rotation2d.fromDegrees(0));
+    public static final Pose2d poseAlignBlueLeft18 = new Pose2d(3.5, 4.23, Rotation2d.fromDegrees(0)); //4.25
+    public static final Pose2d poseAlignBlueRight18 = new Pose2d(3.55, 3.88, Rotation2d.fromDegrees(0)); //3.90
     public static final Pose2d poseAlignBlueLeft19 = new Pose2d(4.15, 4.95, Rotation2d.fromDegrees(300));
     public static final Pose2d poseAlignBlueRight19 = new Pose2d(3.85, 4.75, Rotation2d.fromDegrees(300));
     public static final Pose2d poseAlignBlueLeft20 = new Pose2d(5.15, 4.77, Rotation2d.fromDegrees(240));
@@ -51,8 +51,8 @@ public final class Constants {
     public static final Pose2d poseAlignBlueLeft22 = new Pose2d(4.84, 3.01, Rotation2d.fromDegrees(120));
     public static final Pose2d poseAlignBlueRight22 = new Pose2d(5.17, 3.18, Rotation2d.fromDegrees(120));
 
-    public static final Pose2d poseAlignRedLeft10 = new Pose2d(12.157, 4.22, Rotation2d.fromDegrees(0));
-    public static final Pose2d poseAlignRedRight10 = new Pose2d(12.157, 3.789, Rotation2d.fromDegrees(0));
+    public static final Pose2d poseAlignRedLeft10 = new Pose2d(12.157, 4.26, Rotation2d.fromDegrees(0));
+    public static final Pose2d poseAlignRedRight10 = new Pose2d(12.157, 3.8, Rotation2d.fromDegrees(0));
     public static final Pose2d poseAlignRedLeft9 = new Pose2d(12.774, 4.761, Rotation2d.fromDegrees(300));
     public static final Pose2d poseAlignRedRight9 = new Pose2d(12.519, 4.691, Rotation2d.fromDegrees(300));
     public static final Pose2d poseAlignRedLeft8 = new Pose2d(13.635, 4.750, Rotation2d.fromDegrees(240));
@@ -126,9 +126,9 @@ public final class Constants {
     public static final double kHeightIntake = 0.0;
     public static final double kHeightHandoff = 0.0;
     public static final double kHeightCoral1 = 0.0;
-    public static final double kHeightCoral2 = 1.65; //1.73
+    public static final double kHeightCoral2 = 1.63; //1.65
     public static final double kHeightCoral3 = 3.32; //3.4
-    public static final double kHeightCoral4 = 5.8; //5.9
+    public static final double kHeightCoral4 = 5.85; //5.8
 
     public static final double kHeightAlgaeRemove2 = 1.1; //1
     public static final double kHeightAlgaeRemove3 = 2.8; //2.7
@@ -151,6 +151,6 @@ public final class Constants {
 
   public static class Climb{
     public static final double kClimbStowed = 0.0;
-    public static final double kClimbPosition = 490; 
+    public static final double kClimbPosition = 472; 
   }
 }

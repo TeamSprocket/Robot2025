@@ -4,18 +4,18 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
-   "angVelo":{
+   "angvelo":{
     "dimension":"AngVel",
     "var":{
-     "exp":"3.14 rad / s",
-     "val":3.14
+     "exp":"2.3 rad / s",
+     "val":2.3
     }
    },
    "velo":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2.5 m / s",
-     "val":2.5
+     "exp":"2 m / s",
+     "val":2.0
     }
    }
   },
@@ -300,6 +300,20 @@
      "val":0.935
     }
    },
+   "STL":{
+    "x":{
+     "exp":"7.749 m",
+     "val":7.749
+    },
+    "y":{
+     "exp":"7.261 m",
+     "val":7.261
+    },
+    "heading":{
+     "exp":"3.14 rad",
+     "val":3.14
+    }
+   },
    "STM":{
     "x":{
      "exp":"7.777 m",
@@ -308,6 +322,20 @@
     "y":{
      "exp":"6.169 m",
      "val":6.169
+    },
+    "heading":{
+     "exp":"3.14 rad",
+     "val":3.14
+    }
+   },
+   "STR":{
+    "x":{
+     "exp":"7.735 m",
+     "val":7.735
+    },
+    "y":{
+     "exp":"5.045 m",
+     "val":5.045
     },
     "heading":{
      "exp":"3.14 rad",
@@ -338,8 +366,8 @@
    }
   },
   "mass":{
-   "exp":"120 lbs",
-   "val":54.4310844
+   "exp":"131 lbs",
+   "val":59.42060047
   },
   "inertia":{
    "exp":"50 kg m ^ 2",

@@ -46,7 +46,7 @@ public class Climb extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("climb position", getPosition());
-    SmartDashboard.putBoolean("at postition", notAtPosition());
+    SmartDashboard.putBoolean("not at postition", notAtPosition());
     // This method will be called once per scheduler run
     switch (State) {
       case NONE:
@@ -58,9 +58,7 @@ public class Climb extends SubsystemBase {
         break;
 
       case CLIMB:
-        // while (getPosition() < Constants.Climb.kClimbPosition) {
           climbpivot.setVoltage(2); //-2
-        // }
         break;
     }
   }
@@ -70,7 +68,15 @@ public class Climb extends SubsystemBase {
   }
 
   public boolean notAtPosition() {
-    return !(getPosition() < -555); //490
+    return !(getPosition() > Constants.Climb.kClimbPosition); //490
+  }
+
+  public boolean inClimbState() {
+    return State == ClimbStates.CLIMB;
+  }
+
+  public void manualClimb() {
+    climbpivot.setVoltage(2);
   }
 
   public void setState(ClimbStates state) {
