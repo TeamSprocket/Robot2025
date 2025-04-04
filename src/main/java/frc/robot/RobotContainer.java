@@ -102,7 +102,7 @@ public class RobotContainer {
 
     autoChooser = new AutoChooser();
 
-    autoChooser.addRoutine("routine", this::routine);
+    autoChooser.addRoutine("routine", this::testAuton);
 
     // autoChooser.addCmd("toReef", this::goToReef);
     // autoChooser.addCmd("toReefL4", this::moveToReefL4);
@@ -117,10 +117,7 @@ public class RobotContainer {
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
 
-    // autonChooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    // autonChooser.addOjkhfjhvfption("Leave Auton", leave());
 
-    // SmartDashboard.putData("Auto Routine Selector", autonChooser);
   }
 
   // public AutoRoutine routine() {
@@ -136,13 +133,15 @@ public class RobotContainer {
   //     )
   //   );
 
-  public AutoRoutine routine() {
-    AutoRoutine routine = autoFactory.newRoutine("Routine"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("removeAlgae"); //LOAD ALL PATHS HERE
+  public AutoRoutine testAuton() {
+    AutoRoutine routine = autoFactory.newRoutine("preloadScoreBL_L4"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BLL_SL");
+    AutoTrajectory traj3 = routine.trajectory("SL_BL");
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)), //SEE IF THIS IS NECESSARY WHEN ON ACTUAL FIELD
+        superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
       )
@@ -150,34 +149,19 @@ public class RobotContainer {
 
     
     // traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
-    // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
-    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(Commands.waitSeconds(0.75)).andThen(superstructure.setState(SSStates.STOWED)));
-
-    
-    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3).andThen(() -> waitTime(2)).andThen(superstructure.setState(SSStates.STOWED)));
-    // traj1.done().onTrue(superstructure.setState(SSStates.CORAL_3));
-    // traj1.done().onTrue(superstructure.setState(SSStates.STOWED));
+    traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
+    traj2.done().onTrue(intake().andThen(traj3.cmd()));
+    traj3.done().onTrue(scoreL4Right());
     return routine;
   }
 
-  // public AutoRoutine routine() {
-  //   AutoRoutine routine = autoFactory.newRoutine("Routine");
-
-  //   routine.active().onTrue(
-  //     Commands.sequence(
-  //       superstructure.setState(SSStates.STOWED)
-  //     )
-  //   );
-
-  //   return routine;
-  // }
 
   public Command alignLeft() {
-    return choreoAlignLeft().withTimeout(alignTimeout);
+    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
   }
 
   public Command alignRight() {
-    return choreoAlignRight().withTimeout(alignTimeout);
+    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
   }
 
   public Command scoreL2Left() {
