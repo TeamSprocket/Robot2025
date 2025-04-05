@@ -105,21 +105,8 @@ public class RobotContainer {
  
     autoChooser.addRoutine("STM_BL_L4L_SL_BL_L4R", this::STR_BR_L4L_SR_BR_L4R);
     autoChooser.addRoutine("test", this::test);
-
-    // autoChooser.addCmd("toReef", this::goToReef);
-    // autoChooser.addCmd("toReefL4", this::moveToReefL4);
-    // autoChooser.addCmd("testCircle", this::testCircle);
-    // autoChooser.addCmd("rotationTest", this::rotationTest);
-    // autoChooser.addCmd("test1", this::test);
-    // autoChooser.addCmd("test2", this::test2);
-    // autoChooser.addCmd("testBoth", this::testBoth);
-
     SmartDashboard.putData("Select Auto", autoChooser);
-    
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
-
-
-
   }
 
   // public AutoRoutine routine() {
@@ -190,7 +177,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        // new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -198,7 +185,7 @@ public class RobotContainer {
     );
 
     
-    // traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
+    traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
     traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
     traj2.done().onTrue(intake().andThen(traj3.cmd()));
     traj3.done().onTrue(scoreL4Right());
@@ -225,11 +212,11 @@ public class RobotContainer {
   }
 
   public Command alignLeft() {
-    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command alignRight() {
-    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command scoreL2Left() {

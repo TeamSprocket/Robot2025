@@ -51,6 +51,7 @@ public final class Constants {
     public static final Pose2d poseAlignBlueLeft22 = new Pose2d(4.84, 3.01, Rotation2d.fromDegrees(120));
     public static final Pose2d poseAlignBlueRight22 = new Pose2d(5.17, 3.18, Rotation2d.fromDegrees(120));
 
+    //THE LEFT AND RIGHT ARE FLIPPED, ONLY FOR RED
     public static final Pose2d poseAlignRedLeft10 = new Pose2d(12.157, 4.26, Rotation2d.fromDegrees(0));
     public static final Pose2d poseAlignRedRight10 = new Pose2d(12.157, 3.8, Rotation2d.fromDegrees(0));
     public static final Pose2d poseAlignRedLeft9 = new Pose2d(12.774, 4.761, Rotation2d.fromDegrees(300));
@@ -63,6 +64,24 @@ public final class Constants {
     public static final Pose2d poseAlignRedRight6 = new Pose2d(13.680, 3.250, Rotation2d.fromDegrees(120));
     public static final Pose2d poseAlignRedLeft11 = new Pose2d(12.359, 3.200, Rotation2d.fromDegrees(60));
     public static final Pose2d poseAlignRedRight11 = new Pose2d(12.684, 3.078, Rotation2d.fromDegrees(60));
+
+    
+    public static final Pose2d Blue17 = new Pose2d(3.993471145629883 , 3.175410270690918 , Rotation2d.fromDegrees(60));
+    public static final Pose2d Blue18 = new Pose2d(3.506136178970337 , 4.0267229080200195 , Rotation2d.fromDegrees(0));
+    public static final Pose2d Blue19 = new Pose2d(3.9916608333587646 , 4.88698148727417 , Rotation2d.fromDegrees(300));
+    public static final Pose2d Blue20 = new Pose2d(4.992037296295166 , 4.88698148727417 , Rotation2d.fromDegrees(240));
+    public static final Pose2d Blue21 = new Pose2d(5.480820178985596 , 4.03324031829834 , Rotation2d.fromDegrees(180));
+    public static final Pose2d Blue22 = new Pose2d(4.977437496185303 , 3.175410270690918 , Rotation2d.fromDegrees(120));
+
+    public static final Pose2d Red6 = new Pose2d(13.570917129516602 , 3.175776481628418 , Rotation2d.fromDegrees(120));
+    public static final Pose2d Red7 = new Pose2d(14.050718307495117 , 4.028757572174072 , Rotation2d.fromDegrees(180));
+    public static final Pose2d Red8 = new Pose2d(13.561223983764648 , 4.886585712432861 , Rotation2d.fromDegrees(240));
+    public static final Pose2d Red9 = new Pose2d(12.577387809753418 , 4.876892566680908 , Rotation2d.fromDegrees(300));
+    public static final Pose2d Red10 = new Pose2d(12.080918312072754, 4.032328128814697 , Rotation2d.fromDegrees(0));
+    public static final Pose2d Red11 = new Pose2d(12.577386856079102 , 3.1903159618377686 , Rotation2d.fromDegrees(60));
+
+    public static final double xOffset = 0.1648;
+    public static final double yOffset = 0.1648;
   }
 
   public static final class Intake {
@@ -103,7 +122,7 @@ public final class Constants {
     
     public static final double kAngleStowed = -0.14; //-0.22 -0.19
     public static final double kAngleAlgaeRemove = 0.04;
-    public static final double kAngleIntake = 0.224; //0.105
+    public static final double kAngleIntake = 0.3; //0.224
     public static final double kAngleL4 = 0.06;
 
     public static final double kMotionMagicCruiseVelocity = 6;//2
