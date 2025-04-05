@@ -45,8 +45,8 @@ public class Climb extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("climb position", getPosition());
-    SmartDashboard.putBoolean("not at postition", notAtPosition());
+    // SmartDashboard.putNumber("climb position", getPosition());
+    // SmartDashboard.putBoolean("not at postition", notAtPosition());
     // This method will be called once per scheduler run
     switch (State) {
       case NONE:

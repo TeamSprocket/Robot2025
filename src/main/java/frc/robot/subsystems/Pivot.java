@@ -67,13 +67,14 @@ public class Pivot extends SubsystemBase {
 
       motor.getConfigurator().apply(talonFXConfigs, 0.050);
       mm.Slot = 0;
+      motor.setNeutralMode(NeutralModeValue.Brake);
 
       motor.setPosition(-0.2744);
     }
 
     @Override
     public void periodic() {
-      SmartDashboard.putString("State [AP]", currentState.toString());
+      // SmartDashboard.putString("State [AP]", currentState.toString());
       // setState(stateChooser.getSelected());
 
       switch(currentState){
@@ -82,22 +83,22 @@ public class Pivot extends SubsystemBase {
         break;
 
         case STOWED:
-        motor.setNeutralMode(NeutralModeValue.Brake);
+        // motor.setNeutralMode(NeutralModeValue.Brake);
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleStowed));
         break;
 
         case ALGAE_REMOVE:
-        motor.setNeutralMode(NeutralModeValue.Coast);
+        // motor.setNeutralMode(NeutralModeValue.Coast);
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleAlgaeRemove));
         break;
 
         case INTAKE:
-        motor.setNeutralMode(NeutralModeValue.Brake);
+        // motor.setNeutralMode(NeutralModeValue.Brake);
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleIntake));
         break;
 
         case L4:
-        motor.setNeutralMode(NeutralModeValue.Coast);
+        // motor.setNeutralMode(NeutralModeValue.Coast);
         motor.setControl(mm.withPosition(Constants.Pivot.kAngleL4));
         break;
 

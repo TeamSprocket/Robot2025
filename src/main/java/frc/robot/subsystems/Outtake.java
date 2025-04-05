@@ -61,22 +61,22 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     
     motor1.getConfigurator().apply(talonFXConfigs, 0);
     motor1.getVelocity();
+    motor1.setNeutralMode(NeutralModeValue.Brake);
   }
 
   /** Creates a new Outtake. */
   public Outtake() {
-    stateChooser.setDefaultOption("NONE", OuttakeStates.NONE);
-    stateChooser.addOption("STOWED", OuttakeStates.STOWED);
-    stateChooser.addOption("CORAL_2", OuttakeStates.CORAL_OUTTAKE);
-    stateChooser.addOption("ALGAE_REMOVE_2", OuttakeStates.ALGAE_REMOVE);
-    SmartDashboard.putData("Elevator State Chooser", stateChooser);
+    // stateChooser.setDefaultOption("NONE", OuttakeStates.NONE);
+    // stateChooser.addOption("STOWED", OuttakeStates.STOWED);
+    // stateChooser.addOption("CORAL_2", OuttakeStates.CORAL_OUTTAKE);
+    // stateChooser.addOption("ALGAE_REMOVE_2", OuttakeStates.ALGAE_REMOVE);
+    // SmartDashboard.putData("Elevator State Chooser", stateChooser);
     configMotors();
   }
 
   @Override
   public void periodic() {
-    motor1.setNeutralMode(NeutralModeValue.Brake);
-    SmartDashboard.putString("OUTTALKE STATE", state.toString());
+    // SmartDashboard.putString("OUTTALKE STATE", state.toString());
     // setState(stateChooser.getSelected()); // TODO: remove this when done testing
 
     switch(state){
