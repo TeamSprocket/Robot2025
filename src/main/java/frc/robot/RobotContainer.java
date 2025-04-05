@@ -103,8 +103,9 @@ public class RobotContainer {
 
     autoChooser = new AutoChooser();
  
-    autoChooser.addRoutine("STM_BL_L4L_SL_BL_L4R", this::STR_BR_L4L_SR_BR_L4R);
-    autoChooser.addRoutine("test", this::test);
+    autoChooser.addRoutine("STL_LEAVE", this::STL_LEAVE);
+    autoChooser.addRoutine("STM_LEAVE", this::STM_LEAVE);
+    autoChooser.addRoutine("STR_LEAVE", this::STR_LEAVE);
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
   }
@@ -122,58 +123,77 @@ public class RobotContainer {
   //     )
   //   );
 
-  public AutoRoutine STM_BL_L4L_SL_BL_L4R() {
-    AutoRoutine routine = autoFactory.newRoutine("STM_BL_L4L_SL_BL_L4R"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
-    AutoTrajectory traj2 = routine.trajectory("BLL_SL");
-    AutoTrajectory traj3 = routine.trajectory("SL_BL");
+  // public AutoRoutine STM_BL_L4L_SL_BL_L4R() {
+  //   AutoRoutine routine = autoFactory.newRoutine("STM_BL_L4L_SL_BL_L4R"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
+  //   AutoTrajectory traj2 = routine.trajectory("BLL_SL");
+  //   AutoTrajectory traj3 = routine.trajectory("SL_BL");
 
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
-        traj1.cmd()
-      )
-    );
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+  //   traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
+  //   traj2.done().onTrue(intake().andThen(traj3.cmd()));
+  //   traj3.done().onTrue(scoreL4Right());
+  //   return routine;
+  // }
 
-    
-    // traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
-    traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
-    traj2.done().onTrue(intake().andThen(traj3.cmd()));
-    traj3.done().onTrue(scoreL4Right());
-    return routine;
-  }
+  // public AutoRoutine STR_BR_L4L_SR_BR_L4R() {
+  //   AutoRoutine routine = autoFactory.newRoutine("STR_BR_L4L_SR_BR_L4R"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("STR_BR"); //LOAD ALL PATHS HERE
+  //   AutoTrajectory traj2 = routine.trajectory("BRL_SR");
+  //   AutoTrajectory traj3 = routine.trajectory("SR_BR");
 
-  public AutoRoutine STR_BR_L4L_SR_BR_L4R() {
-    AutoRoutine routine = autoFactory.newRoutine("STR_BR_L4L_SR_BR_L4R"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STR_BR"); //LOAD ALL PATHS HERE
-    AutoTrajectory traj2 = routine.trajectory("BRL_SR");
-    AutoTrajectory traj3 = routine.trajectory("SR_BR");
-
-    routine.active().onTrue(
+  //   routine.active().onTrue(
       
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
-        traj1.cmd()
-      )
-    );
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
 
     
-    // traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
-    traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
-    traj2.done().onTrue(intake().andThen(traj3.cmd()));
-    traj3.done().onTrue(scoreL4Right());
-    return routine;
-  }
+  //   // traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
+  //   traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
+  //   traj2.done().onTrue(intake().andThen(traj3.cmd()));
+  //   traj3.done().onTrue(scoreL4Right());
+  //   return routine;
+  // }
 
-  public AutoRoutine STR_BM_L4L_SR_BM_L4R() {
-    AutoRoutine routine = autoFactory.newRoutine("STR_BM_L4L_SR_BM_L4R"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STR_BM"); //LOAD ALL PATHS HERE
-    AutoTrajectory traj2 = routine.trajectory("BML_SR");
-    AutoTrajectory traj3 = routine.trajectory("SR_BM");
+  // public AutoRoutine STR_BM_L4L_SR_BM_L4R() {
+  //   AutoRoutine routine = autoFactory.newRoutine("STR_BM_L4L_SR_BM_L4R"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("STR_BM"); //LOAD ALL PATHS HERE
+  //   AutoTrajectory traj2 = routine.trajectory("BML_SR");
+  //   AutoTrajectory traj3 = routine.trajectory("SR_BM");
+
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+
+    
+  //   traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
+  //   traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
+  //   traj2.done().onTrue(intake().andThen(traj3.cmd()));
+  //   traj3.done().onTrue(scoreL4Right());
+  //   return routine;
+  // }
+
+  public AutoRoutine STL_LEAVE() {
+    AutoRoutine routine = autoFactory.newRoutine("STL_LEAVE"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STL_LEAVE"); //LOAD ALL PATHS HERE
+
 
     routine.active().onTrue(
       Commands.sequence(
@@ -183,18 +203,12 @@ public class RobotContainer {
         traj1.cmd()
       )
     );
-
-    
-    traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
-    traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));
-    traj2.done().onTrue(intake().andThen(traj3.cmd()));
-    traj3.done().onTrue(scoreL4Right());
     return routine;
   }
 
-  public AutoRoutine test() {
-    AutoRoutine routine = autoFactory.newRoutine("test"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STM_BM"); //LOAD ALL PATHS HERE
+  public AutoRoutine STM_LEAVE() {
+    AutoRoutine routine = autoFactory.newRoutine("STM_LEAVE"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STM_LEAVE"); //LOAD ALL PATHS HERE
 
 
     routine.active().onTrue(
@@ -205,9 +219,22 @@ public class RobotContainer {
         traj1.cmd()
       )
     );
+    return routine;
+  }
 
-    
-    // traj1.active().whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3));
+  public AutoRoutine STR_LEAVE() {
+    AutoRoutine routine = autoFactory.newRoutine("STR_LEAVE"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STR_LEAVE"); //LOAD ALL PATHS HERE
+
+
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+        traj1.cmd()
+      )
+    );
     return routine;
   }
 
