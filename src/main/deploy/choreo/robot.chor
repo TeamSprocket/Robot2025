@@ -7,8 +7,8 @@
    "angvelo":{
     "dimension":"AngVel",
     "var":{
-     "exp":"2.3 rad / s",
-     "val":2.3
+     "exp":"1.5 rad / s",
+     "val":1.5
     }
    },
    "velo":{

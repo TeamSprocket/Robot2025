@@ -57,7 +57,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     SwerveDriveKinematics m_kinematics;
 
     private PIDController C_PID_Translation = new PIDController(8, 0.0, 0.0); //10 0 0
-    private PIDController C_PID_Rotation = new PIDController(50, 0, 1);  //0.2 0 0
+    private PIDController C_PID_Rotation = new PIDController(15, 0, 0);  //0.2 0 0
 
     private double pathX = 0.0;
     private double pathY = 0.0;
@@ -302,13 +302,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public double getContinuousRadians ( double radians){
-        if (radians < 0) {
-            radians += 2 * Math.PI * (Math.abs(radians) / 360 + 1);;
-            // * (Math.abs(radians) / 360 + 1
+        if (radians < -Math.PI) {
+            radians += 2 * Math.PI * (Math.abs(radians) / (2*Math.PI) + 1);
         }
-        // if (radians > 2*Math.PI) {
-        //     radians -= 
-        // }
+        else if (radians >= Math.PI) {  //NEW
+
+            radians -= 2 * Math.PI * (Math.abs(radians) / (2*Math.PI) + 1);
+
+        }
         
         return radians;
     }
@@ -316,19 +317,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public double getOmegaPID() {
         Pose2d pose = getAutoBuilderPose();
 
-        double roboRotation = getContinuousRadians(pose.getRotation().getRadians());
-        double heading = pathHeading;
-        if (Math.abs(roboRotation-heading) > Math.PI) {
-            if (heading > roboRotation) roboRotation = roboRotation + 2 * Math.PI;
-            if (heading < roboRotation) roboRotation = roboRotation - 2 * Math.PI; 
-        }
+        double roboRotation = getContinuousRadians(pose.getRotation().getRadians()); //pi
+        double heading = getContinuousRadians(pathHeading); //0
+        
+        // if (Math.abs(roboRotation-heading) > Math.PI) {
+        //     if (heading > roboRotation) roboRotation = roboRotation + 2 * Math.PI;
+        //     if (heading < roboRotation) roboRotation = roboRotation - 2 * Math.PI; 
+        // }
+        System.out.println("robo rot " + roboRotation);
+        System.out.println("path rot " + heading);
         return C_PID_Translation.calculate(roboRotation,heading) ;
     }
 
     public void followTrajectory(SwerveSample path) {
-        C_PID_Rotation.enableContinuousInput(0, 2 * Math.PI);
+        C_PID_Rotation.enableContinuousInput(-Math.PI, Math.PI); //NEW
         Pose2d pose = getAutoBuilderPose();
-
         pathX = path.x;
         pathY = path.y;
         pathHeading = path.heading;
@@ -341,7 +344,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         ChassisSpeeds speeds = new ChassisSpeeds(
             path.vx + C_PID_Translation.calculate(pose.getX(), path.x),
             path.vy + C_PID_Translation.calculate(pose.getY(), path.y),
-            path.omega + getOmegaPID()
+            path.omega + pidOutputOmega
             // C_PID_Rotation.calculate(getContinuousRadians(pose.getRotation().getRadians()), path.heading)
 
             // path.vx,

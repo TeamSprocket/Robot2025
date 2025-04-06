@@ -35,8 +35,8 @@ public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
     private PIDController pidRotationAlign = new PIDController(4.5, 0, 0); //3.5 0 0
-    private PIDController pidXAlign = new PIDController(1.75, 0, 0); //2.5 0 0
-    private PIDController pidYAlign = new PIDController(1.75, 0, 0); //2.5 0 0
+    private PIDController pidXAlign = new PIDController(2.25, 0, 0); //2.5 0 0
+    private PIDController pidYAlign = new PIDController(2.25, 0, 0); //2.5 0 0
 
     Timer timer = new Timer();
 
@@ -228,7 +228,7 @@ public class Vision extends SubsystemBase {
     public Pose2d getTargetTagLeft() {
         //CHECK IF SAME FOR RED AND BLUE
         Pose2d targetTag = getClosestTag();
-        Pose2d targetPose = new Pose2d(targetTag.getX() + Constants.Vision.xOffset*Math.cos((targetTag.getRotation()).getRadians()+Math.PI/2), targetTag.getY() + Constants.Vision.xOffset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
+        Pose2d targetPose = new Pose2d(targetTag.getX() + Constants.Vision.xOffset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getY() + Constants.Vision.xOffset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
         return targetPose;
     }
 

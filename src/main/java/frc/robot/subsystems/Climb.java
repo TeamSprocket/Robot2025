@@ -58,7 +58,7 @@ public class Climb extends SubsystemBase {
         break;
 
       case CLIMB:
-          climbpivot.setVoltage(2); //-2
+          climbpivot.setVoltage(4); //-2
         break;
     }
   }

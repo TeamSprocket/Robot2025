@@ -79,7 +79,7 @@ public class RobotContainer {
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
-  double alignTimeout = 2.0; //TUNE
+  double alignTimeout = 1.5; //TUNE
   double intakeTimeout = 3.0; //TUNE
   double scoreTimeout = 0.75; //TUNE
 
@@ -106,6 +106,12 @@ public class RobotContainer {
     autoChooser.addRoutine("STL_LEAVE", this::STL_LEAVE);
     autoChooser.addRoutine("STM_LEAVE", this::STM_LEAVE);
     autoChooser.addRoutine("STR_LEAVE", this::STR_LEAVE);
+    // autoChooser.addRoutine("ST_FIELD_MIDDLE_LEAVE", this::ST_FIELD_MIDDLE_LEAVE);
+    autoChooser.addRoutine("match31", this::STB_BR_L4L);
+    autoChooser.addRoutine("test", this::test);
+    autoChooser.addRoutine("match20", this::match20);
+    autoChooser.addRoutine("match37", this::match37);
+    autoChooser.addRoutine("match48", this::match48);
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
   }
@@ -238,6 +244,110 @@ public class RobotContainer {
     return routine;
   }
 
+  // public AutoRoutine ST_FIELD_MIDDLE_BM_L4R() {
+  //   AutoRoutine routine = autoFactory.newRoutine("ST_FIELD_MIDDLE_LEAVE"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+  //   return routine;
+  // }
+
+  public AutoRoutine STB_BR_L4L() {
+    AutoRoutine routine = autoFactory.newRoutine("STB_BM_L4L"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STB_BR"); //LOAD ALL PATHS HERE
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Right());
+    return routine;
+  }
+
+  public AutoRoutine test() {
+    AutoRoutine routine = autoFactory.newRoutine("test"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("test"); //LOAD ALL PATHS HERE
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Right());
+    return routine;
+  }
+
+  public AutoRoutine match20() {
+    AutoRoutine routine = autoFactory.newRoutine("match20"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+        // Commands.waitSeconds(0.5),
+
+        traj1.cmd()
+      )
+    );
+
+    // traj1.done().onTrue(scoreL4Right());
+    return routine;
+  }
+
+  public AutoRoutine match37() {
+    AutoRoutine routine = autoFactory.newRoutine("match20"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BML_SL");
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj2.resetOdometry(),
+
+        traj2.cmd()
+      )
+    );
+
+    // traj1.done().onTrue(scoreL4Right().andThen(traj2.cmd()));
+    // traj2.done().onTrue(intake());
+
+    return routine;
+  }
+
+  public AutoRoutine match48() {
+    AutoRoutine routine = autoFactory.newRoutine("match48"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
+    // AutoTrajectory traj2 = routine.trajectory("BML_SL");
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Right());
+    // traj2.done().onTrue(intake());
+
+    return routine;
+  }
+
   public Command alignLeft() {
     return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
@@ -304,8 +414,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
     drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.5) // Drive forward with negative Y (forward)
-            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.5) // Drive left with negative X (left)
+        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.6) // Drive forward with negative Y (forward)
+            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.6) // Drive left with negative X (left)
             .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6
             ) // Drive counterclockwise with negative X (left)
         )
@@ -358,6 +468,10 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.INTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
+    new Trigger(operator.rightTrigger())
+      .whileTrue(superstructure.setState(SSStates.EJECT))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
     new Trigger(operator.a())
       .whileTrue(superstructure.setState(SSStates.CORAL_1))
       .whileFalse(superstructure.setState(SSStates.STOWED));
@@ -387,10 +501,6 @@ public class RobotContainer {
 
     new Trigger(operator.povUp())
       .whileTrue(new InstantCommand(() -> outtake.runOuttake()))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
-
-    new Trigger(operator.povDown())
-      .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger (operator.button(8).and(() -> climb.notAtPosition()))

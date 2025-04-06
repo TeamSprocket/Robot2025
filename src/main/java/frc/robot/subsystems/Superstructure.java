@@ -128,7 +128,7 @@ public class Superstructure extends SubsystemBase {
       // new InstantCommand(() -> pivot.setState(PivotStates.L4)),
       // new WaitUntilCommand(() -> pivot.atSetpoint()),
       // new WaitCommand(0.2),
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
+      new InstantCommand(() -> outtake.setState(OuttakeStates.L4))
     );
   }
 

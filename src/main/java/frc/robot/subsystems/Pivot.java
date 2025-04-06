@@ -37,10 +37,10 @@ public class Pivot extends SubsystemBase {
   
     public Pivot(){
 
-      stateChooser.setDefaultOption("NONE", PivotStates.NONE);
-      stateChooser.addOption("STOWED", PivotStates.STOWED);
-      stateChooser.addOption("ALGAE_REMOVE_2", PivotStates.ALGAE_REMOVE);
-      SmartDashboard.putData("Pivot State Chooser", stateChooser);
+      // stateChooser.setDefaultOption("NONE", PivotStates.NONE);
+      // stateChooser.addOption("STOWED", PivotStates.STOWED);
+      // stateChooser.addOption("ALGAE_REMOVE_2", PivotStates.ALGAE_REMOVE);
+      // SmartDashboard.putData("Pivot State Chooser", stateChooser);
 
       TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
       talonFXConfigs.withSlot0(
@@ -74,7 +74,7 @@ public class Pivot extends SubsystemBase {
 
     @Override
     public void periodic() {
-      // SmartDashboard.putString("State [AP]", currentState.toString());
+      SmartDashboard.putString("PIVOT STATE", currentState.toString());
       // setState(stateChooser.getSelected());
 
       switch(currentState){
