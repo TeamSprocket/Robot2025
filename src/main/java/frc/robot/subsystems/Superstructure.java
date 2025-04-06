@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -44,7 +45,7 @@ public class Superstructure extends SubsystemBase {
   Pivot pivot;
   Outtake outtake;
   Climb climb;
-
+  
   private Timer timer = new Timer();
 
   public Superstructure(Elevator elevator, Intake intake, Outtake outtake, Pivot pivot, Climb climb) {

@@ -8,6 +8,7 @@ import java.util.Optional;
 // import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.hal.AllianceStationID;
+import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +20,7 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,6 +39,8 @@ public class Vision extends SubsystemBase {
     private PIDController pidRotationAlign = new PIDController(4.5, 0, 0); //3.5 0 0
     private PIDController pidXAlign = new PIDController(2.25, 0, 0); //2.5 0 0
     private PIDController pidYAlign = new PIDController(2.25, 0, 0); //2.5 0 0
+
+    Field2d field = new Field2d();
 
     Timer timer = new Timer();
 
@@ -81,15 +85,16 @@ public class Vision extends SubsystemBase {
         timer.reset();
         timer.start();
 
-        
         ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
         ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
     }
 
     @Override
     public void periodic() {
+        field.setRobotPose(drivetrain.getState().Pose);
         testPose = getPoseTesting();
 
+        SmartDashboard.putData("Field", field);
         SmartDashboard.putNumber("Target Speed X", getAlignOffsetsRight()[0]);
         SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 

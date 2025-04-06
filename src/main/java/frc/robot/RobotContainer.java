@@ -80,7 +80,7 @@ public class RobotContainer {
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
   double alignTimeout = 1.5; //TUNE
-  double intakeTimeout = 3.0; //TUNE
+  double intakeTimeout = 2.0; //TUNE
   double scoreTimeout = 0.75; //TUNE
 
   public RobotContainer() {
@@ -112,6 +112,9 @@ public class RobotContainer {
     autoChooser.addRoutine("match20", this::match20);
     autoChooser.addRoutine("match37", this::match37);
     autoChooser.addRoutine("match48", this::match48);
+    autoChooser.addRoutine("match 63", this::match63);
+    autoChooser.addRoutine("match 69", this::match69);
+
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
   }
@@ -316,13 +319,13 @@ public class RobotContainer {
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
         superstructure.setState(SSStates.STOWED),
-        traj2.resetOdometry(),
+        traj1.resetOdometry(),
 
-        traj2.cmd()
+        traj1.cmd()
       )
     );
 
-    // traj1.done().onTrue(scoreL4Right().andThen(traj2.cmd()));
+    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
     // traj2.done().onTrue(intake());
 
     return routine;
@@ -344,6 +347,49 @@ public class RobotContainer {
 
     traj1.done().onTrue(scoreL4Right());
     // traj2.done().onTrue(intake());
+
+    return routine;
+  }
+
+  public AutoRoutine match63() {
+    AutoRoutine routine = autoFactory.newRoutine("match63"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BLL_SL");
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj2.done().onTrue(intake());
+
+    return routine;
+  }
+
+  public AutoRoutine match69() {
+    AutoRoutine routine = autoFactory.newRoutine("match69"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STBM_BR"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BRL_SR");
+    AutoTrajectory traj3 = routine.trajectory("SR_FR");
+
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
+    traj3.done().onTrue(scoreL4Right());
 
     return routine;
   }
@@ -414,8 +460,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
     drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.6) // Drive forward with negative Y (forward)
-            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.6) // Drive left with negative X (left)
+        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.65) // Drive forward with negative Y (forward)
+            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.65) // Drive left with negative X (left)
             .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6
             ) // Drive counterclockwise with negative X (left)
         )

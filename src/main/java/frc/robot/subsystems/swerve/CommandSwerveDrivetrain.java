@@ -57,7 +57,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     SwerveDriveKinematics m_kinematics;
 
     private PIDController C_PID_Translation = new PIDController(8, 0.0, 0.0); //10 0 0
-    private PIDController C_PID_Rotation = new PIDController(15, 0, 0);  //0.2 0 0
+    private PIDController C_PID_Rotation = new PIDController(15, 0, 0);  //15 0 0      30 0 1
 
     private double pathX = 0.0;
     private double pathY = 0.0;
@@ -324,8 +324,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //     if (heading > roboRotation) roboRotation = roboRotation + 2 * Math.PI;
         //     if (heading < roboRotation) roboRotation = roboRotation - 2 * Math.PI; 
         // }
-        System.out.println("robo rot " + roboRotation);
-        System.out.println("path rot " + heading);
         return C_PID_Translation.calculate(roboRotation,heading) ;
     }
 
