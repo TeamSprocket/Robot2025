@@ -79,9 +79,9 @@ public class RobotContainer {
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
-  double alignTimeout = 1.5; //TUNE
-  double intakeTimeout = 2.0; //TUNE
-  double scoreTimeout = 0.75; //TUNE
+  double alignTimeout = 1.5; //TUNE ALSO LOWER
+  double intakeTimeout = 2.0; //LOWER, PREFERABLY LES THAN 1 SECOND
+  double scoreTimeout = 0.75; //TUNE ALSO LOWER
 
   public RobotContainer() {
     // drivetrain.configureAutoBuilder();
@@ -108,7 +108,7 @@ public class RobotContainer {
     autoChooser.addRoutine("STR_LEAVE", this::STR_LEAVE);
     // autoChooser.addRoutine("ST_FIELD_MIDDLE_LEAVE", this::ST_FIELD_MIDDLE_LEAVE);
     autoChooser.addRoutine("match31", this::STB_BR_L4L);
-    autoChooser.addRoutine("test", this::test);
+    // autoChooser.addRoutine("test", this::test);
     autoChooser.addRoutine("match20", this::match20);
     autoChooser.addRoutine("match37", this::match37);
     autoChooser.addRoutine("match48", this::match48);
@@ -118,6 +118,8 @@ public class RobotContainer {
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
   }
+
+  //MOVE EVERYTHING TO ANOTHER FILE SO THAT ROBOT CONTAINER IS NOT CLUTERED
 
   // public AutoRoutine routine() {
   //   AutoRoutine routine = autoFactory.newRoutine("Routine");
@@ -247,39 +249,9 @@ public class RobotContainer {
     return routine;
   }
 
-  // public AutoRoutine ST_FIELD_MIDDLE_BM_L4R() {
-  //   AutoRoutine routine = autoFactory.newRoutine("ST_FIELD_MIDDLE_LEAVE"); //ROUTINE NAME
-  //   AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
-  //   routine.active().onTrue(
-  //     Commands.sequence(
-  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-  //       superstructure.setState(SSStates.STOWED),
-  //       traj1.resetOdometry(),
-  //       traj1.cmd()
-  //     )
-  //   );
-  //   return routine;
-  // }
-
   public AutoRoutine STB_BR_L4L() {
     AutoRoutine routine = autoFactory.newRoutine("STB_BM_L4L"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STB_BR"); //LOAD ALL PATHS HERE
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
-        traj1.cmd()
-      )
-    );
-
-    traj1.done().onTrue(scoreL4Right());
-    return routine;
-  }
-
-  public AutoRoutine test() {
-    AutoRoutine routine = autoFactory.newRoutine("test"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("test"); //LOAD ALL PATHS HERE
     routine.active().onTrue(
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
