@@ -349,14 +349,35 @@ public class Vision extends SubsystemBase {
     }
 
     public double[] getAlignOffsetsRight() {
-        double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
-        double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
+        double xOffset = drivetrain.getState().Pose.getX() - getTargetTagRight().getX();
+        double yOffset = drivetrain.getState().Pose.getY() - getTargetTagRight().getY();
+        double speedX = 0;
+        double speedY = 0;
+        double angle = Math.atan(yOffset / xOffset);
+        
+        if (yOffset > 0 && xOffset < 0) {
+            angle = angle + Math.PI;
+        }
+        if (yOffset < 0 && xOffset < 0) {
+            angle = angle + Math.PI;
+        }
+        if (yOffset < 0 && xOffset > 0) {
+            angle = angle + 2 * Math.PI;
+        }
 
-        if (Util.inRange(speedX, -0.05, 0.05)) {
+        if (Math.abs(xOffset) < 0.3 * Math.cos(angle)) {
+            speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
+        } else speedX = Constants.Vision.kFFAlignSpeed * Math.cos(angle);
+        
+        if (Math.abs(yOffset) < 0.3 * Math.sin(angle)) {
+            speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
+        } else speedY = Constants.Vision.kFFAlignSpeed * Math.sin(angle);
+
+        if (Util.inRange(speedX, -0.0001, 0.0001)) {
             speedX = 0.0;
         }
 
-        if (Util.inRange(speedY, -0.05, 0.05)) {
+        if (Util.inRange(speedY, -0.0001, 0.001)) {
             speedY = 0.0;
         }
         
@@ -367,8 +388,29 @@ public class Vision extends SubsystemBase {
       }
     
       public double[] getAlignOffsetsLeft() {
-        double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
-        double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
+        double xOffset = drivetrain.getState().Pose.getX() - getTargetTagLeft().getX();
+        double yOffset = drivetrain.getState().Pose.getY() - getTargetTagLeft().getY();
+        double speedX = 0;
+        double speedY = 0;
+        double angle = Math.atan(yOffset / xOffset);
+        
+        if (yOffset > 0 && xOffset < 0) {
+            angle = angle + Math.PI;
+        }
+        if (yOffset < 0 && xOffset < 0) {
+            angle = angle + Math.PI;
+        }
+        if (yOffset < 0 && xOffset > 0) {
+            angle = angle + 2 * Math.PI;
+        }
+
+        if (Math.abs(xOffset) < 0.3 * Math.cos(angle)) {
+            speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
+        } else speedX = Constants.Vision.kFFAlignSpeed * Math.cos(angle);
+        
+        if (Math.abs(yOffset) < 0.3 * Math.sin(angle)) {
+            speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
+        } else speedY = Constants.Vision.kFFAlignSpeed * Math.sin(angle);
 
         if (Util.inRange(speedX, -0.0001, 0.0001)) {
             speedX = 0.0;
