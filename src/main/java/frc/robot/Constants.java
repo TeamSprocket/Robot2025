@@ -67,20 +67,22 @@ public final class Constants {
 
     
     public static final Pose2d Blue17 = new Pose2d(3.993471145629883 , 3.175410270690918 , Rotation2d.fromDegrees(60));
-    public static final Pose2d Blue18 = new Pose2d(3.506136178970337 , 4.018757572174072 , Rotation2d.fromDegrees(0)); //x, 4.0267229080200195
+    public static final Pose2d Blue18 = new Pose2d(3.498136178970337 , 4.027757572174072 , Rotation2d.fromDegrees(0)); //x, 4.0267229080200195
     public static final Pose2d Blue19 = new Pose2d(3.9916608333587646 , 4.88698148727417 , Rotation2d.fromDegrees(300));
     public static final Pose2d Blue20 = new Pose2d(4.992037296295166 , 4.88698148727417 , Rotation2d.fromDegrees(240));
-    public static final Pose2d Blue21 = new Pose2d(5.480820178985596 , 4.018757572174072  , Rotation2d.fromDegrees(180));
+    public static final Pose2d Blue21 = new Pose2d(5.480820178985596 , 4.024757572174072 , Rotation2d.fromDegrees(180)); //WAS 180 DEGREES
     public static final Pose2d Blue22 = new Pose2d(4.977437496185303 , 3.175410270690918 , Rotation2d.fromDegrees(120));
 
     public static final Pose2d Red6 = new Pose2d(13.554709434509277  , 3.1757071018218994  , Rotation2d.fromDegrees(120));
-    public static final Pose2d Red7 = new Pose2d(14.050718307495117 , 4.013757572174072 , Rotation2d.fromDegrees(180));
+    public static final Pose2d Red7 = new Pose2d(14.050718307495117 , 4.046757572174072 , Rotation2d.fromDegrees(180)); 
     public static final Pose2d Red8 = new Pose2d(13.561223983764648 , 4.886585712432861 , Rotation2d.fromDegrees(240));
     public static final Pose2d Red9 = new Pose2d(12.576774597167969  , 4.876892566680908 , Rotation2d.fromDegrees(300));
-    public static final Pose2d Red10 = new Pose2d(12.080918312072754, 4.018757572174072 , Rotation2d.fromDegrees(0));
+    public static final Pose2d Red10 = new Pose2d(12.080918312072754, 4.046757572174072 , Rotation2d.fromDegrees(0));
     public static final Pose2d Red11 = new Pose2d(12.575830459594727  , 3.174359083175659  , Rotation2d.fromDegrees(60));
 
     public static final double xOffset = 0.172; //0.17
+
+    public static final double kFFAlignSpeed = 2.5;
     // public static final double yOffset = 0.1648;
   }
 
@@ -103,7 +105,7 @@ public final class Constants {
   public static final class Outtake {
     
     public static final double kSpeedStowed = 0.0;
-    public static final double kSpeedOuttake = 7.5;
+    public static final double kSpeedOuttake = 6.5;
     public static final double kSpeedOuttakeL4 = 9;
     public static final double kSpeedAlgaeRemoval = -6.5;
     public static final double kSpeedIntake = 4;
@@ -146,9 +148,9 @@ public final class Constants {
     public static final double kHeightIntake = 0.0;
     public static final double kHeightHandoff = 0.0;
     public static final double kHeightCoral1 = 0.0;
-    public static final double kHeightCoral2 = 1.63; //1.65
-    public static final double kHeightCoral3 = 3.32; //3.4
-    public static final double kHeightCoral4 = 5.85; //5.8
+    public static final double kHeightCoral2 = 1.42; //1.65
+    public static final double kHeightCoral3 = 3.05; //3.4
+    public static final double kHeightCoral4 = 5.70; //5.8
 
     public static final double kHeightAlgaeRemove2 = 1.1; //1
     public static final double kHeightAlgaeRemove3 = 2.8; //2.7

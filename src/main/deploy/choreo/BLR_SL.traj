@@ -18,15 +18,15 @@
  },
  "params":{
   "waypoints":[
-    {"x":{"exp":"BLR.x", "val":5.145}, "y":{"exp":"BLR.y", "val":4.83}, "heading":{"exp":"BLR.heading", "val":-2.124}, "intervals":21, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"5.378483772277832 m", "val":5.378483772277832}, "y":{"exp":"5.827744960784912 m", "val":5.827744960784912}, "heading":{"exp":"-1.4787495306633276 rad", "val":-1.4787495306633276}, "intervals":45, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"1.6538182497024536 m", "val":1.6538182497024536}, "y":{"exp":"7.196041107177734 m", "val":7.196041107177734}, "heading":{"exp":"-0.7750888659290945 rad", "val":-0.7750888659290945}, "intervals":18, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"SL.x", "val":0.5883389592170716}, "y":{"exp":"SL.y", "val":7.542521667480468}, "heading":{"exp":"SL.heading", "val":-0.935}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"BLR.x", "val":5.145}, "y":{"exp":"BLR.y", "val":4.83}, "heading":{"exp":"BLR.heading", "val":-2.124}, "intervals":22, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"5.378483772277832 m", "val":5.378483772277832}, "y":{"exp":"5.827744960784912 m", "val":5.827744960784912}, "heading":{"exp":"-1.4787495306633276 rad", "val":-1.4787495306633276}, "intervals":52, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"1.6538182497024536 m", "val":1.6538182497024536}, "y":{"exp":"7.196041107177734 m", "val":7.196041107177734}, "heading":{"exp":"-0.7750888659290945 rad", "val":-0.7750888659290945}, "intervals":14, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"SL.x", "val":1.0206990480422973}, "y":{"exp":"SL.y", "val":7.189364433288574}, "heading":{"exp":"SL.heading", "val":-0.935}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"17.548 m", "val":17.548}, "h":{"exp":"8.052 m", "val":8.052}}}, "enabled":false},
-    {"from":0, "to":3, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"velo", "val":2.5}}}, "enabled":true},
+    {"from":0, "to":3, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"velo", "val":2.0}}}, "enabled":true},
     {"from":0, "to":3, "data":{"type":"MaxAngularVelocity", "props":{"max":{"exp":"angVelo", "val":3.14}}}, "enabled":true},
     {"from":3, "to":2, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"svelo", "val":1.0}}}, "enabled":true}],
   "targetDt":{
