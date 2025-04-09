@@ -73,6 +73,8 @@ public class Vision extends SubsystemBase {
     double distToAprilRight = 0.0;
     boolean updateFirst = true;
 
+    double maxDistance = 0.60;
+
     double fiducialID;
     
 
@@ -284,7 +286,10 @@ public class Vision extends SubsystemBase {
     public void updateAlignPose() {
         if (LimelightHelper.getTV(name)) {
             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            drivetrain.resetPose(estimate.pose);
+            Pose2d tag = getClosestTag();
+            if (Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)) < maxDistance) {
+                drivetrain.resetPose(estimate.pose);
+            }
         }
     }
 

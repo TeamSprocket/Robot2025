@@ -115,7 +115,8 @@ public class RobotContainer {
     autoChooser.addRoutine("match 63", this::match63);
     autoChooser.addRoutine("SL_TEST", this::SL_TEST);
     autoChooser.addRoutine("testPID", this::testPID);
-
+    autoChooser.addRoutine("2mf", this::twometerforward);
+    autoChooser.addRoutine("2mft", this::twometerforwardturn);
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
   }
@@ -377,6 +378,46 @@ public class RobotContainer {
     );
 
     traj1.done().onTrue(scoreL4Left());
+    // traj2.done().onTrue(intake());
+
+    return routine;
+  }
+
+  public AutoRoutine twometerforward() {
+    AutoRoutine routine = autoFactory.newRoutine("2mf"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("2mforward"); //LOAD ALL PATHS HERE
+    // AutoTrajectory traj2 = routine.trajectory("BLL_SL");
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    // traj1.done().onTrue(scoreL4Left());
+    // traj2.done().onTrue(intake());
+
+    return routine;
+  }
+
+  public AutoRoutine twometerforwardturn() {
+    AutoRoutine routine = autoFactory.newRoutine("2mft"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("2mforwardturn"); //LOAD ALL PATHS HERE
+    // AutoTrajectory traj2 = routine.trajectory("BLL_SL");
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    // traj1.done().onTrue(scoreL4Left());
     // traj2.done().onTrue(intake());
 
     return routine;
