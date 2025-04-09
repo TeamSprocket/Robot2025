@@ -125,7 +125,7 @@ public class Superstructure extends SubsystemBase {
         climb.setState(ClimbStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()),
-      new WaitCommand(0.2),
+      new WaitCommand(0.1),
       // new InstantCommand(() -> pivot.setState(PivotStates.L4)),
       // new WaitUntilCommand(() -> pivot.atSetpoint()),
       // new WaitCommand(0.2),

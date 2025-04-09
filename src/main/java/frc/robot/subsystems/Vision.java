@@ -347,11 +347,11 @@ public class Vision extends SubsystemBase {
         double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
         double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
 
-        if (Util.inRange(speedX, -0.0001, 0.0001)) {
+        if (Util.inRange(speedX, -0.05, 0.05)) {
             speedX = 0.0;
         }
 
-        if (Util.inRange(speedY, -0.0001, 0.0001)) {
+        if (Util.inRange(speedY, -0.05, 0.05)) {
             speedY = 0.0;
         }
         
@@ -365,11 +365,11 @@ public class Vision extends SubsystemBase {
         double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
         double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
 
-        if (Util.inRange(speedX, -0.0001, 0.0001)) {
+        if (Util.inRange(speedX, -0.05, 0.05)) {
             speedX = 0.0;
         }
 
-        if (Util.inRange(speedY, -0.0001, 0.0001)) {
+        if (Util.inRange(speedY, -0.05, 0.05)) {
             speedY = 0.0;
         }
 

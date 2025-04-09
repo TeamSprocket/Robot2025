@@ -4,18 +4,32 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "accel":{
+    "dimension":"LinAcc",
+    "var":{
+     "exp":"6 m / s ^ 2",
+     "val":6.0
+    }
+   },
    "angvelo":{
     "dimension":"AngVel",
     "var":{
-     "exp":"1.5 rad / s",
-     "val":1.5
+     "exp":"2 rad / s",
+     "val":2.0
+    }
+   },
+   "evelo":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
     }
    },
    "velo":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2 m / s",
-     "val":2.0
+     "exp":"2.5 m / s",
+     "val":2.5
     }
    }
   },

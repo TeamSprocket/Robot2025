@@ -79,9 +79,9 @@ public class RobotContainer {
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
-  double alignTimeout = 1.5; //TUNE ALSO LOWER
+  double alignTimeout = 1.25; //TUNE ALSO LOWER
   double intakeTimeout = 2.0; //LOWER, PREFERABLY LES THAN 1 SECOND
-  double scoreTimeout = 0.75; //TUNE ALSO LOWER
+  double scoreTimeout = 0.23; //TUNE ALSO LOWER
 
   public RobotContainer() {
     // drivetrain.configureAutoBuilder();
@@ -113,7 +113,8 @@ public class RobotContainer {
     autoChooser.addRoutine("match37", this::match37);
     autoChooser.addRoutine("match48", this::match48);
     autoChooser.addRoutine("match 63", this::match63);
-    autoChooser.addRoutine("match 69", this::match69);
+    autoChooser.addRoutine("SL_TEST", this::SL_TEST);
+    autoChooser.addRoutine("testPID", this::testPID);
 
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
@@ -249,6 +250,22 @@ public class RobotContainer {
     return routine;
   }
 
+  public AutoRoutine testPID() {
+    AutoRoutine routine = autoFactory.newRoutine("testPID"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("testPID"); //LOAD ALL PATHS HERE
+
+
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+        traj1.cmd()
+      )
+    );
+    return routine;
+  }
+
   public AutoRoutine STB_BR_L4L() {
     AutoRoutine routine = autoFactory.newRoutine("STB_BM_L4L"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STB_BR"); //LOAD ALL PATHS HERE
@@ -303,6 +320,28 @@ public class RobotContainer {
     return routine;
   }
 
+  public AutoRoutine SL_TEST() {
+    AutoRoutine routine = autoFactory.newRoutine("match20"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BML_SL");
+    AutoTrajectory traj3 = routine.trajectory("SL_FM");
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj2.done().onTrue(intake().andThen(traj3.cmd()));
+    traj3.done().onTrue(scoreL4Right());
+
+    return routine;
+  }
+
   public AutoRoutine match48() {
     AutoRoutine routine = autoFactory.newRoutine("match48"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
@@ -325,8 +364,8 @@ public class RobotContainer {
 
   public AutoRoutine match63() {
     AutoRoutine routine = autoFactory.newRoutine("match63"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
-    AutoTrajectory traj2 = routine.trajectory("BLL_SL");
+    AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
+    // AutoTrajectory traj2 = routine.trajectory("BLL_SL");
     routine.active().onTrue(
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
@@ -337,8 +376,8 @@ public class RobotContainer {
       )
     );
 
-    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
-    traj2.done().onTrue(intake());
+    traj1.done().onTrue(scoreL4Left());
+    // traj2.done().onTrue(intake());
 
     return routine;
   }
@@ -367,11 +406,11 @@ public class RobotContainer {
   }
 
   public Command alignLeft() {
-    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command alignRight() {
-    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command scoreL2Left() {

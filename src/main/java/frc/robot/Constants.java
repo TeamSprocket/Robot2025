@@ -67,10 +67,10 @@ public final class Constants {
 
     
     public static final Pose2d Blue17 = new Pose2d(3.993471145629883 , 3.175410270690918 , Rotation2d.fromDegrees(60));
-    public static final Pose2d Blue18 = new Pose2d(3.498136178970337 , 4.027757572174072 , Rotation2d.fromDegrees(0)); //x, 4.0267229080200195
+    public static final Pose2d Blue18 = new Pose2d(3.498136178970337 , 4.057757572174072 , Rotation2d.fromDegrees(0)); //
     public static final Pose2d Blue19 = new Pose2d(3.9916608333587646 , 4.88698148727417 , Rotation2d.fromDegrees(300));
     public static final Pose2d Blue20 = new Pose2d(4.992037296295166 , 4.88698148727417 , Rotation2d.fromDegrees(240));
-    public static final Pose2d Blue21 = new Pose2d(5.480820178985596 , 4.024757572174072 , Rotation2d.fromDegrees(180)); //WAS 180 DEGREES
+    public static final Pose2d Blue21 = new Pose2d(5.480820178985596 , 4.054757572174072 , Rotation2d.fromDegrees(180)); //WAS 180 DEGREES
     public static final Pose2d Blue22 = new Pose2d(4.977437496185303 , 3.175410270690918 , Rotation2d.fromDegrees(120));
 
     public static final Pose2d Red6 = new Pose2d(13.554709434509277  , 3.1757071018218994  , Rotation2d.fromDegrees(120));
