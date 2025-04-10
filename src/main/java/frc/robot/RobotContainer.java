@@ -546,7 +546,8 @@ public class RobotContainer {
         () -> new ApplyFieldSpeeds()
           .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedRight()))
       ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
-    .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+      .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+
 
     driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
