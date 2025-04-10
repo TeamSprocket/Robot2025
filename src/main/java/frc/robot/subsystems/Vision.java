@@ -73,7 +73,7 @@ public class Vision extends SubsystemBase {
     double distToAprilRight = 0.0;
     boolean updateFirst = true;
 
-    double maxDistance = 0.60;
+    double maxDistance = 1.85;
 
     double fiducialID;
     
@@ -227,6 +227,47 @@ public class Vision extends SubsystemBase {
         return targetPose;
     }
 
+    public Pose2d getClosestTagEstimate() {
+        int tag = -1;
+        double minDistance = Integer.MAX_VALUE;
+        Pose2d targetPose = new Pose2d();
+        LimelightHelper.PoseEstimate estimate2 = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+            for (int i = 6; i <= 11; i++) {
+            Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
+            if (i == 6) target = Constants.Vision.Red6;
+            else if (i == 7) target = Constants.Vision.Red7;
+            else if (i == 8) target = Constants.Vision.Red8;
+            else if (i == 9) target = Constants.Vision.Red9;
+            else if (i == 10) target = Constants.Vision.Red10;
+            else if (i == 11) target = Constants.Vision.Red11;
+
+            double distance = Util.distance(estimate2.pose.getX(), estimate2.pose.getY(), target.getX(), target.getY());
+            if (distance < minDistance) {
+                minDistance = distance;
+                tag = i;
+                targetPose = target;
+            }
+        }
+
+        for (int i = 17; i <= 22; i++) {
+            Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
+            if (i == 17) target = Constants.Vision.Blue17;
+            else if (i == 18) target = Constants.Vision.Blue18;
+            else if (i == 19) target = Constants.Vision.Blue19;
+            else if (i == 20) target = Constants.Vision.Blue20;
+            else if (i == 21) target = Constants.Vision.Blue21;
+            else if (i == 22) target = Constants.Vision.Blue22;
+
+            double distance = Util.distance(estimate2.pose.getX(), estimate2.pose.getY(), target.getX(), target.getY());
+            if (distance < minDistance) {
+                minDistance = distance;
+                tag = i;
+                targetPose = target;
+            }
+        }
+        return targetPose;
+    }
+
     public Pose2d getTargetTagLeft() {
         //CHECK IF SAME FOR RED AND BLUE
         Pose2d targetTag = getClosestTag();
@@ -286,7 +327,9 @@ public class Vision extends SubsystemBase {
     public void updateAlignPose() {
         if (LimelightHelper.getTV(name)) {
             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            Pose2d tag = getClosestTag();
+            Pose2d tag = getClosestTagEstimate();
+            System.out.println("math distance" + Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)));
+            System.out.println("func distance " + getDistToTarget());
             if (Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)) < maxDistance) {
                 drivetrain.resetPose(estimate.pose);
             }
