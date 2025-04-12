@@ -27,6 +27,7 @@ public class Superstructure extends SubsystemBase {
     ALGAE_REMOVE_2,
     ALGAE_REMOVE_3,
     CLIMB,
+    UNDOCLIMB,
     EJECT
   }
 
@@ -189,6 +190,16 @@ public class Superstructure extends SubsystemBase {
     });
   }
 
+  private Command undoclimb() {
+    return new InstantCommand(() -> {
+      climb.setState(ClimbStates.UNDOCLIMB);
+      intake.setState(IntakeStates.STOWED);
+      outtake.setState(OuttakeStates.STOWED);
+      pivot.setState(PivotStates.STOWED);
+      elevator.setState(ElevatorStates.STOWED);
+    });
+  }
+
   // ------ commands -------
   /**
    * Sets the superstructure target state
@@ -239,6 +250,9 @@ public class Superstructure extends SubsystemBase {
       
       case CLIMB:
         return climb();
+      
+      case UNDOCLIMB:
+        return undoclimb();
 
       default:
         return Commands.print("failed");

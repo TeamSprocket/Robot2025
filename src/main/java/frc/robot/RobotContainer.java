@@ -379,12 +379,21 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger (operator.button(8).and(() -> climb.notAtPosition()))
+    // new Trigger (operator.button(8).and(() -> climb.notAtPosition()))
+    //   .whileTrue(superstructure.setState(SSStates.CLIMB))
+    //   .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    // new Trigger(operator.povRight().and(() -> climb.inClimbState()))
+    //   .whileTrue(new InstantCommand(() -> climb.manualClimb()))
+    //   .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    
+    new Trigger(operator.povRight())
       .whileTrue(superstructure.setState(SSStates.CLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.povRight().and(() -> climb.inClimbState()))
-      .whileTrue(new InstantCommand(() -> climb.manualClimb()))
+    new Trigger(operator.povLeft())
+      .whileTrue(superstructure.setState(SSStates.UNDOCLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
   }

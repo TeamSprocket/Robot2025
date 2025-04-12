@@ -18,6 +18,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.Climb;
 import frc.util.Util;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,12 +27,14 @@ public class Climb extends SubsystemBase {
 
   private final TalonFX climbpivot = new TalonFX(RobotMap.Climb.CLIMB_PIVOT);
 
+
   private ClimbStates State = ClimbStates.NONE;    
 
   public enum ClimbStates {
     NONE,
     STOWED,
-    CLIMB
+    CLIMB,
+    UNDOCLIMB
   }
 
   /** Creates a new Climb. */
@@ -58,8 +61,12 @@ public class Climb extends SubsystemBase {
         break;
 
       case CLIMB:
-          climbpivot.setVoltage(2); //-2
+          climbpivot.setVoltage(-2);//-2 //2
         break;
+
+      case UNDOCLIMB:
+        climbpivot.setVoltage(2);
+      break;
     }
   }
 
@@ -75,9 +82,21 @@ public class Climb extends SubsystemBase {
     return State == ClimbStates.CLIMB;
   }
 
+  public boolean undoClimbState()
+  {
+    return State == ClimbStates.UNDOCLIMB;
+  }
+
   public void manualClimb() {
+    climbpivot.setVoltage(-2);
+  }
+
+  public void undoClimb()
+  {
     climbpivot.setVoltage(2);
   }
+
+  
 
   public void setState(ClimbStates state) {
     this.State = state;
