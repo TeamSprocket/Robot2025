@@ -33,7 +33,8 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     CORAL_OUTTAKE,
     CORAL1,
     ALGAE_REMOVE,
-    CORAL_RECLAIM
+    CORAL_RECLAIM,
+    L4
   }
 
   private OuttakeStates state = OuttakeStates.NONE;
@@ -76,7 +77,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
   @Override
   public void periodic() {
-    // SmartDashboard.putString("OUTTALKE STATE", state.toString());
+    SmartDashboard.putString("OUTTAKE STATE", state.toString());
     // setState(stateChooser.getSelected()); // TODO: remove this when done testing
 
     switch(state){
@@ -98,6 +99,10 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 
       case CORAL_OUTTAKE:
         motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttake));
+        break;
+        
+      case L4:
+        motor1.setControl(velocityVoltage.withVelocity(Constants.Outtake.kSpeedOuttakeL4));
         break;
 
       case CORAL_RECLAIM:

@@ -4,18 +4,32 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "accel":{
+    "dimension":"LinAcc",
+    "var":{
+     "exp":"6 m / s ^ 2",
+     "val":6.0
+    }
+   },
    "angvelo":{
     "dimension":"AngVel",
     "var":{
-     "exp":"2.3 rad / s",
-     "val":2.3
+     "exp":"2 rad / s",
+     "val":2.0
+    }
+   },
+   "evelo":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
     }
    },
    "velo":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2 m / s",
-     "val":2.0
+     "exp":"2.5 m / s",
+     "val":2.5
     }
    }
   },
@@ -232,8 +246,8 @@
    },
    "FR":{
     "x":{
-     "exp":"3.649 m",
-     "val":3.649
+     "exp":"3.552 m",
+     "val":3.552
     },
     "y":{
      "exp":"2.623 m",
@@ -274,12 +288,12 @@
    },
    "SL":{
     "x":{
-     "exp":"1.255 m",
-     "val":1.255
+     "exp":"1.0206990480422973 m",
+     "val":1.0206990480422973
     },
     "y":{
-     "exp":"7.076 m",
-     "val":7.076
+     "exp":"7.189364433288574 m",
+     "val":7.189364433288574
     },
     "heading":{
      "exp":"-0.935 rad",
@@ -288,12 +302,12 @@
    },
    "SR":{
     "x":{
-     "exp":"1.174 m",
-     "val":1.174
+     "exp":"1.0456666946411133 m",
+     "val":1.0456666946411133
     },
     "y":{
-     "exp":"1 m",
-     "val":1.0
+     "exp":"0.8716393709182739 m",
+     "val":0.8716393709182739
     },
     "heading":{
      "exp":"0.935 rad",

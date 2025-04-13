@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,7 +46,7 @@ public class Superstructure extends SubsystemBase {
   Pivot pivot;
   Outtake outtake;
   Climb climb;
-
+  
   private Timer timer = new Timer();
 
   public Superstructure(Elevator elevator, Intake intake, Outtake outtake, Pivot pivot, Climb climb) {
@@ -125,11 +126,11 @@ public class Superstructure extends SubsystemBase {
         climb.setState(ClimbStates.STOWED);
       }),
       new WaitUntilCommand(() -> elevator.atSetpoint()),
-      new WaitCommand(0.2),
+      new WaitCommand(0.1),
       // new InstantCommand(() -> pivot.setState(PivotStates.L4)),
       // new WaitUntilCommand(() -> pivot.atSetpoint()),
       // new WaitCommand(0.2),
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
+      new InstantCommand(() -> outtake.setState(OuttakeStates.L4))
     );
   }
 
