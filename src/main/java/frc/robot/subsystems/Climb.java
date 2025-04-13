@@ -13,7 +13,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.Climb;
@@ -81,22 +80,6 @@ public class Climb extends SubsystemBase {
   public boolean inClimbState() {
     return State == ClimbStates.CLIMB;
   }
-
-  public boolean undoClimbState()
-  {
-    return State == ClimbStates.UNDOCLIMB;
-  }
-
-  public void manualClimb() {
-    climbpivot.setVoltage(-2);
-  }
-
-  public void undoClimb()
-  {
-    climbpivot.setVoltage(2);
-  }
-
-  
 
   public void setState(ClimbStates state) {
     this.State = state;
