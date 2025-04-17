@@ -16,7 +16,7 @@
  "params":{
   "waypoints":[
     {"x":{"exp":"7.741505146026611 m", "val":7.741505146026611}, "y":{"exp":"4.03 m", "val":4.03}, "heading":{"exp":"180 deg", "val":3.141592653589793}, "intervals":15, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"BM.x", "val":6.313}, "y":{"exp":"BM.y", "val":4.061}, "heading":{"exp":"BM.heading", "val":3.14}, "intervals":33, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"BM.x", "val":6.111}, "y":{"exp":"BM.y", "val":4.055}, "heading":{"exp":"BM.heading", "val":3.14}, "intervals":33, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"17.548 m", "val":17.548}, "h":{"exp":"8.052 m", "val":8.052}}}, "enabled":false},

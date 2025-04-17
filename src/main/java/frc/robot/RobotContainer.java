@@ -100,21 +100,30 @@ public class RobotContainer {
     
 
     autoChooser = new AutoChooser();
+
+    //---------universal-------------
  
     autoChooser.addRoutine("STL_LEAVE", this::STL_LEAVE);
     autoChooser.addRoutine("STM_LEAVE", this::STM_LEAVE);
     autoChooser.addRoutine("STR_LEAVE", this::STR_LEAVE);
-    // autoChooser.addRoutine("ST_FIELD_MIDDLE_LEAVE", this::ST_FIELD_MIDDLE_LEAVE);
-    autoChooser.addRoutine("match31", this::STB_BR_L4L);
-    // autoChooser.addRoutine("test", this::test);
-    autoChooser.addRoutine("match20", this::match20);
-    autoChooser.addRoutine("match37", this::match37);
-    autoChooser.addRoutine("match48", this::match48);
-    autoChooser.addRoutine("match 63", this::match63);
-    autoChooser.addRoutine("SL_TEST", this::SL_TEST);
-    autoChooser.addRoutine("testPID", this::testPID);
-    autoChooser.addRoutine("2mf", this::twometerforward);
-    autoChooser.addRoutine("2mft", this::twometerforwardturn);
+
+    //---------champs---------
+    autoChooser.addRoutine("match 4", this::match4_Champs);
+
+    //---------cvr------------
+
+    // autoChooser.addRoutine("match31", this::STB_BR_L4L);
+    // autoChooser.addRoutine("match20", this::match20);
+    // autoChooser.addRoutine("match37", this::match37);
+    // autoChooser.addRoutine("match48", this::match48);
+    // autoChooser.addRoutine("match 63", this::match63);
+    // autoChooser.addRoutine("SL_TEST", this::SL_TEST);
+
+    //---------test----------
+
+    // autoChooser.addRoutine("testPID", this::testPID);
+    // autoChooser.addRoutine("2mf", this::twometerforward);
+    // autoChooser.addRoutine("2mft", this::twometerforwardturn);
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
   }
@@ -246,6 +255,29 @@ public class RobotContainer {
         traj1.cmd()
       )
     );
+    return routine;
+  }
+
+  public AutoRoutine match4_Champs() { // TODO: have eric check lmao
+    AutoRoutine routine = autoFactory.newRoutine("match4_Champs"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STL_BL"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BLR_SL");
+    AutoTrajectory traj3 = routine.trajectory("SL_FL");
+
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj2.cmd()));
+    traj3.done().onTrue(scoreL4Right());
+  
     return routine;
   }
 
