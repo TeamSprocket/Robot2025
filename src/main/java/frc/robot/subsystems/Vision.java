@@ -109,75 +109,6 @@ public class Vision extends SubsystemBase {
         currentAlignState = alignState;
     }
 
-    // public Pose2d getPoseLeft() {
-    //     fiducialID = getTargetTagLeft();
-
-    //     if (getTargetTagLeft() == 17) {
-    //         return Constants.Vision.poseAlignBlueLeft17;
-    //     } else if (getTargetTagLeft() == 18) {
-    //         return Constants.Vision.poseAlignBlueLeft18;
-    //     } else if (getTargetTagLeft() == 19) {
-    //         return Constants.Vision.poseAlignBlueLeft19;
-    //     } else if (getTargetTagLeft() == 20) {
-    //         return Constants.Vision.poseAlignBlueLeft19;
-    //     } else if (getTargetTagLeft() == 21) {
-    //         return Constants.Vision.poseAlignBlueLeft19;
-    //     } else if (getTargetTagLeft() == 22) {
-    //         return Constants.Vision.poseAlignBlueLeft19;
-    //     } else if (getTargetTagLeft() == 6) {
-    //         return Constants.Vision.poseAlignRedLeft6;
-    //     } else if (getTargetTagLeft() == 7) {
-    //         return Constants.Vision.poseAlignRedLeft7;
-    //     } else if (getTargetTagLeft() == 8) {
-    //         return Constants.Vision.poseAlignRedLeft8;
-    //     } else if (getTargetTagLeft() == 9) {
-    //         return Constants.Vision.poseAlignRedLeft9;
-    //     } else if (getTargetTagLeft() == 10) {
-    //         return Constants.Vision.poseAlignRedLeft10;
-    //     } else if (getTargetTagLeft() == 11) {
-    //         return Constants.Vision.poseAlignRedLeft11;
-    //     } else {
-    //         return drivetrain.getAutoBuilderPose();
-    //     }
-    // }
-    
-    // public Pose2d getPoseRight() {
-    //     fiducialID = getTargetTagRight();
-
-    //     if (getTargetTagRight() == 17) {
-    //         return Constants.Vision.poseAlignBlueRight17;
-    //     } else if (getTargetTagRight() == 18) {
-    //         return Constants.Vision.poseAlignBlueRight18;
-    //     } else if (getTargetTagRight() == 19) {
-    //         return Constants.Vision.poseAlignBlueRight19;
-    //     } else if (getTargetTagRight() == 20) {
-    //         return Constants.Vision.poseAlignBlueRight19;
-    //     } else if (getTargetTagRight() == 21) {
-    //         return Constants.Vision.poseAlignBlueRight19;
-    //     } else if (getTargetTagRight() == 22) {
-    //         return Constants.Vision.poseAlignBlueRight19;
-    //     } else if (getTargetTagRight() == 6) {
-    //         return Constants.Vision.poseAlignRedRight6;
-    //     } else if (getTargetTagRight() == 7) {
-    //         return Constants.Vision.poseAlignRedRight7;
-    //     } else if (getTargetTagRight() == 8) {
-    //         return Constants.Vision.poseAlignRedRight8;
-    //     } else if (getTargetTagRight() == 9) {
-    //         return Constants.Vision.poseAlignRedRight9;
-    //     } else if (getTargetTagRight() == 10) {
-    //         return Constants.Vision.poseAlignRedRight10;
-    //     } else if (getTargetTagRight() == 11) {
-    //         return Constants.Vision.poseAlignRedRight11;
-    //     } else {
-    //         return drivetrain.getAutoBuilderPose();
-    //     }
-
-    //     // AutoBuilder.pathfindToPose(
-    //     //     endpointL,
-    //     //     new PathConstraints(2, 2, 3, 2), 0.0
-    //     // );
-    // }
-
     public Pose2d getPoseTesting() {
         testPose = new Pose2d(
             // ShuffleboardIO.getDouble("Alignment X"), 
@@ -317,19 +248,10 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    // public void updateAlignPose() {
-    //     if (LimelightHelper.getTV(name) && updatePose) {
-    //         estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-    //         drivetrain.resetPose(estimate.pose);
-    //     }
-    // }
-
     public void updateAlignPose() {
         if (LimelightHelper.getTV(name)) {
             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
             Pose2d tag = getClosestTagEstimate();
-            System.out.println("math distance" + Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)));
-            System.out.println("func distance " + getDistToTarget());
             if (Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)) < maxDistance) {
                 drivetrain.resetPose(estimate.pose);
             }
