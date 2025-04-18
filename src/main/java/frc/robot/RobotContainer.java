@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -569,23 +570,27 @@ public class RobotContainer {
   }
 
   public Command scoreL4Left() {
-    return alignLeft()
-      .andThen(superstructure.setState(SSStates.CORAL_4))
-      // .andThen(Commands.waitSeconds(scoreTimeout))
-      .andThen(superstructure.setState(SSStates.OUTTAKE))
-      .andThen(Commands.waitSeconds(scoreTimeout))
-      .andThen(superstructure.setState(SSStates.STOWED));
+    return 
+      Commands.sequence(
+        alignLeft(),
+        superstructure.setState(SSStates.CORAL_4),
+        new WaitUntilCommand(() -> elevator.atSetpoint()),
+        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.STOWED)
+      );
     // return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
 
   }
 
   public Command scoreL4Right() {
-    return alignRight()
-      .andThen(superstructure.setState(SSStates.CORAL_4))
-      .andThen(Commands.waitSeconds(scoreTimeout))
-      .andThen(superstructure.setState(SSStates.OUTTAKE))
-      .andThen(Commands.waitSeconds(scoreTimeout))
-      .andThen(superstructure.setState(SSStates.STOWED));
+    return 
+      Commands.sequence(
+        alignRight(),
+        superstructure.setState(SSStates.CORAL_4),
+        new WaitUntilCommand(() -> elevator.atSetpoint()),
+        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.STOWED)
+      );
     // return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
 
   }
