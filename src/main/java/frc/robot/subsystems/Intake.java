@@ -46,6 +46,8 @@ public class Intake extends SubsystemBase {
 
     TalonFXConfiguration IntakeConfig = new TalonFXConfiguration();
 
+    servo.enableDeadbandElimination(true);
+
     IntakeConfig.withSlot0(
             new Slot0Configs()
                 .withKS(Constants.Intake.kIntakeS) 
@@ -94,7 +96,8 @@ public class Intake extends SubsystemBase {
 
       case CLIMB:
         intakemotor.setControl(velocityVoltage.withVelocity(0));
-        servo.setSpeed(-1);
+        
+        servo.setSpeed(2.0);
         break;
       // This method will be called once per scheduler run
     }

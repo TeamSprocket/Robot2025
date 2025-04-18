@@ -80,8 +80,8 @@ public class RobotContainer {
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
   double alignTimeout = 1.25; //TUNE ALSO LOWER
-  double intakeTimeout = 2.0; //LOWER, PREFERABLY LES THAN 1 SECOND
-  double scoreTimeout = 0.23; //TUNE ALSO LOWER
+  double intakeTimeout = 3.0; //TUNE
+  double scoreTimeout = 0.20; //TUNE ALSO LOWER
 
   public RobotContainer() {
     // drivetrain.configureAutoBuilder();
@@ -108,7 +108,10 @@ public class RobotContainer {
     autoChooser.addRoutine("STR_LEAVE", this::STR_LEAVE);
 
     //---------champs---------
-    autoChooser.addRoutine("match 4", this::match4_Champs);
+    autoChooser.addRoutine("right2CoralAuton", this::right2CoralAuton);
+    autoChooser.addRoutine("CENTER_LEFT", this::CENTER_LEFT);
+    autoChooser.addRoutine("left2CoralAuton", this::left2CoralAuton);
+    // autoChooser.addRoutine("notmatch4_Champs", this::match4_Champs);
 
     //---------cvr------------
 
@@ -217,7 +220,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -233,7 +236,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -249,7 +252,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -260,13 +263,13 @@ public class RobotContainer {
 
   public AutoRoutine match4_Champs() { // TODO: have eric check lmao
     AutoRoutine routine = autoFactory.newRoutine("match4_Champs"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STL_BL"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
     AutoTrajectory traj2 = routine.trajectory("BLR_SL");
     AutoTrajectory traj3 = routine.trajectory("SL_FL");
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
 
@@ -274,8 +277,53 @@ public class RobotContainer {
       )
     );
 
-    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
-    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj2.cmd()));
+    traj1.done().onTrue(scoreL4Left().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
+    traj3.done().onTrue(scoreL4Right());
+  
+    return routine;
+  }
+
+  public AutoRoutine right2CoralAuton() { // TODO: have eric check lmao
+    AutoRoutine routine = autoFactory.newRoutine("right2CoralAuton"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STB_BR"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BRR_SR");
+    AutoTrajectory traj3 = routine.trajectory("SR_FR");
+
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Left().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
+    traj3.done().onTrue(scoreL4Right());
+  
+    return routine;
+  }
+
+  public AutoRoutine left2CoralAuton() { // TODO: have eric check lmao
+    AutoRoutine routine = autoFactory.newRoutine("left2CoralAuton"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BLR_SL");
+    AutoTrajectory traj3 = routine.trajectory("SL_FL");
+
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+        traj1.cmd()
+      )
+    );
+
+    traj1.done().onTrue(scoreL4Left().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
     traj3.done().onTrue(scoreL4Right());
   
     return routine;
@@ -393,8 +441,8 @@ public class RobotContainer {
     return routine;
   }
 
-  public AutoRoutine match63() {
-    AutoRoutine routine = autoFactory.newRoutine("match63"); //ROUTINE NAME
+  public AutoRoutine CENTER_LEFT() {
+    AutoRoutine routine = autoFactory.newRoutine("CENTER_LEFT"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
     // AutoTrajectory traj2 = routine.trajectory("BLL_SL");
     routine.active().onTrue(
@@ -485,29 +533,59 @@ public class RobotContainer {
   }
 
   public Command scoreL2Left() {
-    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignLeft()
+      .andThen(superstructure.setState(SSStates.CORAL_2))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.OUTTAKE))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL2Right() {
-    return alignRight().andThen(superstructure.setState(SSStates.CORAL_2)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignRight()
+      .andThen(superstructure.setState(SSStates.CORAL_2))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.OUTTAKE))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL3Left() {
-    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignLeft()
+      .andThen(superstructure.setState(SSStates.CORAL_3))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.OUTTAKE))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL3Right() {
-    return alignRight().andThen(superstructure.setState(SSStates.CORAL_3)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignRight()
+      .andThen(superstructure.setState(SSStates.CORAL_3))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.OUTTAKE))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.STOWED));
   }
 
   public Command scoreL4Left() {
-    return alignLeft().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignLeft()
+      .andThen(superstructure.setState(SSStates.CORAL_4))
+      // .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.OUTTAKE))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.STOWED));
     // return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
 
   }
 
   public Command scoreL4Right() {
-    return alignRight().andThen(superstructure.setState(SSStates.CORAL_4)).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
+    return alignRight()
+      .andThen(superstructure.setState(SSStates.CORAL_4))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.OUTTAKE))
+      .andThen(Commands.waitSeconds(scoreTimeout))
+      .andThen(superstructure.setState(SSStates.STOWED));
     // return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
 
   }
@@ -539,8 +617,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
     drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.65) // Drive forward with negative Y (forward)
-            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.65) // Drive left with negative X (left)
+        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.75) // Drive forward with negative Y (forward)
+            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.75) // Drive left with negative X (left)
             .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6
             ) // Drive counterclockwise with negative X (left)
         )
@@ -595,7 +673,7 @@ public class RobotContainer {
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.rightTrigger())
-      .whileTrue(superstructure.setState(SSStates.EJECT))
+      .whileTrue(superstructure.setState(SSStates.OUTTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger(operator.a())
@@ -629,11 +707,15 @@ public class RobotContainer {
       .whileTrue(new InstantCommand(() -> outtake.runOuttake()))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
+    new Trigger(operator.povDown())
+      .whileTrue(superstructure.setState(SSStates.EJECT))
+      .whileFalse(superstructure.setState(SSStates.STOWED));
+
     new Trigger (operator.button(8).and(() -> climb.notAtPosition()))
       .whileTrue(superstructure.setState(SSStates.CLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.povRight().and(() -> climb.inClimbState()))
+    new Trigger(operator.povRight()) //.and(() -> climb.inClimbState())
       .whileTrue(superstructure.setState(SSStates.UNDOCLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 

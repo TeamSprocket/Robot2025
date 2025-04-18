@@ -102,6 +102,10 @@ public class Elevator extends SubsystemBase {
         this.state = newState;
     }
 
+    public ElevatorStates getState() {
+        return state;
+    }
+
     private void moveToHeight(double targetHeight) {
         mmControl = mmControl.withPosition(targetHeight);
         elevatorMotor.setControl(mmControl);

@@ -35,8 +35,8 @@ public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
     private PIDController pidRotationAlign = new PIDController(4.5, 0, 0); //3.5 0 0
-    private PIDController pidXAlign = new PIDController(2.25, 0, 0); //2.5 0 0
-    private PIDController pidYAlign = new PIDController(2.25, 0, 0); //2.5 0 0
+    private PIDController pidXAlign = new PIDController(3.0, 0, 0); //2.5 0 0
+    private PIDController pidYAlign = new PIDController(3.0, 0, 0); //2.5 0 0
 
     Timer timer = new Timer();
 
@@ -59,6 +59,8 @@ public class Vision extends SubsystemBase {
     String name = "limelight-front";
     int counter = 0;
     int tagOutside = 1;
+
+    double maxSpeed = 3.0;
 
 
     Pose2d lastPose = new Pose2d();
@@ -314,19 +316,27 @@ public class Vision extends SubsystemBase {
     }
 
     public double[] getAlignOffsetsRight() {
-        double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
-        double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
+        double veloX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
+        double veloY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
 
-        if (Util.inRange(speedX, -0.05, 0.05)) {
-            speedX = 0.0;
+        if (!Util.inRange(veloX, -maxSpeed, maxSpeed)) {
+            veloX = (veloX / Math.abs(veloX)) * maxSpeed;
         }
 
-        if (Util.inRange(speedY, -0.05, 0.05)) {
-            speedY = 0.0;
+        if (!Util.inRange(veloY, -maxSpeed, maxSpeed)) {
+            veloY = (veloY / Math.abs(veloY)) * maxSpeed;
+        }
+
+        if (Util.inRange(veloX, -0.05, 0.05)) {
+            veloX = 0.0;
+        }
+
+        if (Util.inRange(veloY, -0.05, 0.05)) {
+            veloY = 0.0;
         }
         
         double[] values = {
-          speedX, speedY
+          veloX, veloY
         };
         return values;
       }

@@ -69,7 +69,7 @@ public class Pivot extends SubsystemBase {
       mm.Slot = 0;
       motor.setNeutralMode(NeutralModeValue.Brake);
 
-      motor.setPosition(-0.2744);
+      motor.setPosition(-0.2746);
     }
 
     @Override

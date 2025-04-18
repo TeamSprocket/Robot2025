@@ -25,6 +25,7 @@ public class Superstructure extends SubsystemBase {
     CORAL_2,
     CORAL_3,
     CORAL_4,
+    OUTTAKE,
     ALGAE_REMOVE_2,
     ALGAE_REMOVE_3,
     CLIMB,
@@ -97,8 +98,8 @@ public class Superstructure extends SubsystemBase {
         pivot.setState(PivotStates.STOWED);
         climb.setState(ClimbStates.STOWED);
       }),
-      new WaitUntilCommand(() -> elevator.atSetpoint()), 
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
+      new WaitUntilCommand(() -> elevator.atSetpoint())
+      // new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
 
@@ -111,8 +112,8 @@ public class Superstructure extends SubsystemBase {
         pivot.setState(PivotStates.STOWED);
         climb.setState(ClimbStates.STOWED);
       }),
-      new WaitUntilCommand(() -> elevator.atSetpoint()), 
-      new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
+      new WaitUntilCommand(() -> elevator.atSetpoint())
+      // new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
 
@@ -124,14 +125,19 @@ public class Superstructure extends SubsystemBase {
         elevator.setState(ElevatorStates.CORAL_4);
         pivot.setState(PivotStates.STOWED);
         climb.setState(ClimbStates.STOWED);
-      }),
-      new WaitUntilCommand(() -> elevator.atSetpoint()),
-      new WaitCommand(0.1),
-      // new InstantCommand(() -> pivot.setState(PivotStates.L4)),
-      // new WaitUntilCommand(() -> pivot.atSetpoint()),
-      // new WaitCommand(0.2),
-      new InstantCommand(() -> outtake.setState(OuttakeStates.L4))
+      }), 
+      new WaitUntilCommand(() -> elevator.atSetpoint())
+      // new WaitCommand(0.1),
+      // // new InstantCommand(() -> pivot.setState(PivotStates.L4)),
+      // // new WaitUntilCommand(() -> pivot.atSetpoint()),
+      // // new WaitCommand(0.2),
+      // new InstantCommand(() -> outtake.setState(OuttakeStates.L4))
     );
+  }
+
+  public Command outtake() {
+    if (elevator.getState().equals(ElevatorStates.CORAL_4)) return new InstantCommand(() -> outtake.setState(OuttakeStates.L4));
+    else return new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE));
   }
 
   private Command algaeRemove2() {
@@ -239,6 +245,9 @@ public class Superstructure extends SubsystemBase {
 
       case CORAL_4:
         return coral4();
+
+      case OUTTAKE:
+        return outtake();
 
       case ALGAE_REMOVE_2:
         return algaeRemove2();
