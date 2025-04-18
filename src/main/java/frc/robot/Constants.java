@@ -79,6 +79,20 @@ public final class Constants {
     public static final Pose2d Red9 = new Pose2d(12.576774597167969  , 4.876892566680908 , Rotation2d.fromDegrees(300));
     public static final Pose2d Red10 = new Pose2d(12.080918312072754, 4.028757572174072 , Rotation2d.fromDegrees(0));
     public static final Pose2d Red11 = new Pose2d(12.575830459594727  , 3.174359083175659  , Rotation2d.fromDegrees(60));
+    // new constants
+    // public static final Pose2d Blue17 = new Pose2d(3.921855926513672  , 3.0368428230285645 , Rotation2d.fromDegrees(60));
+    // public static final Pose2d Blue18 = new Pose2d(3.3525543212890625  , 4.025277137756348 , Rotation2d.fromDegrees(0)); //
+    // public static final Pose2d Blue19 = new Pose2d(3.925164222717285  , 5.018551349639893, Rotation2d.fromDegrees(300));
+    // public static final Pose2d Blue20 = new Pose2d(5.069857597351074 , 5.0384016036987305 , Rotation2d.fromDegrees(240));
+    // public static final Pose2d Blue21 = new Pose2d(5.642204284667969 , 4.029351234436035 , Rotation2d.fromDegrees(180));
+    // public static final Pose2d Blue22 = new Pose2d(5.056624412536621 , 3.0368428230285645 , Rotation2d.fromDegrees(120));
+
+    // public static final Pose2d Red6 = new Pose2d(13.6320858002 , 3.0368428230285645 , Rotation2d.fromDegrees(120));
+    // public static final Pose2d Red7 = new Pose2d(14.2176656723 , 4.029351234436035 , Rotation2d.fromDegrees(180));
+    // public static final Pose2d Red8 = new Pose2d(13.645318985 , 5.038401603698730 , Rotation2d.fromDegrees(240));
+    // public static final Pose2d Red9 = new Pose2d(12.5006256104  , 5.018551349639893 , Rotation2d.fromDegrees(300));
+    // public static final Pose2d Red10 = new Pose2d(11.92801570892334, 4.025277137756348 , Rotation2d.fromDegrees(0));
+    // public static final Pose2d Red11 = new Pose2d(12.4953173141  , 3.0422428230285645  , Rotation2d.fromDegrees(60));
 
     public static final double xOffset = 0.172; //0.17
 
