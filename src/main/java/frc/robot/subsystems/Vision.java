@@ -62,6 +62,7 @@ public class Vision extends SubsystemBase {
 
     double maxSpeed = 3.0;
 
+    // double moveForwardAlignDisplacement = 0.9;
 
     Pose2d lastPose = new Pose2d();
     double lastTimeStamp = 0.0;
@@ -358,6 +359,10 @@ public class Vision extends SubsystemBase {
         };
         return values;
       }
+
+    //   public double getMoveFowardAlignSpeed() {
+        
+    //   }
       
       public double getRotationalAlignSpeedRight() {
         pidRotationAlign.enableContinuousInput(0, 2*Math.PI);
@@ -375,8 +380,8 @@ public class Vision extends SubsystemBase {
         double targetRotation = getTargetTagLeft().getRotation().getRadians();
         
         double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
-        System.out.println(currentRotation);
-        System.out.println(targetRotation);
+        // System.out.println(currentRotation);
+        // System.out.println(targetRotation);
         // System.out.println(targetSpeed);
         return targetSpeed;
       }

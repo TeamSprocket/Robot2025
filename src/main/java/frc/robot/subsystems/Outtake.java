@@ -128,4 +128,5 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   public void setState(OuttakeStates state) {
     this.state = state;
   }
+  
 }

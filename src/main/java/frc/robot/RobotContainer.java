@@ -81,8 +81,8 @@ public class RobotContainer {
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
   double alignTimeout = 1.25; //TUNE ALSO LOWER
-  double intakeTimeout = 3.0; //TUNE
-  double scoreTimeout = 0.20; //TUNE ALSO LOWER
+  double intakeTimeout = 2.0; //TUNE
+  double scoreTimeout = 0.6; //TUNE ALSO LOWER
 
   public RobotContainer() {
     // drivetrain.configureAutoBuilder();
@@ -330,6 +330,7 @@ public class RobotContainer {
     return routine;
   }
 
+
   public AutoRoutine testPID() {
     AutoRoutine routine = autoFactory.newRoutine("testPID"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("testPID"); //LOAD ALL PATHS HERE
@@ -540,7 +541,8 @@ public class RobotContainer {
         superstructure.setState(SSStates.CORAL_2),
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
-        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.OUTTAKE),
+        new WaitCommand(1),
         superstructure.setState(SSStates.STOWED)
       );
   }
@@ -552,7 +554,8 @@ public class RobotContainer {
         superstructure.setState(SSStates.CORAL_2),
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
-        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.OUTTAKE),
+        new WaitCommand(1),
         superstructure.setState(SSStates.STOWED)
       );
   }
@@ -564,7 +567,8 @@ public class RobotContainer {
         superstructure.setState(SSStates.CORAL_3),
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
-        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.OUTTAKE),
+        new WaitCommand(1),
         superstructure.setState(SSStates.STOWED)
       );
   }
@@ -576,7 +580,8 @@ public class RobotContainer {
         superstructure.setState(SSStates.CORAL_3),
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
-        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.OUTTAKE),
+        new WaitCommand(1),
         superstructure.setState(SSStates.STOWED)
       );
   }
@@ -588,7 +593,8 @@ public class RobotContainer {
         superstructure.setState(SSStates.CORAL_4),
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
-        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.OUTTAKE),
+        new WaitCommand(1),
         superstructure.setState(SSStates.STOWED)
       );
     // return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
@@ -602,10 +608,10 @@ public class RobotContainer {
         superstructure.setState(SSStates.CORAL_4),
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
-        superstructure.setState(SSStates.OUTTAKE).withTimeout(scoreTimeout),
+        superstructure.setState(SSStates.OUTTAKE),
+        new WaitCommand(1),
         superstructure.setState(SSStates.STOWED)
-      );
-    // return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
+    );    // return superstructure.setState(SSStates.CORAL_4).andThen(Commands.waitSeconds(scoreTimeout)).andThen(superstructure.setState(SSStates.STOWED));
 
   }
 
@@ -674,6 +680,8 @@ public class RobotContainer {
 
 
     driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    //     driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.75, 0.0, 0.0))).withTimeout(0.8).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+
 
     driver.leftTrigger()
     .whileTrue(
@@ -684,6 +692,8 @@ public class RobotContainer {
     .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
     driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    //     driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.75, 0.0, 0.0))).withTimeout(0.8).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+
 
     // --------------------=Operator=--------------------
 
@@ -730,11 +740,11 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger (operator.button(8).and(() -> climb.notAtPosition()))
+    new Trigger (operator.button(8)) // .and(() -> climb.notAtPosition())
       .whileTrue(superstructure.setState(SSStates.CLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.povRight()) //.and(() -> climb.inClimbState())
+    new Trigger(operator.button(7)) //.and(() -> climb.inClimbState())
       .whileTrue(superstructure.setState(SSStates.UNDOCLIMB))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 

@@ -47,6 +47,7 @@ public class Intake extends SubsystemBase {
     TalonFXConfiguration IntakeConfig = new TalonFXConfiguration();
 
     servo.enableDeadbandElimination(true);
+    servo.setPosition(0);
 
     IntakeConfig.withSlot0(
             new Slot0Configs()
@@ -72,32 +73,31 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // SmartDashboard.putString("INTAKE STATE", state.toString());
-    // setState(stateChooser.getSelected()); // TODO: remove later
+    // setState(stateChooser.getSelected()); // TODO: remove later    
     switch (state) {
       case NONE:
         intakemotor.setControl(velocityVoltage.withVelocity(0));
-        servo.setSpeed(0);
+        servo.setPosition(0);
         break;
 
       case STOWED:
         intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedStowed));
-        servo.setSpeed(0);
+        servo.setPosition(0);
         break;
           
       case INTAKE:
         intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedIntake));
-        servo.setSpeed(0);
+        servo.setPosition(0);
         break;
 
       case EJECT:
         intakemotor.setControl(velocityVoltage.withVelocity(Constants.Intake.kSpeedEject));
-        servo.setSpeed(0);
+        servo.setPosition(0);
         break;
 
       case CLIMB:
         intakemotor.setControl(velocityVoltage.withVelocity(0));
-        
-        servo.setSpeed(2.0);
+        servo.setPosition(0.7);
         break;
       // This method will be called once per scheduler run
     }
@@ -117,5 +117,9 @@ public class Intake extends SubsystemBase {
 
   public double getIntakeSpeed() {
     return intakemotor.getVelocity().getValueAsDouble();
+  }
+  public void stopintake(){
+    intakemotor.setControl(velocityVoltage.withVelocity(0));
+
   }
 }
