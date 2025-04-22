@@ -66,15 +66,12 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     Timer.delay(0.05);
     m_robotContainer.getSuperstructure().setStowed();
-    // Timer.delay(0.15);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.getSuperstructure().setStowed();
-    // m_robotContainer.getSuperstructure().setState(SSStates.STOWED);
 
-    
   }
 
   @Override

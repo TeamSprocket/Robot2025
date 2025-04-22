@@ -145,11 +145,6 @@ public class Elevator extends SubsystemBase {
                 .withGravityType(GravityTypeValue.Elevator_Static)
         );
 
-        // config.withFeedback(
-        //     new FeedbackConfigs()
-        //         .withSensorToMechanismRatio(Constants.Elevator.kElevatorGearRatio)
-        // );
-
         config.withMotorOutput(new MotorOutputConfigs()
             .withInverted(InvertedValue.Clockwise_Positive)
         );

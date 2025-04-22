@@ -114,9 +114,6 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getPoseTesting() {
         testPose = new Pose2d(
-            // ShuffleboardIO.getDouble("Alignment X"), 
-            // ShuffleboardIO.getDouble("Alignment Y"), 
-            // Rotation2d.fromDegrees(180));
             12.684, 3.078,Rotation2d.fromDegrees(60));
         return testPose;
     }
@@ -271,15 +268,6 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public double getDistToTarget() {
-        if (LimelightHelper.getTV(name)) {
-            double dist = (0.3048 - Constants.Vision.kLimelightHeightMeters) / Math.tan(LimelightHelper.getTY(name)); // tan(vertical angle) = height of robot to apriltag / distance to april tag
-            return dist;
-        } else {
-            return 1.5; // if there is no target return a value greater than 1 so pose doesn't update
-        }
-    }
-
     public boolean hasTargets() {
         return LimelightHelper.getTV(name);
     }
@@ -295,16 +283,6 @@ public class Vision extends SubsystemBase {
         } 
         return false;
     }
-
-    // public Pose2d addVisionPose() {
-    //     if (hasTargets()) {
-    //         Pose2d pose = getPose2d();
-    //         drivetrain.addVisionMeasurement(pose, getTimeStamp());
-    //         return pose;
-    //     } else {
-    //         return drivetrain.getAutoBuilderPose();
-    //     }
-    // }
 
     public Pose2d resetPose() {
         if (hasTargets()) {
