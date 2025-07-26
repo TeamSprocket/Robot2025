@@ -22,16 +22,72 @@ import frc.util.Util;
 import frc.util.Alert;
 
 public class Subsystem extends SubsystemBase {
+    private final TalonFX elevatorMotor = new TalonFX(0);
+    private final TalonFX followerMotor = new TalonFX(0);
+    private final SubsystemStates state = SubsystemStates.NONE;
+    private final MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(null);
+
+
     public static enum SubsystemStates {
-        NONE
+        NONE,
+        LOW, 
+        MEDIUM,
+        HIGH
     }
 
     public Subsystem() {
 
     }
+private void configMotors(){
+    TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
+    MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+    Slot0Configs slot0Configs = new Slot0Configs();
 
+    motionMagicConfigs.MotionMagicCruiseVelocity = 0;
+    motionMagicConfigs.MotionMagicAcceleration = 0;
+
+    slot0Configs.withKS(0);
+    slot0Configs.withKV(0);
+    slot0Configs.withKA(0);
+    slot0Configs.withKG(0);
+    slot0Configs.withKP(0);
+    slot0Configs.withKI(0);
+    slot0Configs.withKD(0);
+
+
+    elevatorMotor.getConfigurator().apply(talonFXConfigs);
+    elevatorMotor.getConfigurator().apply(slot0Configs);
+    elevatorMotor.getConfigurator().apply(motionMagicConfigs);
+    followerMotor.getConfigurator().apply(talonFXConfigs);
+    followerMotor.getConfigurator().apply(slot0Configs);
+    followerMotor.getConfigurator().apply(motionMagicConfigs);
+
+    
+
+
+
+}
     @Override
     public void periodic() {
+    switch (state) {
+    case NONE:
+        elevatorMotor.set(0);
+        break;
+    case LOW:
+        moveToHeight(0);
+        break;
+    case MEDIUM:
+        moveToHeight(1);
+        break;
+    case HIGH:
+        moveToHeight(2);
+    }
+
+    private void moveToHeight(double height){
+        
+    }
+
+    public void setState(SubsystemStates state){
 
     }
 }
