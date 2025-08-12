@@ -99,15 +99,16 @@ public final class Constants {
     public static final double kAngleIntake = 0.30; //0.224
     public static final double kAngleL4 = 0.06;
 
-    public static final double kMotionMagicCruiseVelocity = 6;//2
-    public static final double kMotionMagicAcceleration = 7; //4
-    public static final double kP = 8; //50
+    //CONSTANTS FOR TEST BELOW
+    public static final double kMotionMagicCruiseVelocity = 0;
+    public static final double kMotionMagicAcceleration = 0;
+    public static final double kP = 0.0;
     public static final double kI = 0.0;
-    public static final double kD = 1.2;
-    public static final double kS = 0.16; //0.24 0.45 
-    public static final double kV = 0.5; // //0.5 //0.74 0.617
+    public static final double kD = 0.0;
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
     public static final double kA = 0.0;
-    public static final double kG = -0.45; // -0.45 //-0.42 0.45
+    public static final double kG = 0.0;
 
     public static final double kPivotGearRatio = 2.75;
   }
