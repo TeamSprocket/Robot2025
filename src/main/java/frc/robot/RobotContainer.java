@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Pivot.PivotStates;
 import frc.robot.subsystems.Superstructure.SSStates;
 import frc.robot.subsystems.Vision.AlignStates;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -209,13 +210,29 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.ALGAE_REMOVE_3))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.povUp())
-      .whileTrue(new InstantCommand(() -> outtake.runOuttake()))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+    // new Trigger(operator.povUp())
+    //   .whileTrue(new InstantCommand(() -> outtake.runOuttake()))
+    //   .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.povDown())
-      .whileTrue(superstructure.setState(SSStates.EJECT))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+    // new Trigger(operator.povDown())
+    //   .whileTrue(superstructure.setState(SSStates.EJECT))
+    //   .whileFalse(superstructure.setState(SSStates.STOWED));
+
+    new Trigger(operator.povUp())
+    .whileTrue(new InstantCommand(() -> pivot.setState(PivotStates.ALGAE_REMOVE)))
+    .whileFalse(superstructure.setState(SSStates.STOWED));
+
+  new Trigger(operator.povDown())
+    .whileTrue(new InstantCommand(() -> pivot.setState(PivotStates.INTAKE)))
+    .whileFalse(superstructure.setState(SSStates.STOWED));
+
+  new Trigger (operator.povLeft())
+    .whileTrue(new InstantCommand(() -> pivot.setState(PivotStates.L4)))
+    .whileFalse(superstructure.setState(SSStates.STOWED));
+
+  new Trigger(operator.povRight())
+    .whileTrue(new InstantCommand(() -> pivot.setState(PivotStates.STOWED)))
+    .whileFalse(superstructure.setState(SSStates.STOWED));
 
     new Trigger (operator.button(8))
       .whileTrue(superstructure.setState(SSStates.CLIMB))
