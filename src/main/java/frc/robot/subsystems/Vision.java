@@ -8,7 +8,6 @@ import java.util.Optional;
 // import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.hal.AllianceStationID;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -258,7 +257,6 @@ public class Vision extends SubsystemBase {
             Pose2d tag = getClosestTagEstimate();
             if (Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)) < maxDistance) {
                 // drivetrain.resetPose(estimate.pose);
-                drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
                 drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
             }
         }
