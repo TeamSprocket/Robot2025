@@ -60,7 +60,7 @@ public class Vision extends SubsystemBase {
     int counter = 0;
     int tagOutside = 1;
 
-    double maxSpeed = 2.0;
+    double maxSpeed = 3.0;
 
     // double moveForwardAlignDisplacement = 0.9;
 
@@ -306,11 +306,11 @@ public class Vision extends SubsystemBase {
             veloY = (veloY / Math.abs(veloY)) * maxSpeed;
         }
 
-        if (Util.inRange(veloX, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
+        if (Util.inRange(veloX, -0.05, 0.05)) {
             veloX = 0.0;
         }
 
-        if (Util.inRange(veloY, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
+        if (Util.inRange(veloY, -0.05, 0.05)) {
             veloY = 0.0;
         }
         
@@ -324,11 +324,11 @@ public class Vision extends SubsystemBase {
         double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
         double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
 
-        if (Util.inRange(speedX, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
+        if (Util.inRange(speedX, -0.05, 0.05)) {
             speedX = 0.0;
         }
 
-        if (Util.inRange(speedY, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
+        if (Util.inRange(speedY, -0.05, 0.05)) {
             speedY = 0.0;
         }
 
