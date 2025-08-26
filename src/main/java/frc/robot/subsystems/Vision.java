@@ -1,9 +1,5 @@
 package frc.robot.subsystems;
 
-import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
-import java.util.Arrays;
-import java.util.Optional;
-
 // import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathConstraints;
 
@@ -31,6 +27,13 @@ import frc.util.LimelightHelper;
 import frc.util.ShuffleboardIO;
 import frc.util.Util;
 
+
+/**
+ * The Vision subsystem gathers and calculates information that deals with the position of the robot and april tags
+ * using LimeLight with odometry to find an estimation on the robot or tag pose2d
+ * can also be used to return alignment values on the reef or used to check and return PID Offsets
+ * 
+ */
 public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
@@ -94,10 +97,17 @@ public class Vision extends SubsystemBase {
         ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
     }
 
+
+
+    /**
+     * this method periodically uploads the target x,y speed, and debug into smartDashboard aswell as updating the alignment pose
+     * 
+     * @see updateAlignPose();
+     * @see debug();
+     */
     @Override
     public void periodic() {
-        testPose = getPoseTesting();
-
+        
         SmartDashboard.putNumber("Target Speed X", getAlignOffsetsRight()[0]);
         SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 
@@ -111,16 +121,19 @@ public class Vision extends SubsystemBase {
         debug();
     }
 
+
+    /**
+     * this method sets the aligning state of the robot
+     */
     public void setAlignState(AlignStates alignState) {
         currentAlignState = alignState;
     }
 
-    public Pose2d getPoseTesting() {
-        testPose = new Pose2d(
-            12.684, 3.078,Rotation2d.fromDegrees(60));
-        return testPose;
-    }
-
+    /**
+     * this method gets the closest tag pose in relation to the current robot pose
+     * 
+     * @return targetPose - pose2d
+     */
     public Pose2d getClosestTag() {
         int tag = -1;
         double minDistance = Integer.MAX_VALUE;
@@ -161,7 +174,13 @@ public class Vision extends SubsystemBase {
         return targetPose;
     }
 
+    /**
+     * This method uses vision to estimate the bot pose then calculates the closest tag pose with that estimate
+     * 
+     * @Return targetpose - pose2d
+     */
     public Pose2d getClosestTagEstimate() {
+    //TEST TO SEE IF THIS IS REDUNDANT OR NOT
         int tag = -1;
         double minDistance = Integer.MAX_VALUE;
         Pose2d targetPose = new Pose2d();
@@ -201,7 +220,15 @@ public class Vision extends SubsystemBase {
         }
         return targetPose;
     }
+    
 
+
+    /**
+     * Finds the pose2d left of the closest tag
+     * 
+     * @return targetPose - pose2d
+     * @see getClosestTag();
+     */
     public Pose2d getTargetTagLeft() {
         //CHECK IF SAME FOR RED AND BLUE
         Pose2d targetTag = getClosestTag();
@@ -209,6 +236,12 @@ public class Vision extends SubsystemBase {
         return targetPose;
     }
 
+      /**
+     * Finds the pose2d right of the closest tag
+     * 
+     * @return targetPose - pose2d
+     * @see getClosestTag();
+     */
     public Pose2d getTargetTagRight() {
         Pose2d targetTag = getClosestTag();
         Pose2d targetPose = new Pose2d(targetTag.getX() - Constants.Vision.xOffset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getY() - Constants.Vision.xOffset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
@@ -218,21 +251,29 @@ public class Vision extends SubsystemBase {
     /**
      * @return {xCoord, yCoord, timestamp}
      */
-    public Translation2d getTranslation2d() {
-        LimelightHelper.PoseEstimate estimate;
-        if (LimelightHelper.getTV(name)) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-                estimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            }
-            else {
-                estimate = LimelightHelper.getBotPoseEstimate_wpiRed_MegaTag2(name);
-            }
-            return new Translation2d(estimate.pose.getX(), estimate.pose.getY());
-        } else {
-            return new Translation2d(0.0, 0.0);
-        }
-    }
+    //CHECK TO SEE IF THIS CODE IS USEFUL
+    // public Translation2d getTranslation2d() {
+    //     LimelightHelper.PoseEstimate estimate;
+    //     if (LimelightHelper.getTV(name)) {
+    //         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+    //             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+    //         }
+    //         else {
+    //             estimate = LimelightHelper.getBotPoseEstimate_wpiRed_MegaTag2(name);
+    //         }
+    //         return new Translation2d(estimate.pose.getX(), estimate.pose.getY());
+    //     } else {
+    //         return new Translation2d(0.0, 0.0);
+    //     }
+    // }
 
+
+
+    /**
+     * this method gets the current pose2d of the bot using LL estimate
+     * 
+     * @return lastPose - pose2d of the bot using LL
+     */
     public Pose2d getPose2d() {
         if (LimelightHelper.getTV(name)) {
             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
@@ -243,19 +284,33 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public double getTX() {
-        if (hasTargets()) {
-            return LimelightHelper.getTX(name);
-        } else {
-            return 0.0;
-        }
-    }
 
+    /**
+     * this method, if there is a target tag then returns the horizontal offset and if not returns 0
+     * 
+     * @return double - horizontal offset
+     */
+    // public double getTX() {
+    // //THIS METHOD IS NOT REFRENCED ANYWHERE, MIGHT BE DEBUG
+    //     if (hasTargets()) {
+    //         return LimelightHelper.getTX(name);
+    //     } else {
+    //         return 0.0;
+    //     }
+    // }
+
+
+
+    /**
+     * this method updates the pose which the robot wants to align to using a kalman filter with vision and odometry inputs
+     * 
+     * @see getClosestTag();
+     */
     public void updateAlignPose() {
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
             var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            Pose2d tag = getClosestTagEstimate();
+            Pose2d tag = getClosestTag(); //getClosestTagEstimate()
             if (Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)) < maxDistance) {
                 // drivetrain.resetPose(estimate.pose);
                 drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
@@ -264,11 +319,17 @@ public class Vision extends SubsystemBase {
         }
     }
 
+
+    /**
+     * this method resets the alignment pose for the robot
+     * 
+     * @see getClosestTag();
+     */
     public void resetAlignPose() {
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
-            var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            Pose2d tag = getClosestTagEstimate();
+            // var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+            Pose2d tag = getClosestTag(); //getClosestTagEstimate()
             if (Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)) < maxDistance) {
                 drivetrain.resetPose(estimate.pose);
                 // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
@@ -276,20 +337,38 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public double getTimeStamp() {
-        if (LimelightHelper.getTV(name)) {
-            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            lastTimeStamp = estimate.timestampSeconds;
-            return estimate.timestampSeconds;
-        } else {
-            return lastTimeStamp;
-        }
-    }
+    /**
+     * gets the last timestamp of the robot
+     * 
+     * @return lastTimeStamp - double
+     */
+    // public double getTimeStamp() {
+    //     //NOT REFERENCED ANYWHERE (MIGHT BE DEBUG)
+    //     if (LimelightHelper.getTV(name)) {
+    //         estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+    //         lastTimeStamp = estimate.timestampSeconds;
+    //         return estimate.timestampSeconds;
+    //     } else {
+    //         return lastTimeStamp;
+    //     }
+    // }
 
+
+    /**
+     * returns true if the LL is looking at a target
+     * 
+     * @return boolean - true or false
+     */
     public boolean hasTargets() {
         return LimelightHelper.getTV(name);
     }
-     
+    
+
+    /**
+     * returns true if the LL is looking at a reef tag
+     * 
+     * @return boolean - true or false
+     */
     public boolean hasReefTargets(){
         if(LimelightHelper.getTV(name) ){
             for (int reefID : redReefAprilTag) {
@@ -302,6 +381,13 @@ public class Vision extends SubsystemBase {
         return false;
     }
 
+
+    /**
+     * resets the bot pose using LL if present and if not then uses autobuilderpose
+     * 
+     * @return pose - pose2d
+     * @see getPose2d()
+     */
     public Pose2d resetPose() {
         if (hasTargets()) {
             Pose2d pose = getPose2d();
@@ -312,6 +398,12 @@ public class Vision extends SubsystemBase {
         }
     }
 
+
+    /**
+     * this method caps the max speed of PID output while preserving it's direction and includes a deadband for when there is minimal movement for the right side of the tag
+     * 
+     * @return {veloX, veloY} - array new PID outputs
+     */
     public double[] getAlignOffsetsRight() {
         double veloX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
         double veloY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
@@ -337,7 +429,14 @@ public class Vision extends SubsystemBase {
         };
         return values;
       }
-    
+
+
+      /**
+     * this method caps the max speed of PID output while preserving it's direction and includes a deadband for when there is minimal movement for the left side of the tag
+     * 
+     * @return {veloX, veloY} - array of new PID outputs
+     * 
+     */
       public double[] getAlignOffsetsLeft() {
         double veloX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
         double veloY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
@@ -364,6 +463,12 @@ public class Vision extends SubsystemBase {
         return values;
       }
       
+
+      /**
+       * this method gets the rotational speed to align to the right of the tag
+       * 
+       * @return targetSpeed - the PID output for rotational speed
+       */
       public double getRotationalAlignSpeedRight() {
         pidRotationAlign.enableContinuousInput(0, 2*Math.PI);
         double currentRotation = drivetrain.getState().Pose.getRotation().getRadians();
@@ -372,7 +477,13 @@ public class Vision extends SubsystemBase {
         double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
         return targetSpeed;
       }
-    
+
+
+      /**
+       * this method gets the rotational speed to align to the left of the tag
+       * 
+       * @return targetSpeed - the PID output for rotational speed
+       */
       public double getRotationalAlignSpeedLeft() {
         pidRotationAlign.enableContinuousInput(0, 2*Math.PI);
         double currentRotation = drivetrain.getState().Pose.getRotation().getRadians();
@@ -382,6 +493,9 @@ public class Vision extends SubsystemBase {
         return targetSpeed;
       }
     
+    /**
+     * this method puts different values into smartDashboard for testing/debugging purposes
+     */
     private void debug() {
         SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
         SmartDashboard.putNumber("APRILTAG POSE", getPose2d().getX());
