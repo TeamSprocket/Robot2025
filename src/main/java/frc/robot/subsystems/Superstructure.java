@@ -17,6 +17,9 @@ import frc.robot.subsystems.Pivot.PivotStates;
 
 public class Superstructure extends SubsystemBase {
 
+  /**
+   * defining the states
+   */
   public static enum SSStates {
     NONE,
     STOWED,
@@ -50,6 +53,15 @@ public class Superstructure extends SubsystemBase {
   
   private Timer timer = new Timer();
 
+  /**
+   * 
+   * @param elevator
+   * @param intake
+   * @param outtake
+   * @param pivot
+   * @param climb
+   * defining and setting constructors
+   */
   public Superstructure(Elevator elevator, Intake intake, Outtake outtake, Pivot pivot, Climb climb) {
     timer.restart();
 
@@ -60,13 +72,17 @@ public class Superstructure extends SubsystemBase {
     this.climb = climb;
   }
   
+  
   @Override
   public void periodic() {
     SmartDashboard.putString("SUPERSTRUCTURE STATE CURRENT", currentState.toString());
   }
 
   // States
-
+/**
+ * sets each state to stowed
+ * @return
+ */
   private Command stowed() {
     return Commands.runOnce(() -> {
       intake.setState(IntakeStates.STOWED);
@@ -76,7 +92,10 @@ public class Superstructure extends SubsystemBase {
       climb.setState(ClimbStates.STOWED);
     });
   }
-
+/**
+ * sets needed states to intake and the rest stowed
+ * @return
+ */
   private Command intake() {
     return Commands.sequence(
       new InstantCommand(() -> {
@@ -88,6 +107,10 @@ public class Superstructure extends SubsystemBase {
     new WaitCommand(0.5),
     new InstantCommand(()->intake.setState(IntakeStates.INTAKE)));
   }
+  /**
+   * coral 2
+   * @return
+   */
 
   private Command coral2() { // test method
     return Commands.sequence(
@@ -102,7 +125,10 @@ public class Superstructure extends SubsystemBase {
       // new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE))
     );
   }
-
+/**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command coral3() {
     return Commands.sequence(
       new InstantCommand(() -> {
@@ -117,6 +143,10 @@ public class Superstructure extends SubsystemBase {
     );
   }
 
+  /**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command coral4() {
     return Commands.sequence(
       new InstantCommand(() -> {
@@ -134,11 +164,21 @@ public class Superstructure extends SubsystemBase {
     );
   }
 
+  /**
+ * setes needed states to the command, and the rest stowed
+ * if the current state is coral 4, return the instant command
+ * @return
+ */
+
   public Command outtake() {
     if (elevator.getState().equals(ElevatorStates.CORAL_4)) return new InstantCommand(() -> outtake.setState(OuttakeStates.L4));
     else return new InstantCommand(() -> outtake.setState(OuttakeStates.CORAL_OUTTAKE));
   }
 
+  /**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command algaeRemove2() {
     return Commands.sequence(
       new InstantCommand(() -> {
@@ -153,6 +193,10 @@ public class Superstructure extends SubsystemBase {
     );
   }
 
+  /**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command algaeRemove3() {
     return Commands.sequence(
       new InstantCommand(() -> {
@@ -166,7 +210,10 @@ public class Superstructure extends SubsystemBase {
       new InstantCommand(() -> {outtake.setState(OuttakeStates.ALGAE_REMOVE); pivot.setState(PivotStates.ALGAE_REMOVE);})
     );
   }
-
+/**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command eject() {
     return new InstantCommand(() -> {
       intake.setState(IntakeStates.EJECT);
@@ -176,7 +223,10 @@ public class Superstructure extends SubsystemBase {
       climb.setState(ClimbStates.STOWED);
     });
   }
-
+/**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command coral1() {
     return new InstantCommand(() -> {
       intake.setState(IntakeStates.STOWED); 
@@ -186,6 +236,10 @@ public class Superstructure extends SubsystemBase {
       climb.setState(ClimbStates.STOWED);
     });
   }
+  /**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command climb() {
     return new InstantCommand(() -> {
       climb.setState(ClimbStates.CLIMB);
@@ -195,7 +249,10 @@ public class Superstructure extends SubsystemBase {
       elevator.setState(ElevatorStates.STOWED);
     });
   }
-
+/**
+ * setes needed states to the command, and the rest stowed
+ * @return
+ */
   private Command undoclimb() {
     return new InstantCommand(() -> {
       climb.setState(ClimbStates.UNDOCLIMB);
@@ -211,7 +268,10 @@ public class Superstructure extends SubsystemBase {
    * Sets the superstructure target state
    * @param currentState Target state
    */
-
+/**
+ * sets needed states to stowed
+ * @return
+ */
   public void setStowed() {
     Commands.runOnce(() -> {
       intake.setState(IntakeStates.STOWED);
@@ -270,7 +330,10 @@ public class Superstructure extends SubsystemBase {
   }
 
   // ------ methods ------
-
+/**
+ * 
+ * @return SSStates
+ */
   public SSStates getCurrentState() {
       return currentState;
   }
