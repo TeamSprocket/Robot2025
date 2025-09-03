@@ -89,8 +89,10 @@ public class Vision extends SubsystemBase {
 
     public Vision(CommandSwerveDrivetrain drive) {
         drivetrain = drive;
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
         timer.reset();
         timer.start();
+
 
         
         ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
@@ -317,7 +319,7 @@ public class Vision extends SubsystemBase {
             Pose2d tag = getClosestTagEstimate();
             if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) < maxDistance) {
                 // drivetrain.resetPose(estimate.pose);
-                drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
+                // drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
                 drivetrain.addVisionMeasurement(visionEstimate.pose, visionEstimate.timestampSeconds);
             }
         }
