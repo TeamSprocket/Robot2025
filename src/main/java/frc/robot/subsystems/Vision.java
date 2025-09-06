@@ -1,27 +1,16 @@
 package frc.robot.subsystems;
 
-import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
-import java.util.Arrays;
-import java.util.Optional;
-
-// import com.pathplanner.lib.auto.AutoBuilder;
-// import com.pathplanner.lib.path.PathConstraints;
-
-import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 // import frc.robot.Constants.Vision;
@@ -56,7 +45,8 @@ public class Vision extends SubsystemBase {
 
     CommandSwerveDrivetrain drivetrain;
 
-    String name = "limelight-front";
+    String front = "limelight-front";
+    String back = "limelight-back";
     int counter = 0;
     int tagOutside = 1;
 
@@ -100,7 +90,6 @@ public class Vision extends SubsystemBase {
 
         if (timer.get() > 0.2 && currentAlignState == AlignStates.ALIGNING) {
             updateAlignPose();
-            // System.out.println("UPDATING");
             timer.reset();
             timer.start();
         }
@@ -162,7 +151,7 @@ public class Vision extends SubsystemBase {
         int tag = -1;
         double minDistance = Integer.MAX_VALUE;
         Pose2d targetPose = new Pose2d();
-        LimelightHelper.PoseEstimate estimate2 = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+        LimelightHelper.PoseEstimate estimate2 = LimelightHelper.getBotPoseEstimate_wpiBlue(front);
             for (int i = 6; i <= 11; i++) {
             Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
             if (i == 6) target = Constants.Vision.Red6;
@@ -200,7 +189,6 @@ public class Vision extends SubsystemBase {
     }
 
     public Pose2d getTargetTagLeft() {
-        //CHECK IF SAME FOR RED AND BLUE
         Pose2d targetTag = getClosestTag();
         Pose2d targetPose = new Pose2d(targetTag.getX() + Constants.Vision.xOffset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getY() + Constants.Vision.xOffset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
         return targetPose;
@@ -217,12 +205,12 @@ public class Vision extends SubsystemBase {
      */
     public Translation2d getTranslation2d() {
         LimelightHelper.PoseEstimate estimate;
-        if (LimelightHelper.getTV(name)) {
+        if (LimelightHelper.getTV(front)) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-                estimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+                estimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(front);
             }
             else {
-                estimate = LimelightHelper.getBotPoseEstimate_wpiRed_MegaTag2(name);
+                estimate = LimelightHelper.getBotPoseEstimate_wpiRed_MegaTag2(front);
             }
             return new Translation2d(estimate.pose.getX(), estimate.pose.getY());
         } else {
@@ -231,54 +219,72 @@ public class Vision extends SubsystemBase {
     }
 
     public Pose2d getPose2d() {
-        if (LimelightHelper.getTV(name)) {
-            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+        if (LimelightHelper.getTV(front)) {
+            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(front);
             lastPose = estimate.pose;
-            return estimate.pose;
-        } else {
-            return lastPose;
+        } else if (LimelightHelper.getTV(back)) {
+            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(back);
+            lastPose = estimate.pose;
         }
+        return lastPose;  
     }
 
     public double getTX() {
         if (hasTargets()) {
-            return LimelightHelper.getTX(name);
+            return LimelightHelper.getTX(front);
         } else {
             return 0.0;
         }
     }
 
     public void updateAlignPose() {
-        if (LimelightHelper.getTV(name)) {
-            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            Pose2d tag = getClosestTagEstimate();
-            if (Math.sqrt(Math.pow(tag.getX()-estimate.pose.getX(), 2) + Math.pow(tag.getY()-estimate.pose.getY(), 2)) < maxDistance) {
+        boolean check = false;
+        double distance1 = Double.MAX_VALUE;
+        double distance2 = Double.MAX_VALUE;
+        if (LimelightHelper.getTV(front)) {
+            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(front);
+            Pose2d tag1 = getClosestTagEstimate();
+            distance1 = Math.sqrt(Math.pow(tag1.getX()-estimate.pose.getX(), 2) + Math.pow(tag1.getY()-estimate.pose.getY(), 2));
+            if (distance1 < maxDistance) {
+                check = true;
                 drivetrain.resetPose(estimate.pose);
+            }
+        }
+        if (LimelightHelper.getTV(front)) {
+            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(back);
+            Pose2d tag2 = getClosestTagEstimate();
+            distance2 = Math.sqrt(Math.pow(tag2.getX()-estimate.pose.getX(), 2) + Math.pow(tag2.getY()-estimate.pose.getY(), 2));
+            if (distance2 < maxDistance) {
+                if (!(check && (distance2 > distance1))){
+                    drivetrain.resetPose(estimate.pose);
+                }
             }
         }
     }
 
     public double getTimeStamp() {
-        if (LimelightHelper.getTV(name)) {
-            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+        if (LimelightHelper.getTV(front)) {
+            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(front);
             lastTimeStamp = estimate.timestampSeconds;
-            return estimate.timestampSeconds;
-        } else {
-            return lastTimeStamp;
+        } else if (LimelightHelper.getTV(back)) {
+            estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(back);
+            lastTimeStamp = estimate.timestampSeconds;
         }
+        return lastTimeStamp;
+        
     }
 
     public boolean hasTargets() {
-        return LimelightHelper.getTV(name);
+        return LimelightHelper.getTV(front);
     }
      
     public boolean hasReefTargets(){
-        if(LimelightHelper.getTV(name) ){
+        if(LimelightHelper.getTV(front) ){
             for (int reefID : redReefAprilTag) {
-                if (LimelightHelper.getFiducialID(name) == reefID) return true;
+                if (LimelightHelper.getFiducialID(front) == reefID) return true;
             }
             for (int reefID : blueReefAprilTag) {
-                if (LimelightHelper.getFiducialID(name) == reefID) return true;
+                if (LimelightHelper.getFiducialID(front) == reefID) return true;
             }
         } 
         return false;
@@ -320,7 +326,7 @@ public class Vision extends SubsystemBase {
         return values;
       }
     
-      public double[] getAlignOffsetsLeft() {
+    public double[] getAlignOffsetsLeft() {
         double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), getTargetTagLeft().getX());
         double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), getTargetTagLeft().getY());
 
@@ -337,10 +343,6 @@ public class Vision extends SubsystemBase {
         };
         return values;
       }
-
-    //   public double getMoveFowardAlignSpeed() {
-        
-    //   }
       
       public double getRotationalAlignSpeedRight() {
         pidRotationAlign.enableContinuousInput(0, 2*Math.PI);
@@ -348,7 +350,6 @@ public class Vision extends SubsystemBase {
         double targetRotation = getTargetTagRight().getRotation().getRadians();
         
         double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
-        // System.out.println(targetSpeed);
         return targetSpeed;
       }
     
@@ -358,11 +359,60 @@ public class Vision extends SubsystemBase {
         double targetRotation = getTargetTagLeft().getRotation().getRadians();
         
         double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
-        // System.out.println(currentRotation);
-        // System.out.println(targetRotation);
-        // System.out.println(targetSpeed);
         return targetSpeed;
       }
+
+
+    //SOURCE-----------------------------------------------------------------------------------
+
+    public Pose2d getTargetSource(){
+        double minDistance = Integer.MAX_VALUE;
+        Pose2d targetSource = new Pose2d();
+            for (int i = 1; i <= 4; i++) {
+            Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
+            if (i == 1) target = Constants.Vision.RedSource1;
+            else if (i == 2) target = Constants.Vision.RedSource2;
+            else if (i == 3) target = Constants.Vision.BlueSource1;
+            else if (i == 4) target = Constants.Vision.BlueSource2;
+
+            double distance = Util.distance(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(), target.getX(), target.getY());
+            if (distance < minDistance) {
+                minDistance = distance;
+                targetSource = target;
+            }
+        }
+        return targetSource;
+    }
+
+    public double[] getAlignOffsetsSource() {
+        Pose2d targetPose = getTargetSource();
+        double speedX = pidXAlign.calculate(drivetrain.getState().Pose.getX(), targetPose.getX());
+        double speedY = pidYAlign.calculate(drivetrain.getState().Pose.getY(), targetPose.getY());
+
+        if (Util.inRange(speedX, -0.05, 0.05)) {
+            speedX = 0.0;
+        }
+
+        if (Util.inRange(speedY, -0.05, 0.05)) {
+            speedY = 0.0;
+        }
+
+        double[] values = {
+          speedX, speedY
+        };
+        return values;
+    }
+
+    public double getRotationalAlignSpeedSource() {
+        pidRotationAlign.enableContinuousInput(0, 2*Math.PI);
+        double currentRotation = drivetrain.getState().Pose.getRotation().getRadians();
+        double targetRotation = getTargetSource().getRotation().getRadians();
+        double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
+        return targetSpeed;
+    }
+      
+
+    
     
     private void debug() {
         SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
