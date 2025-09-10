@@ -95,20 +95,20 @@ public final class Constants {
   public static final class Pivot {
     
     public static final double kAngleStowed = 0.0;
-    public static final double kAngleAlgaeRemove = 0.0;
-    public static final double kAngleIntake = 0.0; 
-    public static final double kAngleL4 = 0.0;
+    public static final double kAngleAlgaeRemove = -.412;
+    public static final double kAngleIntake = -.412; 
+    public static final double kAngleL4 = -.412;
 
     //CONSTANTS FOR TEST BELOW
-    public static final double kMotionMagicCruiseVelocity = 0; //7
-    public static final double kMotionMagicAcceleration = 0; //6
-    public static final double kP = 0.0;
+    public static final double kMotionMagicCruiseVelocity = 7; //7
+    public static final double kMotionMagicAcceleration = 6; //6
+    public static final double kP = 10;
     public static final double kI = 0.0;
-    public static final double kD = 0.0;
-    public static final double kS = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
-    public static final double kG = 0.0;
+    public static final double kD = 0.05;
+    public static final double kS = 0.151;
+    public static final double kV = .7;
+    public static final double kA = 0.01;
+    public static final double kG = -0.447;
 
     public static final double kPivotGearRatio = 2.75;
   }
