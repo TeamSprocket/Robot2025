@@ -10,8 +10,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Superstructure.SSStates;
+import org.littletonrobotics.junction.AutoLogOutputManager;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
+import org.littletonrobotics.junction.rlog.RLOGServer;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   // private boolean run = false;
@@ -22,9 +30,17 @@ public class Robot extends TimedRobot {
 
     Timer.delay(0.5);
 
+    Logger.addDataReceiver(new WPILOGWriter());
+    Logger.addDataReceiver(new RLOGServer());
+
+    AutoLogOutputManager.addObject(m_robotContainer.getClimb());
+    AutoLogOutputManager.addObject(m_robotContainer.getElevator());
+    AutoLogOutputManager.addObject(m_robotContainer.getOuttake());
+    AutoLogOutputManager.addObject(m_robotContainer.getIntake());
+    AutoLogOutputManager.addObject(m_robotContainer.getPivot());
+  
     // logging
-    DataLogManager.start();
-    DataLogManager.logNetworkTables(true);
+    Logger.start();
   }
 
   @Override

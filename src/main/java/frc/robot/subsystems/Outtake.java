@@ -22,6 +22,9 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 
 public class Outtake extends SubsystemBase {
+  /**
+   * define motor and velocity voltage
+   */
 private final TalonFX motor1 = new TalonFX(RobotMap.Outtake.ROLL_OUTTAKE);
 
 private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
