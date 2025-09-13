@@ -5,6 +5,8 @@ import com.ctre.phoenix6.Utils;
 // import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathConstraints;
 
+
+
 import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
@@ -75,6 +77,8 @@ public class Vision extends SubsystemBase {
 
     LimelightHelper.PoseEstimate visionEstimate ;
 
+
+
     Command pathL;
     Command pathR;
 
@@ -110,7 +114,7 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
-            visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+            visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
         }
 
         SmartDashboard.putNumber("Target Speed X", getAlignOffsetsRight()[0]);
@@ -267,12 +271,10 @@ public class Vision extends SubsystemBase {
     public void updateAlignPose() {
         if (LimelightHelper.getTV(name)) {
             // Pose2d tag = getClosestTagEstimate();
-            LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
-            visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
             Pose2d tag = getClosestTag();
             if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) < maxDistance) {
                 // drivetrain.resetPose(estimate.pose);
-                drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
+                drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.1,0.02,0.01));
                 System.out.println("UDPATING");
                 // drivetrain.addVisionMeasurement(visionEstimate.pose, visionEstimate.timestampSeconds);
                 drivetrain.addVisionMeasurement(visionEstimate.pose, Utils.getCurrentTimeSeconds());
@@ -289,8 +291,6 @@ public class Vision extends SubsystemBase {
     public void resetAlignPose() {
         if (LimelightHelper.getTV(name)) {
             // var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
-            visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
             Pose2d tag = getClosestTag(); //getClosestTagEstimate()
             if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance) {
                 drivetrain.resetPose(visionEstimate.pose);
@@ -472,6 +472,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
         SmartDashboard.putNumber("Test PoseX", drivetrain.getState().Pose.getX());
         SmartDashboard.putNumber("Text PoseY", drivetrain.getState().Pose.getX());
+        
         
 
         publisher.set(drivetrain.getState().Pose);
