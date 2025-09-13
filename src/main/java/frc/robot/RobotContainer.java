@@ -154,6 +154,7 @@ public class RobotContainer {
     driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
     driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
+    driver.x().onTrue(new InstantCommand(()-> vision.resetAlignPose()));
 
     driver.rightTrigger()
     .whileTrue(

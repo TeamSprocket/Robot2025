@@ -94,6 +94,7 @@ public class Vision extends SubsystemBase {
         timer.start();
 
 
+
         
         ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
         ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
@@ -316,7 +317,8 @@ public class Vision extends SubsystemBase {
      */
     public void updateAlignPose() {
         if (LimelightHelper.getTV(name)) {
-            Pose2d tag = getClosestTagEstimate();
+            // Pose2d tag = getClosestTagEstimate();
+            Pose2d tag = getClosestTag();
             if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) < maxDistance) {
                 // drivetrain.resetPose(estimate.pose);
                 // drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
@@ -484,6 +486,7 @@ public class Vision extends SubsystemBase {
       }
 
 
+
       /**
        * this method gets the rotational speed to align to the left of the tag
        * 
@@ -497,6 +500,8 @@ public class Vision extends SubsystemBase {
         double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
         return targetSpeed;
       }
+
+   
     
     /**
      * this method puts different values into smartDashboard for testing/debugging purposes
@@ -510,6 +515,9 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("times reset", counter);
         SmartDashboard.putBoolean("has targets", hasTargets());
         SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
+        SmartDashboard.putNumber("Test PoseX", drivetrain.getState().Pose.getX());
+        SmartDashboard.putNumber("Text PoseY", drivetrain.getState().Pose.getX());
+        
 
         publisher.set(drivetrain.getState().Pose);
         publisher2.set(getTargetTagRight());
