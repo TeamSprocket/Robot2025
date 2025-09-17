@@ -96,8 +96,7 @@ public class Vision extends SubsystemBase {
     public Vision(CommandSwerveDrivetrain drive) {
         drivetrain = drive;
         drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.02,0.02,0.01));
-        timer.reset();
-        timer.start();
+        LimelightHelper.SetIMUMode(name, 1);
         ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
         ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
     }
@@ -112,8 +111,10 @@ public class Vision extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        // LimelightHelper.SetIMUMode(name, 2);
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
+            
             visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
         }
 
@@ -294,6 +295,18 @@ public class Vision extends SubsystemBase {
             Pose2d tag = getClosestTag(); //getClosestTagEstimate()
             if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance) {
                 drivetrain.resetPose(visionEstimate.pose);
+                // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
+            }
+        }
+    }
+
+    public void resetAlignPoseMT1() {
+        if (LimelightHelper.getTV(name)) {
+            var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+            Pose2d tag = getClosestTag(); //getClosestTagEstimate()
+            if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance) {
+                drivetrain.resetPose(LLMeasurment.pose);
+                drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
                 // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
             }
         }

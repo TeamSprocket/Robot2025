@@ -900,6 +900,17 @@ public class LimelightHelper {
         setLimelightNTDoubleArray(limelightName, "robot_orientation_set", entries);
     }
 
+    /**
+     * Configures the IMU mode for MegaTag2 Localization
+     * 
+     * @param limelightName Name/identifier of the Limelight
+     * @param mode IMU mode.
+     */
+    public static void SetIMUMode(String limelightName, int mode) {
+        setLimelightNTDouble(limelightName, "imumode_set", mode);
+    }
+
+
     public static void SetFiducialIDFiltersOverride(String limelightName, int[] validIDs) {
         double[] validIDsDouble = new double[validIDs.length];
         for (int i = 0; i < validIDs.length; i++) {
