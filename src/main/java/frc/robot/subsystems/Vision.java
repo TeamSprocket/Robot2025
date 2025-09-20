@@ -205,13 +205,8 @@ public class Vision extends SubsystemBase {
         Pose2d targetPose = new Pose2d(targetTag.getX() - Constants.Vision.offset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getY() - Constants.Vision.offset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
         return targetPose;
     }
-
-
-
-
-
-  
-
+    
+    
     /**
      * this method updates the pose which the robot wants to align to using a kalman filter with vision and odometry inputs
      * 
@@ -242,22 +237,12 @@ public class Vision extends SubsystemBase {
 
     public void resetGyroMT1(){
         var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-        if((distToAprilTag() < 1.1) && (Math.sqrt(Math.pow(Math.abs(drivetrain.getState().Speeds.vxMetersPerSecond),2)) + Math.pow(Math.abs(drivetrain.getState().Speeds.vyMetersPerSecond),2) < 3) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI )){
+        if((distToAprilTag() < 1.1) && (speed() < 3) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI )){
                 drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
+                System.out.println("YIPPEE YIPPEEE YIPPEEE YIPPEEE YIPPEEEE");
             }else System.out.println("ERIC AND ZACK SITTING ON A TREE, K-I-SS-I-N-G");
     
     
-    }
-
-
-
-    public double distToAprilTag(){
-        Pose2d tag = getClosestTag();
-        if(LimelightHelper.getTV(name)){
-            return Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) ;
-        }
-        return 0;
-
     }
    
 
@@ -385,6 +370,32 @@ public class Vision extends SubsystemBase {
         double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
         return targetSpeed;
       }
+
+    
+    /**
+     * this method gets the speed of the bot as a scalar value
+     * 
+     * @return double - scalar value of the x and y speeds
+     * 
+     */
+    public double speed(){
+        return Math.sqrt(Math.pow(Math.abs(drivetrain.getState().Speeds.vxMetersPerSecond),2)) + Math.pow(Math.abs(drivetrain.getState().Speeds.vyMetersPerSecond),2);
+    }
+    
+    /**
+     * this method returns the distance to the closest apritag using dist formula
+     * 
+     * @return double - distance to tag
+     */
+
+    public double distToAprilTag(){
+        Pose2d tag = getClosestTag();
+        if(LimelightHelper.getTV(name)){
+            return Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) ;
+        }
+        return 0;
+
+    }
 
    
     
