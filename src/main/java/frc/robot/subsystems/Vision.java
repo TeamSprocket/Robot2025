@@ -209,61 +209,8 @@ public class Vision extends SubsystemBase {
         Pose2d targetPose = new Pose2d(targetTag.getX() - Constants.Vision.offset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getY() - Constants.Vision.offset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
         return targetPose;
     }
-
-    /**
-     * @return {xCoord, yCoord, timestamp}
-     */
-    //CHECK TO SEE IF THIS CODE IS USEFUL
-    // public Translation2d getTranslation2d() {
-    //     LimelightHelper.PoseEstimate estimate;
-    //     if (LimelightHelper.getTV(name)) {
-    //         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-    //             estimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-    //         }
-    //         else {
-    //             estimate = LimelightHelper.getBotPoseEstimate_wpiRed_MegaTag2(name);
-    //         }
-    //         return new Translation2d(estimate.pose.getX(), estimate.pose.getY());
-    //     } else {
-    //         return new Translation2d(0.0, 0.0);
-    //     }
-    // }
-
-
-
-    /**
-     * this method gets the current pose2d of the bot using LL estimate
-     * 
-     * @return lastPose - pose2d of the bot using LL
-     */
-    // public Pose2d getPose2d() {
-    //     if (LimelightHelper.getTV(name)) {
-    //         LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
-    //         estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-    //         lastPose = estimate.pose;
-    //         return estimate.pose;
-    //     } else {
-    //         return lastPose;
-    //     }
-    // }
-
-
-    /**
-     * this method, if there is a target tag then returns the horizontal offset and if not returns 0
-     * 
-     * @return double - horizontal offset
-     */
-    // public double getTX() {
-    // //THIS METHOD IS NOT REFRENCED ANYWHERE, MIGHT BE DEBUG
-    //     if (hasTargets()) {
-    //         return LimelightHelper.getTX(name);
-    //     } else {
-    //         return 0.0;
-    //     }
-    // }
-
-
-
+    
+    
     /**
      * this method updates the pose which the robot wants to align to using a kalman filter with vision and odometry inputs
      * 
@@ -312,21 +259,18 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    /**
-     * gets the last timestamp of the robot
-     * 
-     * @return lastTimeStamp - double
-     */
-    // public double getTimeStamp() {
-    //     //NOT REFERENCED ANYWHERE (MIGHT BE DEBUG)
-    //     if (LimelightHelper.getTV(name)) {
-    //         estimate = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-    //         lastTimeStamp = estimate.timestampSeconds;
-    //         return estimate.timestampSeconds;
-    //     } else {
-    //         return lastTimeStamp;
-    //     }
-    // }
+    public void resetGyroMT1(){
+        var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+        if((distToAprilTag() < 1.1) && (speed() < 3) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI )){
+                drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
+                System.out.println("YIPPEE YIPPEEE YIPPEEE YIPPEEE YIPPEEEE");
+            }else System.out.println("ERIC AND ZACK SITTING ON A TREE, K-I-SS-I-N-G");
+    
+    
+    }
+   
+
+
 
 
     /**
@@ -468,6 +412,32 @@ public class Vision extends SubsystemBase {
         double targetSpeed = pidRotationAlign.calculate(currentRotation, targetRotation);
         return targetSpeed;
       }
+
+    
+    /**
+     * this method gets the speed of the bot as a scalar value
+     * 
+     * @return double - scalar value of the x and y speeds
+     * 
+     */
+    public double speed(){
+        return Math.sqrt(Math.pow(Math.abs(drivetrain.getState().Speeds.vxMetersPerSecond),2)) + Math.pow(Math.abs(drivetrain.getState().Speeds.vyMetersPerSecond),2);
+    }
+    
+    /**
+     * this method returns the distance to the closest apritag using dist formula
+     * 
+     * @return double - distance to tag
+     */
+
+    public double distToAprilTag(){
+        Pose2d tag = getClosestTag();
+        if(LimelightHelper.getTV(name)){
+            return Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) ;
+        }
+        return 0;
+
+    }
 
    
     
