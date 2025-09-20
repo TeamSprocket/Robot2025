@@ -137,7 +137,7 @@ public class RobotContainer {
         )
     );
 
-    driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    driver.a().onTrue(new InstantCommand(()-> vision.resetAlignPoseMT1()));
     driver.b().whileTrue(drivetrain.applyRequest(() ->
         point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
     ));
@@ -153,8 +153,8 @@ public class RobotContainer {
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
     driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.x().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
-    
+    driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
+    driver.x().onTrue(new InstantCommand(()-> vision.resetAlignPose()));
 
     driver.rightTrigger()
     .whileTrue(
