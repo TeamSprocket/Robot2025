@@ -58,7 +58,7 @@ public class RobotContainer {
 
   public final AutoFactory autoFactory;
 
-  double speedMultiplier = 1.0;
+  double speedMultiplier = 0.5;
   Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot, climb);
 
   // ------- Swerve Generated -------
@@ -164,7 +164,7 @@ public class RobotContainer {
       ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
       .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     driver.leftTrigger()
     .whileTrue(
@@ -174,7 +174,7 @@ public class RobotContainer {
         ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
     .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     // --------------------=Operator=--------------------
 
