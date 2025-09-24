@@ -33,11 +33,11 @@ public class Robot extends LoggedRobot {
     Logger.addDataReceiver(new WPILOGWriter());
     Logger.addDataReceiver(new RLOGServer());
 
-    AutoLogOutputManager.addObject(m_robotContainer.getClimb());
-    AutoLogOutputManager.addObject(m_robotContainer.getElevator());
-    AutoLogOutputManager.addObject(m_robotContainer.getOuttake());
-    AutoLogOutputManager.addObject(m_robotContainer.getIntake());
-    AutoLogOutputManager.addObject(m_robotContainer.getPivot());
+    AutoLogOutputManager.addObject(m_robotContainer.climb);
+    AutoLogOutputManager.addObject(m_robotContainer.elevator);
+    AutoLogOutputManager.addObject(m_robotContainer.outtake);
+    AutoLogOutputManager.addObject(m_robotContainer.intake);
+    AutoLogOutputManager.addObject(m_robotContainer.pivot);
   
     // logging
     Logger.start();
