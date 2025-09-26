@@ -10,11 +10,13 @@ import com.ctre.phoenix6.Utils;
 import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,9 +44,18 @@ public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
+    private TrapezoidProfile.Constraints m_contraints = new TrapezoidProfile.Constraints(Constants.Vision.kMaxDrivingSpeed,0.5);
+
     private PIDController pidRotationAlign = new PIDController(4.5, 0, 0); //4.5 0 0
     private PIDController pidXAlign = new PIDController(3.0, 0, 0); //3.0 0 0
     private PIDController pidYAlign = new PIDController(3.0, 0, 0); //3.0 0 0
+
+    private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0);
+    private ProfiledPIDController pidXAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
+    private ProfiledPIDController pidYAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
+
+
+
 
     Timer timer = new Timer();
 
@@ -80,6 +91,7 @@ public class Vision extends SubsystemBase {
 
 
 
+
     Command pathL;
     Command pathR;
 
@@ -91,14 +103,18 @@ public class Vision extends SubsystemBase {
 
     double fiducialID;
 
+    boolean IMUMode2;
+
+    
     
     
 
     public Vision(CommandSwerveDrivetrain drive) {
         drivetrain = drive;
+        IMUMode2 = false;
         timer.reset();
         timer.start();
-        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,99999999));
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0,0,0));
         LimelightHelper.SetIMUMode(name, 1);
         ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
         ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
@@ -117,8 +133,9 @@ public class Vision extends SubsystemBase {
         // LimelightHelper.SetIMUMode(name, 2);
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
-
             visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[1],stdDevConstant()[2],stdDevConstant()[3]));
+
         }
 
         SmartDashboard.putNumber("Target Speed X", getAlignOffsetsRight()[0]);
@@ -228,7 +245,6 @@ public class Vision extends SubsystemBase {
                 // drivetrain.resetPose(estimate.pose);
                 // drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(1 - ((Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2))) / maxDistance),1 - ((Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2))) / maxDistance),0.9999999));
                 // System.out.println("UDPATING");
-                drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,0.5));
                 // drivetrain.addVisionMeasurement(visionEstimate.pose, visionEstimate.timestampSeconds);
                 drivetrain.addVisionMeasurement(visionEstimate.pose, Utils.getCurrentTimeSeconds());
             }
@@ -256,14 +272,16 @@ public class Vision extends SubsystemBase {
         if (LimelightHelper.getTV(name)) {
             var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
             Pose2d tag = getClosestTag(); //getClosestTagEstimate()
-            if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance) {
-                // drivetrain.resetPose(LLMeasurment.pose);
+            if ((Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance)&&(drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI)) {
+                drivetrain.resetPose(LLMeasurment.pose);
                 drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
+                LimelightHelper.SetIMUMode(name, 2);
+                
                 // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
             }
         }
     }
-
+    
     public void resetGyroMT1(){
         var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
         if((distToAprilTag() < 1.1) && (speed() < 3) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI )){
@@ -386,6 +404,36 @@ public class Vision extends SubsystemBase {
         };
         return values;
       }
+
+
+
+
+
+      public double[] getAlignOffsetsRightMP() {
+        double veloX = pidXAlign_MP.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
+        double veloY = pidYAlign_MP.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
+
+        if (!Util.inRange(veloX, -maxSpeed, maxSpeed)) {
+            veloX = (veloX / Math.abs(veloX)) * maxSpeed;
+        }
+
+        if (!Util.inRange(veloY, -maxSpeed, maxSpeed)) {
+            veloY = (veloY / Math.abs(veloY)) * maxSpeed;
+        }
+
+        if (Util.inRange(veloX, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
+            veloX = 0.0;
+        }
+
+        if (Util.inRange(veloY, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
+            veloY = 0.0;
+        }
+        
+        double[] values = {
+          veloX, veloY
+        };
+        return values;
+      }
       
 
       /**
@@ -404,6 +452,24 @@ public class Vision extends SubsystemBase {
         }
         return targetSpeed;
       }
+
+
+
+
+
+
+      public double getRotationalAlignSpeedRightMP() {
+        pidRotationAlign_MP.enableContinuousInput(0, 2*Math.PI);
+        double currentRotation = drivetrain.getState().Pose.getRotation().getRadians();
+        double targetRotation = getTargetTagRight().getRotation().getRadians();
+
+        double targetSpeed = pidRotationAlign_MP.calculate(currentRotation, targetRotation);
+        if (targetSpeed < 0.05) {
+            targetSpeed = 0.0;
+        }
+        return targetSpeed;
+      }
+
 
 
 
@@ -447,6 +513,48 @@ public class Vision extends SubsystemBase {
             return Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) ;
         }
         return 0;
+
+    }
+
+    public void IMUMode(){
+    if(IMUMode2 = false){
+            IMUMode2 = true;
+            LimelightHelper.SetIMUMode(name, 2);
+        }
+    }
+    
+
+
+    public double[] stdDevConstant() {
+        double stdDevX;
+        double stdDevY;
+        double stdDevTheta;
+
+    if(distToAprilTag()>Constants.Vision.apriltagMinSpeed && distToAprilTag() <= 1){
+        stdDevX = 0.07;
+        stdDevY = 0.07;
+        stdDevTheta = 0.05;
+    }
+    if(distToAprilTag()> 1 && distToAprilTag() <= 2){
+        stdDevX = 0.2;
+        stdDevY = 0.2;
+        stdDevTheta = 0.75;
+    }
+    if(distToAprilTag()>2 && distToAprilTag() <= 5){
+        stdDevX = 0.8;
+        stdDevY = 0.8;
+        stdDevTheta = 2;
+    }else{
+        stdDevX = 0;
+        stdDevY = 0;
+        stdDevTheta = 9999999;
+    }
+
+    double[] values = {stdDevX,stdDevY,stdDevTheta};
+
+
+    return values;
+
 
     }
 

@@ -138,6 +138,9 @@ public class RobotContainer {
     );
 
     driver.a().onTrue(new InstantCommand(()-> vision.resetAlignPoseMT1()));
+
+    driver.a().onFalse(new InstantCommand(()-> vision.IMUMode()));
+   
     driver.b().whileTrue(drivetrain.applyRequest(() ->
         point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
     ));
@@ -151,7 +154,14 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-    driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    // driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+
+    driver.rightBumper().whileTrue(drivetrain.applyRequest(
+      () -> new ApplyFieldSpeeds()
+        .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRightMP()[0], vision.getAlignOffsetsRightMP()[1], vision.getRotationalAlignSpeedRightMP()))
+    ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
+    .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    driver.rightBumper().onFalse(drivetrain.applyRequest(()-> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
     driver.x().onTrue(new InstantCommand(()-> vision.resetAlignPose()));
