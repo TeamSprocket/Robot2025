@@ -134,7 +134,7 @@ public class Vision extends SubsystemBase {
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
             visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[1],stdDevConstant()[2],stdDevConstant()[3]));
+            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
 
         }
 
@@ -516,8 +516,9 @@ public class Vision extends SubsystemBase {
 
     }
 
+    //isnt used right now
     public void IMUMode(){
-    if(IMUMode2 = false){
+    if(IMUMode2 == false){
             IMUMode2 = true;
             LimelightHelper.SetIMUMode(name, 2);
         }
