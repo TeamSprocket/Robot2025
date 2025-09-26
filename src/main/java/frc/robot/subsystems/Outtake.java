@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -117,6 +119,9 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
         break;
         
     }
+Logger.recordOutput("Outtake/Position", motor1.getPosition().getValueAsDouble());
+Logger.recordOutput("Outtake/Voltage", motor1.getMotorVoltage().getValueAsDouble());
+Logger.recordOutput("Outtake/Current", motor1.getStatorCurrent().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 

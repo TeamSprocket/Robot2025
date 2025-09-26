@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -19,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.util.*;
 
+@AutoLog
 public class Pivot extends SubsystemBase {
     MotionMagicVoltage mm = new MotionMagicVoltage(0);
     private final TalonFX motor = new TalonFX(RobotMap.AlgaePivot.ALGAE_PIVOT);
@@ -103,6 +106,10 @@ public class Pivot extends SubsystemBase {
         break;
 
       }
+Logger.recordOutput("Pivot/Position", motor.getPosition().getValueAsDouble());
+Logger.recordOutput("Pivot/Voltage", motor.getMotorVoltage().getValueAsDouble());
+Logger.recordOutput("Pivot/Current", motor.getStatorCurrent().getValueAsDouble());
+
     }
 
   public void setState(PivotStates state) {
