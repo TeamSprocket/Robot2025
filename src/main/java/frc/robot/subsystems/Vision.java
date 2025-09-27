@@ -63,11 +63,13 @@ public class Vision extends SubsystemBase {
 
     public enum AlignStates{
 
-        ALIGNING,
+        ALIGNING_L,
+        ALIGNING_R,
+        UPDATING,
         NONE
     }
 
-    AlignStates currentAlignState = AlignStates.ALIGNING;
+    AlignStates currentAlignState = AlignStates.UPDATING;
 
     Alliance allianceColor = Alliance.Blue;
 
@@ -140,7 +142,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("Target Speed X", getAlignOffsetsRight()[0]);
         SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 
-        if (timer.get() > 0.075 && currentAlignState == AlignStates.ALIGNING) {
+        if (timer.get() > 0.075 && !(currentAlignState == AlignStates.NONE)) {
             updateAlignPose();
             // System.out.println("UPDATING");
             timer.reset();
@@ -239,7 +241,7 @@ public class Vision extends SubsystemBase {
         if (LimelightHelper.getTV(name)) {
             // Pose2d tag = getClosestTagEstimate();
             Pose2d tag = getClosestTag();
-            double distance = Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2));
+            double distance = Math.sqrt(Math.pow(tag.getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(tag.getY()-drivetrain.getState().Pose.getY(), 2));
             if (distance < maxDistance) {
                 drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
                 // drivetrain.resetPose(estimate.pose);
@@ -261,7 +263,7 @@ public class Vision extends SubsystemBase {
         if (LimelightHelper.getTV(name)) {
             // var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
             Pose2d tag = getClosestTag(); //getClosestTagEstimate()
-            if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance) {
+            if (Math.sqrt(Math.pow(tag.getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(tag.getY() - drivetrain.getState().Pose.getY(), 2)) < maxDistance) {
                 drivetrain.resetPose(visionEstimate.pose);
                 // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
             }
@@ -272,7 +274,7 @@ public class Vision extends SubsystemBase {
         if (LimelightHelper.getTV(name)) {
             var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
             Pose2d tag = getClosestTag(); //getClosestTagEstimate()
-            if ((Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance)&&(drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI)) {
+            if ((Math.sqrt(Math.pow(tag.getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(tag.getY() - drivetrain.getState().Pose.getY(), 2)) < maxDistance)&&(drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI)) {
                 drivetrain.resetPose(LLMeasurment.pose);
                 drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
                 LimelightHelper.SetIMUMode(name, 2);
@@ -365,6 +367,11 @@ public class Vision extends SubsystemBase {
         if (Util.inRange(veloY, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
             veloY = 0.0;
         }
+
+        // if (reachedGoalP()) {
+        //     veloX = 0.0;
+        //     veloY = 0.0;
+        // }
         
         double[] values = {
           veloX, veloY
@@ -399,6 +406,11 @@ public class Vision extends SubsystemBase {
             veloY = 0.0;
         }
 
+        // if (reachedGoalP()) {
+        //     veloX = 0.0;
+        //     veloY = 0.0;
+        // }
+
         double[] values = {
             veloX, veloY
         };
@@ -428,6 +440,11 @@ public class Vision extends SubsystemBase {
         if (Util.inRange(veloY, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
             veloY = 0.0;
         }
+
+        // if (reachedGoalP()) {
+        //     veloX = 0.0;
+        //     veloY = 0.0;
+        // }
         
         double[] values = {
           veloX, veloY
@@ -450,6 +467,9 @@ public class Vision extends SubsystemBase {
         if (targetSpeed < 0.05) {
             targetSpeed = 0.0;
         }
+        // if (reachedGoalR()) {
+        //     targetSpeed = 0.0;
+        // }
         return targetSpeed;
       }
 
@@ -467,6 +487,9 @@ public class Vision extends SubsystemBase {
         if (targetSpeed < 0.05) {
             targetSpeed = 0.0;
         }
+        // if (reachedGoalR()) {
+        //     targetSpeed = 0.0;
+        // }
         return targetSpeed;
       }
 
@@ -487,6 +510,9 @@ public class Vision extends SubsystemBase {
         if (targetSpeed < 0.05) {
             targetSpeed = 0.0;
         }
+        // if (reachedGoalR()) {
+        //     targetSpeed = 0.0;
+        // }
         return targetSpeed;
       }
 
@@ -510,7 +536,7 @@ public class Vision extends SubsystemBase {
     public double distToAprilTag(){
         Pose2d tag = getClosestTag();
         if(LimelightHelper.getTV(name)){
-            return Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2)) ;
+            return Math.sqrt(Math.pow(tag.getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(tag.getY()-drivetrain.getState().Pose.getY(), 2)) ;
         }
         return 0;
 
@@ -523,34 +549,56 @@ public class Vision extends SubsystemBase {
             LimelightHelper.SetIMUMode(name, 2);
         }
     }
+
+    public boolean reachedGoalP() {
+        if (currentAlignState == AlignStates.ALIGNING_L) {
+            if (Math.sqrt(Math.pow(getTargetTagLeft().getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(getTargetTagLeft().getY()-drivetrain.getState().Pose.getY(), 2)) < 0.025) {
+                return true;
+            }
+        } else if (currentAlignState == AlignStates.ALIGNING_R) {
+            if (Math.sqrt(Math.pow(getTargetTagRight().getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(getTargetTagRight().getY()-drivetrain.getState().Pose.getY(), 2)) < 0.025) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean reachedGoalR() {
+        if (currentAlignState == AlignStates.ALIGNING_L || currentAlignState == AlignStates.ALIGNING_R) {
+            if (Math.abs(getTargetTagLeft().getRotation().getDegrees()-drivetrain.getState().Pose.getRotation().getDegrees()) <= 5) {
+                return true;
+            }
+        } 
+        return false;
+    }
     
 
 
     public double[] stdDevConstant() {
-        double stdDevX;
-        double stdDevY;
-        double stdDevTheta;
+        double stdDevX = 0.25;
+        double stdDevY = 0.25;
+        double stdDevTheta = 0.9999;
 
-    if(distToAprilTag()>Constants.Vision.apriltagMinSpeed && distToAprilTag() <= 1){
-        stdDevX = 0.07;
-        stdDevY = 0.07;
-        stdDevTheta = 2;
-    }
-    if(distToAprilTag()> 1 && distToAprilTag() <= 2){
-        stdDevX = 0.07;
-        stdDevY = 0.07;
-        stdDevTheta = 2;
-    }
-    if(distToAprilTag()>2 && distToAprilTag() <= 5){
-        stdDevX = 0.07;
-        stdDevY = 0.07;
-        stdDevTheta = 2;
-    }else{
-        stdDevX = 0;
-        stdDevY = 0;
-        stdDevTheta = 9999999;
+    // if(distToAprilTag()>Constants.Vision.apriltagMinSpeed && distToAprilTag() <= 1){
+    //     stdDevX = 0.07;
+    //     stdDevY = 0.07;
+    //     stdDevTheta = 2;
+    // }
+    // if(distToAprilTag()> 1 && distToAprilTag() <= 2){
+    //     stdDevX = 0.07;
+    //     stdDevY = 0.07;
+    //     stdDevTheta = 2;
+    // }
+    // if(distToAprilTag()>2 && distToAprilTag() <= 5){
+    //     stdDevX = 0.07;
+    //     stdDevY = 0.07;
+    //     stdDevTheta = 2;
+    // }else{
+    //     stdDevX = 0;
+    //     stdDevY = 0;
+    //     stdDevTheta = 9999999;
         
-    }
+    // }
 
     double[] values = {stdDevX,stdDevY,stdDevTheta};
 
@@ -566,16 +614,25 @@ public class Vision extends SubsystemBase {
      * this method puts different values into smartDashboard for testing/debugging purposes
      */
     private void debug() {
-        SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
-        // SmartDashboard.putNumber("Vision POSE X", visionEstimate.pose.getX());
-        // SmartDashboard.putNumber("Vision POSE Y", visionEstimate.pose.getY());
-        SmartDashboard.putNumber("dist to left", distToAprilLeft);
-        SmartDashboard.putNumber("dist to right", distToAprilRight);
-        SmartDashboard.putNumber("times reset", counter);
-        SmartDashboard.putBoolean("has targets", hasTargets());
-        SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
-        SmartDashboard.putNumber("Test PoseX", drivetrain.getState().Pose.getX());
-        SmartDashboard.putNumber("Text PoseY", drivetrain.getState().Pose.getX());
+        // SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
+        // // SmartDashboard.putNumber("Vision POSE X", visionEstimate.pose.getX());
+        // // SmartDashboard.putNumber("Vision POSE Y", visionEstimate.pose.getY());
+        // SmartDashboard.putNumber("dist to left", distToAprilLeft);
+        // SmartDashboard.putNumber("dist to right", distToAprilRight);
+        // SmartDashboard.putNumber("times reset", counter);
+        // SmartDashboard.putBoolean("has targets", hasTargets());
+        // SmartDashboard.putString("ALIGN STATE", currentAlignState.toString());
+        SmartDashboard.putNumber("Current X", drivetrain.getState().Pose.getX());
+        SmartDashboard.putNumber("Current Y", drivetrain.getState().Pose.getY());
+        SmartDashboard.putNumber("Current Theta", drivetrain.getState().Pose.getRotation().getDegrees());
+
+        SmartDashboard.putNumber("Goal X LEFT", getTargetTagLeft().getX());
+        SmartDashboard.putNumber("Goal Y LEFT", getTargetTagLeft().getY());
+        SmartDashboard.putNumber("Goal Theta LEFT", getTargetTagLeft().getRotation().getDegrees());
+
+        SmartDashboard.putNumber("Goal X RIGHT", getTargetTagRight().getX());
+        SmartDashboard.putNumber("Goal Y RIGHT", getTargetTagRight().getY());
+        SmartDashboard.putNumber("Goal Theta RIGHT", getTargetTagRight().getRotation().getDegrees());
         
         
 

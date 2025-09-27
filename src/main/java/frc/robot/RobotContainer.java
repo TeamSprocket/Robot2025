@@ -170,8 +170,8 @@ public class RobotContainer {
       drivetrain.applyRequest(
         () -> new ApplyFieldSpeeds()
           .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedRight()))
-      ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
-      .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+      ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_R))))
+      .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)));
 
     driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
@@ -180,8 +180,8 @@ public class RobotContainer {
       drivetrain.applyRequest(
         () -> new ApplyFieldSpeeds()
           .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsLeft()[1], vision.getRotationalAlignSpeedLeft()))
-        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
-    .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_L))))
+    .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)));
 
     driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
@@ -249,7 +249,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -265,7 +265,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -281,7 +281,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -298,7 +298,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
 
@@ -321,7 +321,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -343,7 +343,7 @@ public class RobotContainer {
 
     routine.active().onTrue(
       Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)),
+        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         traj1.cmd()
@@ -406,11 +406,11 @@ public class RobotContainer {
 
   // ---------------auton commands--------------
   public Command alignLeft() {
-    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_L))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command alignRight() {
-    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_R))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command scoreL4Left() {
@@ -447,13 +447,13 @@ public class RobotContainer {
     return drivetrain.applyRequest(
         () -> new ApplyFieldSpeeds()
           .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsLeft()[1], vision.getRotationalAlignSpeedLeft()))
-        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)));
+        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_L)));
   }
 
   public Command choreoAlignRight() {
     return drivetrain.applyRequest(
       () -> new ApplyFieldSpeeds()
         .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedRight()))
-    ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING)));
+    ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_R)));
   }
 }
