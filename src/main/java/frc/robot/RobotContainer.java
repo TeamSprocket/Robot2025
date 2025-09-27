@@ -138,7 +138,7 @@ public class RobotContainer {
     );
 
     driver.a().onTrue(new InstantCommand(()-> vision.resetAlignPoseMT1()));
-    driver.a().onFalse(new InstantCommand(()-> vision.IMUMode()));
+    // driver.a().onFalse(new InstantCommand(()-> vision.IMUMode()));
    
     driver.b().whileTrue(drivetrain.applyRequest(() ->
         point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))

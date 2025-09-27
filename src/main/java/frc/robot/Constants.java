@@ -44,7 +44,7 @@ public final class Constants {
     public static final Pose2d Blue19 = new Pose2d(4.073905999999999,  4.740402, Rotation2d.fromDegrees(300));
     public static final Pose2d Blue20 = new Pose2d(4.904739999999999 , 4.740402 , Rotation2d.fromDegrees(240));
     public static final Pose2d Blue21 = new Pose2d(5.321046 , 4.0208200000000005 , Rotation2d.fromDegrees(180));
-    public static final Pose2d Blue22 = new Pose2d(4.904739999999999 , 3.3012379999999997, Rotation2d.fromDegrees(120)); 
+    public static final Pose2d Blue22 = new Pose2d(4.905 , 3.301, Rotation2d.fromDegrees(120)); 
 
     public static final Pose2d Red6 = new Pose2d(13.474446 , 3.3012379999999997, Rotation2d.fromDegrees(120));
     public static final Pose2d Red7 = new Pose2d(13.890498 , 4.028757572174072 , Rotation2d.fromDegrees(180));
@@ -67,11 +67,11 @@ public final class Constants {
     // public static final Pose2d Red10 = new Pose2d(12.080918312072754 , 4.028757572174072 , Rotation2d.fromDegrees(0));
     // public static final Pose2d Red11 = new Pose2d(12.585830459594726 , 3.174359083175659  , Rotation2d.fromDegrees(60));
 
-    public static final double offset = 0.1651; //0.172
+    public static final double offset = 0.1397; //0.172
 
     public static final double kFFAlignSpeed = 2.5;
 
-    public static final double apriltagMinSpeed = 0.1;
+    public static final double apriltagMinSpeed = 0.075;
   }
   
 
