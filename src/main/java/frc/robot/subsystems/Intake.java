@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -17,13 +19,14 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.Outtake.OuttakeStates;
 
+
 public class Intake extends SubsystemBase {
 
   private final TalonFX intakemotor = new TalonFX(RobotMap.Intake.ROLL_INTAKE);
   private final PWM servo = new PWM(0);
 
   private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
-  private IntakeStates state = IntakeStates.NONE;
+  IntakeStates state = IntakeStates.NONE;
 
   private final SendableChooser<IntakeStates> stateChooser = new SendableChooser<>();
 
@@ -101,6 +104,9 @@ public class Intake extends SubsystemBase {
         break;
       // This method will be called once per scheduler run
     }
+Logger.recordOutput("Intake/Position", intakemotor.getPosition().getValueAsDouble());
+Logger.recordOutput("Intake/Voltage", intakemotor.getMotorVoltage().getValueAsDouble());
+Logger.recordOutput("Intake/Current", intakemotor.getStatorCurrent().getValueAsDouble());
   }
 
   public void setState(IntakeStates state) {

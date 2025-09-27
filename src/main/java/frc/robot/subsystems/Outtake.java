@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
 
+
 public class Outtake extends SubsystemBase {
   /**
    * define motor and velocity voltage
@@ -42,7 +43,7 @@ private VelocityVoltage velocityVoltage = new VelocityVoltage(0);
     L4
   }
 
-  private OuttakeStates state = OuttakeStates.NONE;
+  OuttakeStates state = OuttakeStates.NONE;
   private final SendableChooser<OuttakeStates> stateChooser = new SendableChooser<>();
 
   private void configMotors(){

@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -21,13 +25,15 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 public class Climb extends SubsystemBase {
   MotionMagicVoltage climbmmv = new MotionMagicVoltage(0);
 
-  private final TalonFX climbpivot = new TalonFX(RobotMap.Climb.CLIMB_PIVOT);
+  TalonFX climbpivot = new TalonFX(RobotMap.Climb.CLIMB_PIVOT);
 
 
-  private ClimbStates State = ClimbStates.NONE;    
+
+  ClimbStates State = ClimbStates.NONE;    
 
   public enum ClimbStates {
     NONE,
@@ -36,7 +42,9 @@ public class Climb extends SubsystemBase {
     UNDOCLIMB
   }
 
+  
   /** Creates a new Climb. */
+
   public Climb() {
     TalonFXConfiguration ClimbConfig = new TalonFXConfiguration();
     climbpivot.setPosition(0);
@@ -64,6 +72,9 @@ public class Climb extends SubsystemBase {
         climbpivot.setVoltage(-7);
         break;
     }
+  Logger.recordOutput("Climb/Position", climbpivot.getPosition().getValueAsDouble());
+  Logger.recordOutput("Climb/Voltage", climbpivot.getMotorVoltage().getValueAsDouble());
+  Logger.recordOutput("Climb/Current", climbpivot.getStatorCurrent().getValueAsDouble());
   }
 
   public void setState(ClimbStates state) {

@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,7 +28,6 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-    Timer.delay(0.5);
 
     Logger.addDataReceiver(new WPILOGWriter());
     Logger.addDataReceiver(new RLOGServer());
@@ -46,6 +45,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    // Logger.getInstance().record();
   }
 
   @Override

@@ -21,7 +21,6 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.util.*;
 
-@AutoLog
 public class Pivot extends SubsystemBase {
     MotionMagicVoltage mm = new MotionMagicVoltage(0);
     private final TalonFX motor = new TalonFX(RobotMap.AlgaePivot.ALGAE_PIVOT);

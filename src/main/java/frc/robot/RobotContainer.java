@@ -56,6 +56,22 @@ public class RobotContainer {
   Vision vision = new Vision(drivetrain);
   Climb climb = new Climb();
 
+  public Climb getClimb() {
+    return climb;    
+}
+public Elevator getElevator() {
+  return elevator;
+}
+public Outtake getOuttake() {
+  return outtake;
+}
+public Intake getIntake() {
+  return intake;
+}
+public Pivot getPivot() {
+  return pivot;
+}
+
   public final AutoFactory autoFactory;
 
   double speedMultiplier = 1.0;

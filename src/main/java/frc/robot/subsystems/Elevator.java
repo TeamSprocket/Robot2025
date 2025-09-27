@@ -1,6 +1,8 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -20,6 +22,7 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.util.Util;
 import frc.util.Alert;
+
 
 public class Elevator extends SubsystemBase {
 
@@ -41,7 +44,7 @@ public class Elevator extends SubsystemBase {
         ALGAE_REMOVE_3
     }
 
-    private ElevatorStates state = ElevatorStates.NONE;
+    ElevatorStates state = ElevatorStates.NONE;
     
     private final SendableChooser<ElevatorStates> stateChooser = new SendableChooser<>();
 
@@ -93,6 +96,9 @@ public class Elevator extends SubsystemBase {
                 moveToHeight(Constants.Elevator.kHeightAlgaeRemove3);
                 break;
         }
+        Logger.recordOutput("Elevator/Position", elevatorMotor.getPosition().getValueAsDouble());
+        Logger.recordOutput("Elevator/Voltage", elevatorMotor.getMotorVoltage().getValueAsDouble());
+        Logger.recordOutput("Elevator/Current", elevatorMotor.getStatorCurrent().getValueAsDouble());
 
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValueAsDouble());
         SmartDashboard.putString("Elevator State", state.toString());
