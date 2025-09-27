@@ -58,11 +58,11 @@ public class RobotContainer {
 
   public final AutoFactory autoFactory;
 
-  double speedMultiplier = 0.5;
+  double speedMultiplier = 0.8;
   Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot, climb);
 
   // ------- Swerve Generated -------
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)*0.6; // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.5).in(RadiansPerSecond); //(0.75) 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -138,7 +138,6 @@ public class RobotContainer {
     );
 
     driver.a().onTrue(new InstantCommand(()-> vision.resetAlignPoseMT1()));
-
     driver.a().onFalse(new InstantCommand(()-> vision.IMUMode()));
    
     driver.b().whileTrue(drivetrain.applyRequest(() ->
@@ -156,12 +155,12 @@ public class RobotContainer {
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
     // driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.rightBumper().whileTrue(drivetrain.applyRequest(
-      () -> new ApplyFieldSpeeds()
-        .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRightMP()[0], vision.getAlignOffsetsRightMP()[1], vision.getRotationalAlignSpeedRightMP()))
-    ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
-    .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
-    driver.rightBumper().onFalse(drivetrain.applyRequest(()-> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    // driver.rightBumper().whileTrue(drivetrain.applyRequest(
+    //   () -> new ApplyFieldSpeeds()
+    //     .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRightMP()[0], vision.getAlignOffsetsRightMP()[1], vision.getRotationalAlignSpeedRightMP()))
+    // ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
+    // .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    // driver.rightBumper().onFalse(drivetrain.applyRequest(()-> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
     driver.x().onTrue(new InstantCommand(()-> vision.resetAlignPose()));
@@ -398,7 +397,6 @@ public class RobotContainer {
         new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
-
         traj1.cmd()
       )
     );

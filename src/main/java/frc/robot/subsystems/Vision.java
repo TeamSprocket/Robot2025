@@ -44,13 +44,13 @@ public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
     StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
-    private TrapezoidProfile.Constraints m_contraints = new TrapezoidProfile.Constraints(Constants.Vision.kMaxDrivingSpeed,0.5);
+    private TrapezoidProfile.Constraints m_contraints = new TrapezoidProfile.Constraints(Constants.Vision.kMaxDrivingSpeed,0.1);
 
     private PIDController pidRotationAlign = new PIDController(4.5, 0, 0); //4.5 0 0
     private PIDController pidXAlign = new PIDController(3.0, 0, 0); //3.0 0 0
     private PIDController pidYAlign = new PIDController(3.0, 0, 0); //3.0 0 0
 
-    private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0);
+    private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0.02);
     private ProfiledPIDController pidXAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
     private ProfiledPIDController pidYAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
 
@@ -134,7 +134,6 @@ public class Vision extends SubsystemBase {
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
             visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
 
         }
 
@@ -242,6 +241,7 @@ public class Vision extends SubsystemBase {
             Pose2d tag = getClosestTag();
             double distance = Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2));
             if (distance < maxDistance) {
+                drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
                 // drivetrain.resetPose(estimate.pose);
                 // drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(1 - ((Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2))) / maxDistance),1 - ((Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2))) / maxDistance),0.9999999));
                 // System.out.println("UDPATING");
@@ -518,7 +518,7 @@ public class Vision extends SubsystemBase {
 
     //isnt used right now
     public void IMUMode(){
-    if(IMUMode2 == false){
+    if(IMUMode2 == false && LimelightHelper.getTV(name)){
             IMUMode2 = true;
             LimelightHelper.SetIMUMode(name, 2);
         }
@@ -534,21 +534,22 @@ public class Vision extends SubsystemBase {
     if(distToAprilTag()>Constants.Vision.apriltagMinSpeed && distToAprilTag() <= 1){
         stdDevX = 0.07;
         stdDevY = 0.07;
-        stdDevTheta = 0.05;
+        stdDevTheta = 2;
     }
     if(distToAprilTag()> 1 && distToAprilTag() <= 2){
-        stdDevX = 0.2;
-        stdDevY = 0.2;
-        stdDevTheta = 0.75;
+        stdDevX = 0.07;
+        stdDevY = 0.07;
+        stdDevTheta = 2;
     }
     if(distToAprilTag()>2 && distToAprilTag() <= 5){
-        stdDevX = 0.8;
-        stdDevY = 0.8;
+        stdDevX = 0.07;
+        stdDevY = 0.07;
         stdDevTheta = 2;
     }else{
         stdDevX = 0;
         stdDevY = 0;
         stdDevTheta = 9999999;
+        
     }
 
     double[] values = {stdDevX,stdDevY,stdDevTheta};
