@@ -213,7 +213,7 @@ public class Vision extends SubsystemBase {
     public Pose2d getTargetTagLeft() {
         //CHECK IF SAME FOR RED AND BLUE
         Pose2d targetTag = getClosestTag();
-        Pose2d targetPose = new Pose2d(targetTag.getX() + Constants.Vision.offset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getY() + Constants.Vision.offset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
+        Pose2d targetPose = new Pose2d(targetTag.getX() + (Constants.Vision.offset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2)+ moveBackXY()[0]), targetTag.getY() + (Constants.Vision.offset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2)+ moveBackXY()[0]), targetTag.getRotation());
         return targetPose;
     }
 
@@ -225,10 +225,43 @@ public class Vision extends SubsystemBase {
      */
     public Pose2d getTargetTagRight() {
         Pose2d targetTag = getClosestTag();
-        Pose2d targetPose = new Pose2d(targetTag.getX() - Constants.Vision.offset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getY() - Constants.Vision.offset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2), targetTag.getRotation());
+        Pose2d targetPose = new Pose2d(targetTag.getX() - (Constants.Vision.offset*Math.cos(targetTag.getRotation().getRadians()+Math.PI/2)+ moveBackXY()[0]), targetTag.getY() - (Constants.Vision.offset*Math.sin(targetTag.getRotation().getRadians()+Math.PI/2)+moveBackXY()[1]), targetTag.getRotation());
         return targetPose;
     }
     
+
+    public double[] moveBackXY(){
+       double angle = getClosestTag().getRotation().getDegrees();
+       double xDist = Math.abs(Constants.Vision.kDistanceAway * Math.cos(angle));
+       double yDist = Math.abs(Constants.Vision.kDistanceAway * Math.sin(angle));
+       
+       if(angle == 0){
+         xDist = -xDist;
+         yDist = 0.0;
+       }
+       if(angle == 60){
+         xDist = -xDist;
+         yDist = -yDist;
+       }
+       if(angle == 120){
+        yDist = -yDist;
+       }
+       if(angle == 180){
+        yDist = 0.0;
+
+       }
+       if(angle == 300){
+        xDist = -xDist;
+        
+       }
+
+
+       double[] values = {xDist, yDist};
+       return values;
+        
+    }
+
+
     
     /**
      * this method updates the pose which the robot wants to align to using a kalman filter with vision and odometry inputs

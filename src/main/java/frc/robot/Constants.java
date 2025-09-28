@@ -32,8 +32,10 @@ public final class Constants {
 
     public static final double kAcceptableVolatilityThreshold = 0.2;
 
-    public static final double kMaxDrivingSpeed = 1.0;
+    public static final double kMaxDrivingSpeed = 0.4;
     public static final double kMaxTurningSpeed = 0.1;
+
+    public static final double kDistanceAway = 2;
 
     public static final int kVolatilitySlidingWindowLen = 20;
 
