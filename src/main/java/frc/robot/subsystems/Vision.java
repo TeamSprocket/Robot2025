@@ -235,25 +235,17 @@ public class Vision extends SubsystemBase {
        double xDist = Math.abs(Constants.Vision.kDistanceAway * Math.cos(angle));
        double yDist = Math.abs(Constants.Vision.kDistanceAway * Math.sin(angle));
        
-       if(angle == 0){
+       if(angle == 0 || angle == 60 || angle ==300){
          xDist = -xDist;
-         yDist = 0.0;
-       }
-       if(angle == 60){
-         xDist = -xDist;
+       };
+       if(angle == 60 || angle == 120){
          yDist = -yDist;
-       }
-       if(angle == 120){
-        yDist = -yDist;
-       }
+       };
        if(angle == 180){
         yDist = 0.0;
+       };
 
-       }
-       if(angle == 300){
-        xDist = -xDist;
-        
-       }
+
 
 
        double[] values = {xDist, yDist};
