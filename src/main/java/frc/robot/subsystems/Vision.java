@@ -275,37 +275,37 @@ public class Vision extends SubsystemBase {
     }
     
 
-    public double[] moveBackXY(){
-       double angle = getClosestTag().getRotation().getDegrees();
-       double angleCalc = getClosestTag().getRotation().getRadians();
-       double xDist = Math.abs(Constants.Vision.kDistanceAway * Math.cos(angleCalc));
-       double yDist = Math.abs(Constants.Vision.kDistanceAway * Math.sin(angleCalc));
+    // public double[] moveBackXY(){
+    //    double angle = getClosestTag().getRotation().getDegrees();
+    //    double angleCalc = getClosestTag().getRotation().getRadians();
+    //    double xDist = Math.abs(Constants.Vision.kDistanceAway * Math.cos(angleCalc));
+    //    double yDist = Math.abs(Constants.Vision.kDistanceAway * Math.sin(angleCalc));
        
-       if(angle == 0){
-         xDist = -xDist;
-         yDist = 0.0;
-       }
-       if(angle == 60){
-         xDist = -xDist;
-         yDist = -yDist;
-       }
-       if(angle == 120){
-        yDist = -yDist;
-       }
-       if(angle == 180){
-        yDist = 0.0;
+    //    if(angle == 0){
+    //      xDist = -xDist;
+    //      yDist = 0.0;
+    //    }
+    //    if(angle == 60){
+    //      xDist = -xDist;
+    //      yDist = -yDist;
+    //    }
+    //    if(angle == 120){
+    //     yDist = -yDist;
+    //    }
+    //    if(angle == 180){
+    //     yDist = 0.0;
 
-       }
-       if(angle == 300){
-        xDist = -xDist;
+    //    }
+    //    if(angle == 300){
+    //     xDist = -xDist;
         
-       }
+    //    }
 
 
-       double[] values = {xDist, yDist};
-       return values;
+    //    double[] values = {xDist, yDist};
+    //    return values;
         
-    }
+    // }
 
 
     
@@ -338,59 +338,46 @@ public class Vision extends SubsystemBase {
      * 
      * @see getClosestTag();
      */
-    public void resetAlignPose() {
-        if (LimelightHelper.getTV(name)) {
-            // var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            Pose2d tag = getClosestTagUpdate(); //getClosestTagEstimate()
-            if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance) {
-                drivetrain.resetPose(visionEstimate.pose);
-                // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
-            }
-        }
-        if (LimelightHelper.getTV(name2)) {
-            // var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            Pose2d tag = getClosestTagUpdate(); //getClosestTagEstimate()
-            if (Math.sqrt(Math.pow(tag.getX()-visionEstimateB.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimateB.pose.getY(), 2)) < maxDistance) {
-                drivetrain.resetPose(visionEstimateB.pose);
-                // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
-            }
-        }
-    }
+    // public void resetAlignPose() {
+    //     if (LimelightHelper.getTV(name)) {
+    //         // var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+    //         Pose2d tag = getClosestTagUpdate(); //getClosestTagEstimate()
+    //         if (Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance) {
+    //             drivetrain.resetPose(visionEstimate.pose);
+    //             // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
+    //         }
+    //     }
+    //     if (LimelightHelper.getTV(name2)) {
+    //         // var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+    //         Pose2d tag = getClosestTagUpdate(); //getClosestTagEstimate()
+    //         if (Math.sqrt(Math.pow(tag.getX()-visionEstimateB.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimateB.pose.getY(), 2)) < maxDistance) {
+    //             drivetrain.resetPose(visionEstimateB.pose);
+    //             // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
+    //         }
+    //     }
+    // }
 
     public void resetAlignPoseMT1() {
         if (LimelightHelper.getTV(name)) {
             var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            Pose2d tag = getClosestTagUpdate(); //getClosestTagEstimate()
-            if ((Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimate.pose.getY(), 2)) < maxDistance)&&(drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI)) {
-                drivetrain.resetPose(LLMeasurment.pose);
-                drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
-                // LimelightHelper.SetIMUMode(name, 2);
-                
-                // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
-            }
+            drivetrain.resetPose(LLMeasurment.pose);
+            drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
         }
+        
 
-        if (LimelightHelper.getTV(name2)) {
+        else if (LimelightHelper.getTV(name2)) {
             var LLMeasurment2 = LimelightHelper.getBotPoseEstimate_wpiBlue(name2);
-            Pose2d tag = getClosestTagUpdate(); //getClosestTagEstimate()
-            if ((Math.sqrt(Math.pow(tag.getX()-visionEstimateB.pose.getX(), 2) + Math.pow(tag.getY() - visionEstimateB.pose.getY(), 2)) < maxDistance)&&(drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI)) {
-                drivetrain.resetPose(LLMeasurment2.pose);
-                drivetrain.getPigeon2().setYaw(LLMeasurment2.pose.getRotation().getDegrees());
-                // LimelightHelper.SetIMUMode(name, 2);
-                
-                // drivetrain.addVisionMeasurement(LLMeasurment.pose, LLMeasurment.timestampSeconds);
-            }
+            drivetrain.resetPose(LLMeasurment2.pose);
+            drivetrain.getPigeon2().setYaw(LLMeasurment2.pose.getRotation().getDegrees());
         }
     }
+    
     
     public void resetGyroMT1(){
         var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
         if((distToAprilTag() < 1.1) && (speed() < 3) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI )){
                 drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
-                System.out.println("YIPPEE YIPPEEE YIPPEEE YIPPEEE YIPPEEEE");
-            }else System.out.println("ERIC AND ZACK SITTING ON A TREE, K-I-SS-I-N-G");
-    
-    
+            };
     }
    
 
@@ -466,11 +453,6 @@ public class Vision extends SubsystemBase {
         if (Util.inRange(veloY, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
             veloY = 0.0;
         }
-
-        // if (reachedGoalP()) {
-        //     veloX = 0.0;
-        //     veloY = 0.0;
-        // }
         
         double[] values = {
           veloX, veloY
@@ -505,48 +487,8 @@ public class Vision extends SubsystemBase {
             veloY = 0.0;
         }
 
-        // if (reachedGoalP()) {
-        //     veloX = 0.0;
-        //     veloY = 0.0;
-        // }
-
         double[] values = {
             veloX, veloY
-        };
-        return values;
-      }
-
-
-
-
-
-      public double[] getAlignOffsetsRightMP() {
-        double veloX = pidXAlign_MP.calculate(drivetrain.getState().Pose.getX(), getTargetTagRight().getX());
-        double veloY = pidYAlign_MP.calculate(drivetrain.getState().Pose.getY(), getTargetTagRight().getY());
-
-        if (!Util.inRange(veloX, -maxSpeed, maxSpeed)) {
-            veloX = (veloX / Math.abs(veloX)) * maxSpeed;
-        }
-
-        if (!Util.inRange(veloY, -maxSpeed, maxSpeed)) {
-            veloY = (veloY / Math.abs(veloY)) * maxSpeed;
-        }
-
-        if (Util.inRange(veloX, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
-            veloX = 0.0;
-        }
-
-        if (Util.inRange(veloY, -Constants.Vision.apriltagMinSpeed, Constants.Vision.apriltagMinSpeed)) {
-            veloY = 0.0;
-        }
-
-        // if (reachedGoalP()) {
-        //     veloX = 0.0;
-        //     veloY = 0.0;
-        // }
-        
-        double[] values = {
-          veloX, veloY
         };
         return values;
       }
@@ -571,29 +513,6 @@ public class Vision extends SubsystemBase {
         }
         return targetSpeed;
       }
-
-
-
-
-
-
-      public double getRotationalAlignSpeedRightMP() {
-        pidRotationAlign_MP.enableContinuousInput(0, 2*Math.PI);
-        double currentRotation = drivetrain.getState().Pose.getRotation().getRadians();
-        double targetRotation = getTargetTagRight().getRotation().getRadians();
-
-        double targetSpeed = pidRotationAlign_MP.calculate(currentRotation, targetRotation);
-        // if (targetSpeed < 0.05) {
-        //     targetSpeed = 0.0;
-        // }
-        if (reachedGoalR()) {
-            targetSpeed = 0.0;
-        }
-        return targetSpeed;
-      }
-
-
-
 
       /**
        * this method gets the rotational speed to align to the left of the tag
@@ -651,30 +570,6 @@ public class Vision extends SubsystemBase {
     //         LimelightHelper.SetIMUMode(name, 2);
     //     }
     // }
-
-    public boolean reachedGoalP() {
-        if (currentAlignState == AlignStates.ALIGNING_L) {
-            if (Math.sqrt(Math.pow(getTargetTagLeft().getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(getTargetTagLeft().getY()-drivetrain.getState().Pose.getY(), 2)) < 0.025) {
-                return true;
-            }
-        } else if (currentAlignState == AlignStates.ALIGNING_R) {
-            if (Math.sqrt(Math.pow(getTargetTagRight().getX()-drivetrain.getState().Pose.getX(), 2) + Math.pow(getTargetTagRight().getY()-drivetrain.getState().Pose.getY(), 2)) < 0.025) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean reachedGoalR() {
-        if (currentAlignState == AlignStates.ALIGNING_L || currentAlignState == AlignStates.ALIGNING_R) {
-            if (Math.abs(getTargetTagLeft().getRotation().getDegrees()-drivetrain.getState().Pose.getRotation().getDegrees()) <= 5) {
-                return true;
-            }
-        } 
-        return false;
-    }
-    
-
 
     public double[] stdDevConstant() {
         double stdDevX = 0.25;

@@ -80,9 +80,9 @@ public class RobotContainer {
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
-  double alignTimeout = 1.25; //TUNE ALSO LOWER
-  double intakeTimeout = 2.0; //TUNE
-  double scoreTimeout = 0.6; //TUNE ALSO LOWER
+  double alignTimeout = 0.60; // 1.25
+  double intakeTimeout = 1.0; //2.0
+  double scoreTimeout = 0.6; //0.6
 
   public RobotContainer() {
     autoFactory = new AutoFactory(
@@ -139,10 +139,10 @@ public class RobotContainer {
 
     driver.a().onTrue(new InstantCommand(()-> vision.resetAlignPoseMT1()));
     // driver.a().onFalse(new InstantCommand(()-> vision.IMUMode()));
-   
-    driver.b().whileTrue(drivetrain.applyRequest(() ->
-        point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
-    ));
+    driver.b().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
+    // driver.b().whileTrue(drivetrain.applyRequest(() ->
+    //     point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
+    // ));
 
 
 
@@ -164,8 +164,8 @@ public class RobotContainer {
     // .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
     // driver.rightBumper().onFalse(drivetrain.applyRequest(()-> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
-    driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
-    driver.x().onTrue(new InstantCommand(()-> vision.resetAlignPose()));
+    
+    // driver.x().onTrue(new InstantCommand(()-> vision.resetAlignPose()));
 
     driver.rightTrigger()
     .whileTrue(
@@ -175,7 +175,7 @@ public class RobotContainer {
       ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_R))))
       .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)));
 
-    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.25, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     driver.leftTrigger()
     .whileTrue(
@@ -185,7 +185,7 @@ public class RobotContainer {
         ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_L))))
     .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)));
 
-    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.25, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     driver.back()
     .whileTrue(
@@ -431,7 +431,7 @@ public class RobotContainer {
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
         superstructure.setState(SSStates.OUTTAKE),
-        new WaitCommand(1),
+        new WaitCommand(0.4),
         superstructure.setState(SSStates.STOWED)
       );
   }
@@ -444,7 +444,7 @@ public class RobotContainer {
         new WaitUntilCommand(() -> elevator.atSetpoint()),
         new WaitCommand(0.1),
         superstructure.setState(SSStates.OUTTAKE),
-        new WaitCommand(1),
+        new WaitCommand(0.4),
         superstructure.setState(SSStates.STOWED)
     );
   }
