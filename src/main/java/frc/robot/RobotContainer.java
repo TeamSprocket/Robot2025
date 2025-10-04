@@ -144,6 +144,8 @@ public class RobotContainer {
         point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
     ));
 
+
+
     driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.5, 0.0, 0.0))));
     driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))));
     driver.povRight().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, -0.5, 0.0))));
@@ -184,6 +186,14 @@ public class RobotContainer {
     .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)));
 
     driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.45).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+
+    driver.back()
+    .whileTrue(
+      drivetrain.applyRequest(
+        () -> new ApplyFieldSpeeds()
+          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsSource()[0], vision.getAlignOffsetsSource()[1], vision.getRotationalAlignSpeedSource()))
+        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING))))
+    .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
     // --------------------=Operator=--------------------
 
