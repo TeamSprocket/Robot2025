@@ -317,10 +317,10 @@ public class RobotContainer {
       )
     );
 
-    traj1.done().onTrue(scoreL4Left().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
-    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
-    traj3.done().onTrue(scoreL4Right().andThen(traj4.resetOdometry()).andThen(traj4.cmd()));
-    traj4.done().onTrue(intake().andThen(traj5.resetOdometry()).andThen(traj5.cmd()));
+    traj1.done().onTrue(scoreL4Left().andThen(traj2.cmd()));//.andThen(traj2.resetOdometry())
+    traj2.done().onTrue(intake().andThen(traj3.cmd()));//.andThen(traj3.resetOdometry())
+    traj3.done().onTrue(scoreL4Right().andThen(traj4.cmd()));//.andThen(traj4.resetOdometry())
+    traj4.done().onTrue(intake().andThen(traj5.cmd()));//.andThen(traj5.resetOdometry())
     traj5.done().onTrue(scoreL4Left());
   
     return routine;
@@ -341,8 +341,8 @@ public class RobotContainer {
       )
     );
 
-    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
-    traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
+    traj1.done().onTrue(scoreL4Right().andThen(traj2.cmd()));//.andThen(traj2.resetOdometry())
+    traj2.done().onTrue(intake().andThen(traj3.cmd()));//andThen(traj3.resetOdometry()).
     traj3.done().onTrue(scoreL4Right());
   
     return routine;
