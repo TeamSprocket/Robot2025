@@ -80,7 +80,7 @@ public class RobotContainer {
 
   public SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
-  double alignTimeout = 0.60; // 1.25
+  double alignTimeout = 1.0; // 1.25
   double intakeTimeout = 1.0; //2.0
   double scoreTimeout = 0.6; //0.6
 
@@ -102,17 +102,17 @@ public class RobotContainer {
     autoChooser = new AutoChooser();
 
     //---------universal-------------
-    autoChooser.addRoutine("STL_LEAVE", this::STL_LEAVE);
-    autoChooser.addRoutine("STM_LEAVE", this::STM_LEAVE);
-    autoChooser.addRoutine("STR_LEAVE", this::STR_LEAVE);
+    // autoChooser.addRoutine("STL_LEAVE", this::STL_LEAVE);
+    // autoChooser.addRoutine("STM_LEAVE", this::STM_LEAVE);
+    // autoChooser.addRoutine("STR_LEAVE", this::STR_LEAVE);
 
     //---------champs---------
     autoChooser.addRoutine("right2CoralAuton", this::right2CoralAuton);
-    autoChooser.addRoutine("CENTER_LEFT", this::CENTER_LEFT);
+    // autoChooser.addRoutine("CENTER_LEFT", this::CENTER_LEFT);
     autoChooser.addRoutine("left2CoralAuton", this::left2CoralAuton);
 
     //---------test----------
-    // autoChooser.addRoutine("testPID", this::testPID);
+    autoChooser.addRoutine("testPID", this::testPID);
     // autoChooser.addRoutine("2mf", this::twometerforward);
     // autoChooser.addRoutine("2mft", this::twometerforwardturn);
 
@@ -252,80 +252,83 @@ public class RobotContainer {
 
   // ---------------------auton routines-------------------------
 
-  public AutoRoutine STL_LEAVE() {
-    AutoRoutine routine = autoFactory.newRoutine("STL_LEAVE"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STL_LEAVE"); //LOAD ALL PATHS HERE
+  // public AutoRoutine STL_LEAVE() {
+  //   AutoRoutine routine = autoFactory.newRoutine("STL_LEAVE"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("STL_LEAVE"); //LOAD ALL PATHS HERE
 
 
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
-        traj1.cmd()
-      )
-    );
-    return routine;
-  }
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+  //   return routine;
+  // }
 
-  public AutoRoutine STM_LEAVE() {
-    AutoRoutine routine = autoFactory.newRoutine("STM_LEAVE"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STM_LEAVE"); //LOAD ALL PATHS HERE
-
-
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
-        traj1.cmd()
-      )
-    );
-    return routine;
-  }
-
-  public AutoRoutine STR_LEAVE() {
-    AutoRoutine routine = autoFactory.newRoutine("STR_LEAVE"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STR_LEAVE"); //LOAD ALL PATHS HERE
+  // public AutoRoutine STM_LEAVE() {
+  //   AutoRoutine routine = autoFactory.newRoutine("STM_LEAVE"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("STM_LEAVE"); //LOAD ALL PATHS HERE
 
 
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
-        traj1.cmd()
-      )
-    );
-    return routine;
-  }
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+  //   return routine;
+  // }
+
+  // public AutoRoutine STR_LEAVE() {
+  //   AutoRoutine routine = autoFactory.newRoutine("STR_LEAVE"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("STR_LEAVE"); //LOAD ALL PATHS HERE
+
+
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
+  //   return routine;
+  // }
 
   public AutoRoutine right2CoralAuton() { 
     AutoRoutine routine = autoFactory.newRoutine("right2CoralAuton"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STB_BR"); //LOAD ALL PATHS HERE
-    AutoTrajectory traj2 = routine.trajectory("BRR_SR");
+    AutoTrajectory traj1 = routine.trajectory("STR_BR"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj2 = routine.trajectory("BRL_SR");
     AutoTrajectory traj3 = routine.trajectory("SR_FR");
+    AutoTrajectory traj4 = routine.trajectory("FRR_SR");
+    AutoTrajectory traj5 = routine.trajectory("SR_FR");
 
     routine.active().onTrue(
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
-
         traj1.cmd()
       )
     );
 
     traj1.done().onTrue(scoreL4Left().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
     traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
-    traj3.done().onTrue(scoreL4Right());
+    traj3.done().onTrue(scoreL4Right().andThen(traj4.resetOdometry()).andThen(traj4.cmd()));
+    traj4.done().onTrue(intake().andThen(traj5.resetOdometry()).andThen(traj5.cmd()));
+    traj5.done().onTrue(scoreL4Left());
   
     return routine;
   }
 
   public AutoRoutine left2CoralAuton() { 
     AutoRoutine routine = autoFactory.newRoutine("left2CoralAuton"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("STM_BL"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj1 = routine.trajectory("STL_BL"); //LOAD ALL PATHS HERE
     AutoTrajectory traj2 = routine.trajectory("BLR_SL");
     AutoTrajectory traj3 = routine.trajectory("SL_FL");
 
@@ -338,7 +341,7 @@ public class RobotContainer {
       )
     );
 
-    traj1.done().onTrue(scoreL4Left().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
+    traj1.done().onTrue(scoreL4Right().andThen(traj2.resetOdometry()).andThen(traj2.cmd()));
     traj2.done().onTrue(intake().andThen(traj3.resetOdometry()).andThen(traj3.cmd()));
     traj3.done().onTrue(scoreL4Right());
   
@@ -362,65 +365,65 @@ public class RobotContainer {
     return routine;
   }
 
-  public AutoRoutine CENTER_LEFT() {
-    AutoRoutine routine = autoFactory.newRoutine("CENTER_LEFT"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
+  // public AutoRoutine CENTER_LEFT() {
+  //   AutoRoutine routine = autoFactory.newRoutine("CENTER_LEFT"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("ST_FIELD_MIDDLE_LEAVE"); //LOAD ALL PATHS HERE
 
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
 
-        traj1.cmd()
-      )
-    );
+  //       traj1.cmd()
+  //     )
+  //   );
 
-    traj1.done().onTrue(scoreL4Left());
+  //   traj1.done().onTrue(scoreL4Left());
 
-    return routine;
-  }
+  //   return routine;
+  // }
 
-  public AutoRoutine twometerforward() {
-    AutoRoutine routine = autoFactory.newRoutine("2mf"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("2mforward"); //LOAD ALL PATHS HERE
+  // public AutoRoutine twometerforward() {
+  //   AutoRoutine routine = autoFactory.newRoutine("2mf"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("2mforward"); //LOAD ALL PATHS HERE
 
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
 
-        traj1.cmd()
-      )
-    );
+  //       traj1.cmd()
+  //     )
+  //   );
 
-    return routine;
-  }
+  //   return routine;
+  // }
 
-  public AutoRoutine twometerforwardturn() {
-    AutoRoutine routine = autoFactory.newRoutine("2mft"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("2mforwardturn"); //LOAD ALL PATHS HERE
+  // public AutoRoutine twometerforwardturn() {
+  //   AutoRoutine routine = autoFactory.newRoutine("2mft"); //ROUTINE NAME
+  //   AutoTrajectory traj1 = routine.trajectory("2mforwardturn"); //LOAD ALL PATHS HERE
 
-    routine.active().onTrue(
-      Commands.sequence(
-        new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
-        superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
-        traj1.cmd()
-      )
-    );
+  //   routine.active().onTrue(
+  //     Commands.sequence(
+  //       new InstantCommand(()->vision.setAlignState(AlignStates.NONE)),
+  //       superstructure.setState(SSStates.STOWED),
+  //       traj1.resetOdometry(),
+  //       traj1.cmd()
+  //     )
+  //   );
 
-    return routine;
-  }
+  //   return routine;
+  // }
 
   // ---------------auton commands--------------
   public Command alignLeft() {
-    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_L))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+    return choreoAlignLeft().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command alignRight() {
-    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING_R))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+    return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
 
   public Command scoreL4Left() {

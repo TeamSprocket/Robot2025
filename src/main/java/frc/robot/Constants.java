@@ -73,8 +73,8 @@ public final class Constants {
     // public static final Pose2d Red10 = new Pose2d(12.080918312072754 , 4.028757572174072 , Rotation2d.fromDegrees(0));
     // public static final Pose2d Red11 = new Pose2d(12.585830459594726 , 3.174359083175659  , Rotation2d.fromDegrees(60));
 
-    public static final double offsetL = 0.17; //0.172
-    public static final double offsetR = 0.128; //0.110
+    public static final double offsetL = 0.172; //0.17
+    public static final double offsetR = 0.126; //0.110
 
     public static final double kFFAlignSpeed = 2.5;
 
@@ -146,7 +146,7 @@ public final class Constants {
     public static final double kHeightCoral1 = 0.0;
     public static final double kHeightCoral2 = 1.52; //1.65
     public static final double kHeightCoral3 = 3.15; //3.4
-    public static final double kHeightCoral4 = 5.75; //5.775
+    public static final double kHeightCoral4 = 5.5; //5.775
 
     public static final double kHeightAlgaeRemove2 = 1.1; //1
     public static final double kHeightAlgaeRemove3 = 2.8; //2.7
