@@ -47,8 +47,8 @@ public class Vision extends SubsystemBase {
     private TrapezoidProfile.Constraints m_contraints = new TrapezoidProfile.Constraints(Constants.Vision.kMaxDrivingSpeed,0.1);
 
     private PIDController pidRotationAlign = new PIDController(5.0, 0, 0); //4.5 0 0
-    private PIDController pidXAlign = new PIDController(1.75, 0, 0.001); //2.75 0 0
-    private PIDController pidYAlign = new PIDController(1.75, 0, 0.001); //2.75 0 0
+    private PIDController pidXAlign = new PIDController(1.25, 0, 0.001); //1.75 0 0
+    private PIDController pidYAlign = new PIDController(1.25, 0, 0.001); //1.75 0 0
 
     private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0.02);
     private ProfiledPIDController pidXAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
@@ -83,7 +83,7 @@ public class Vision extends SubsystemBase {
     int counter = 0;
     int tagOutside = 1;
 
-    double maxSpeed = 0.75;
+    double maxSpeed = 0.85; //0.75
 
     // double moveForwardAlignDisplacement = 0.9;
 
@@ -102,7 +102,7 @@ public class Vision extends SubsystemBase {
     double distToAprilRight = 0.0;
     boolean updateFirst = true;
 
-    double maxDistance = 1.85;
+    double maxDistance = 2.00;
 
     double fiducialID;
 
@@ -114,7 +114,7 @@ public class Vision extends SubsystemBase {
         timer.reset();
         timer.start();
         drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0,0,0));
-        LimelightHelper.SetIMUMode(name, 1);
+        // LimelightHelper.SetIMUMode(name, 1);
         ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
         ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
     }
