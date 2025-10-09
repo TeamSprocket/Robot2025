@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Constants;
+import frc.robot.RobotMap.Drivetrain;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.*;
 
@@ -58,8 +59,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     SwerveDriveKinematics m_kinematics;
 
-    private PIDController C_PID_Translation = new PIDController(2.00, 0.0, 0.00); //0.55 0 0.01
-    private PIDController C_PID_Rotation = new PIDController(1.4, 0, 0);  //15 0 0      30 0 1 // 1.35
+    private PIDController C_PID_Translation = new PIDController(5, 0.0, 0.001); //0.55 0 0.01
+    private PIDController C_PID_Rotation = new PIDController(1.75, 0, 0);  //15 0 0      30 0 1 // 1.35
 
     private double pathX = 0.0;
     private double pathY = 0.0;
