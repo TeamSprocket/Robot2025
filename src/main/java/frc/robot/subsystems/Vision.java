@@ -47,8 +47,8 @@ public class Vision extends SubsystemBase {
     private TrapezoidProfile.Constraints m_contraints = new TrapezoidProfile.Constraints(Constants.Vision.kMaxDrivingSpeed,0.1);
 
     private PIDController pidRotationAlign = new PIDController(5.0, 0, 0); //4.5 0 0
-    private PIDController pidXAlign = new PIDController(1.3, 0, 0.001); //1.75 0 0
-    private PIDController pidYAlign = new PIDController(1.3, 0, 0.001); //1.75 0 0
+    private PIDController pidXAlign = new PIDController(1.5, 0, 0.001); //1.3 0 0
+    private PIDController pidYAlign = new PIDController(1.5, 0, 0.001); //1.3 0 0
 
     private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0.02);
     private ProfiledPIDController pidXAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
