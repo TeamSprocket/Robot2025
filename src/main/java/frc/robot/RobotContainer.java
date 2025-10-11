@@ -300,6 +300,7 @@ public class RobotContainer {
   //   return routine;
   // }
 
+  // DON't USE THIS FOR SOCAL SHOWDOWN
   public AutoRoutine right2CoralAuton() { 
     AutoRoutine routine = autoFactory.newRoutine("right2CoralAuton"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STR_BR"); //LOAD ALL PATHS HERE
@@ -325,7 +326,7 @@ public class RobotContainer {
   
     return routine;
   }
-
+  //DON'T USE THIS FOR SOCAL SHOWDOWN
   public AutoRoutine left2CoralAuton() { 
     AutoRoutine routine = autoFactory.newRoutine("left2CoralAuton"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STL_BL"); //LOAD ALL PATHS HERE
@@ -348,6 +349,9 @@ public class RobotContainer {
     return routine;
   }
 
+
+ 
+  //USE THESE FOR SOCAL SHOWDOWN
   public AutoRoutine left2Vision() { 
     AutoRoutine routine = autoFactory.newRoutine("left2Vision"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STL_BL"); //LOAD ALL PATHS HERE
@@ -357,7 +361,7 @@ public class RobotContainer {
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
-        scoreL4RightVision(1.5).andThen(alignSource(4.0).andThen(scoreL4RightVision(1.5).andThen(alignSource(3.5).andThen(scoreL4LeftVision(1.5)))))
+        scoreL4RightVision(2.5).andThen(alignSource(4.0).andThen(scoreL4RightVision(2.5).andThen(alignSource(3.5).andThen(scoreL4LeftVision(2.5)))))
 
       )
     );
@@ -375,6 +379,22 @@ public class RobotContainer {
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
         scoreL4LeftVision(2.5).andThen(alignSource(4.0).andThen(scoreL4LeftVision(2.5).andThen(alignSource(3.5).andThen(scoreL4RightVision(2.5)))))
+
+      )
+    );
+  
+    return routine;
+  }
+  public AutoRoutine middleVision() { 
+    AutoRoutine routine = autoFactory.newRoutine("right2Vision"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STM_MR"); //LOAD ALL PATHS HERE
+
+    routine.active().onTrue(
+      Commands.sequence(
+        new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
+        superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
+        scoreL4RightVision(2.5)
 
       )
     );
@@ -525,6 +545,12 @@ public class RobotContainer {
         superstructure.setState(SSStates.STOWED)
     ).alongWith(Commands.waitSeconds(1.0).andThen(superstructure.setState(SSStates.STOWED)));
   }
+
+
+
+
+
+
 
   public Command alignSource(double timeout) {
     return alignSourceCommand(timeout).alongWith(Commands.waitSeconds(2.0).andThen(superstructure.setState(SSStates.INTAKE)));
