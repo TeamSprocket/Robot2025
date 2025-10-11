@@ -73,7 +73,7 @@ public final class Constants {
     // public static final Pose2d Red10 = new Pose2d(12.080918312072754 , 4.028757572174072 , Rotation2d.fromDegrees(0));
     // public static final Pose2d Red11 = new Pose2d(12.585830459594726 , 3.174359083175659  , Rotation2d.fromDegrees(60));
 
-    public static final double offsetL = 0.172; //0.17
+    public static final double offsetL = 0.185; //0.17
     public static final double offsetR = 0.126; //0.110
 
     public static final double kFFAlignSpeed = 2.5;
