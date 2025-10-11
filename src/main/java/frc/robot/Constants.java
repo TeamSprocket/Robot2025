@@ -47,7 +47,7 @@ public final class Constants {
     public static final Pose2d Blue20 = new Pose2d(4.904739999999999 , 4.740402 , Rotation2d.fromDegrees(240));
     public static final Pose2d Blue21 = new Pose2d(5.321046 , 4.0208200000000005 , Rotation2d.fromDegrees(180));
     public static final Pose2d Blue22 = new Pose2d(4.905 , 3.301, Rotation2d.fromDegrees(120)); 
-    public static final Pose2d BlueSource1 = new Pose2d(0.9463551640510559 , 7.303492069244385 , Rotation2d.fromDegrees(306));
+    public static final Pose2d BlueSource1 = new Pose2d(1.3679307699203491  , 7.1889729499816895  , Rotation2d.fromDegrees(306));
     public static final Pose2d BlueSource2 = new Pose2d(1.087 , 1.058 , Rotation2d.fromDegrees(54));
 
     public static final Pose2d Red6 = new Pose2d(13.474446 , 3.3012379999999997, Rotation2d.fromDegrees(120));
@@ -56,8 +56,8 @@ public final class Constants {
     public static final Pose2d Red9 = new Pose2d( 12.643358  , 4.740402 , Rotation2d.fromDegrees(300));
     public static final Pose2d Red10 = new Pose2d(12.227305999999999 , 4.0208200000000005 , Rotation2d.fromDegrees(0));
     public static final Pose2d Red11 = new Pose2d( 12.643358 , 3.3012379999999997 , Rotation2d.fromDegrees(60));
-    public static final Pose2d RedSource1 = new Pose2d(16.567501068115234 , 7.303492069244385 , Rotation2d.fromDegrees(54));
-    public static final Pose2d RedSource2 = new Pose2d(16.567501068115234  , 0.9785733819007874 , Rotation2d.fromDegrees(306));
+    public static final Pose2d RedSource1 = new Pose2d(16.39447593688965  , 7.019742012023926  , Rotation2d.fromDegrees(54));
+    public static final Pose2d RedSource2 = new Pose2d(16.337108612060547   , 0.9674757719039917  , Rotation2d.fromDegrees(306));
     
     // public static final Pose2d Blue17 = new Pose2d(3.9883315563201904 , 3.1964995861053467, Rotation2d.fromDegrees(60));
     // public static final Pose2d Blue18 = new Pose2d(3.5167877674102783 , 4.027209281921387, Rotation2d.fromDegrees(0));
@@ -73,7 +73,7 @@ public final class Constants {
     // public static final Pose2d Red10 = new Pose2d(12.080918312072754 , 4.028757572174072 , Rotation2d.fromDegrees(0));
     // public static final Pose2d Red11 = new Pose2d(12.585830459594726 , 3.174359083175659  , Rotation2d.fromDegrees(60));
 
-    public static final double offsetL = 0.172; //0.17
+    public static final double offsetL = 0.185; //0.17
     public static final double offsetR = 0.126; //0.110
 
     public static final double kFFAlignSpeed = 2.5;
