@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.Optional;
-
 import com.ctre.phoenix6.Utils;
 
 // import com.pathplanner.lib.auto.AutoBuilder;
@@ -73,9 +71,9 @@ public class Vision extends SubsystemBase {
 
     AlignStates currentAlignState = AlignStates.UPDATING;
 
-    Optional<Alliance> allianceColor = DriverStation.getAlliance();
+    
 
-    // Alliance allianceColor = Alliance.Blue;
+    Alliance allianceColor = Alliance.Blue;
 
     private int[] blueReefAprilTag = {17, 18, 19, 20, 21, 22};
     private int[] redReefAprilTag = {6, 7, 8, 9, 10, 11};
@@ -136,24 +134,17 @@ public class Vision extends SubsystemBase {
         if (LimelightHelper.getTV(name)) {
             LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
             visionEstimate = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-            if (allianceColor.get() == Alliance.Red) {
-                visionEstimate = LimelightHelper.getBotPoseEstimate_wpiRed_MegaTag2(name);
-            }
         }
-            
         if (LimelightHelper.getTV(name2)) {
             LimelightHelper.SetRobotOrientation(name2, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
             visionEstimateB = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name2);
-            if (allianceColor.get() == Alliance.Red) {
-                visionEstimateB = LimelightHelper.getBotPoseEstimate_wpiRed_MegaTag2(name2);
-            }
         }
 
         SmartDashboard.putNumber("Target Speed X", getAlignOffsetsRight()[0]);
         SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 
         if (timer.get() > 0.075 && !(currentAlignState == AlignStates.NONE)) {
-            // resetGyroMT1Periodic(); //NEW CHECK THIS
+            resetGyroMT1Periodic(); //NEW CHECK THIS
             updateAlignPose();
             
             // System.out.println("UPDATING");
@@ -373,9 +364,6 @@ public class Vision extends SubsystemBase {
     public void resetAlignPoseMT1() {
         if (LimelightHelper.getTV(name)) {
             var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-            if (allianceColor.get() == Alliance.Red) {
-                LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiRed(name);
-            }
             drivetrain.resetPose(LLMeasurment.pose);
             drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
         }
@@ -383,9 +371,6 @@ public class Vision extends SubsystemBase {
 
         else if (LimelightHelper.getTV(name2)) {
             var LLMeasurment2 = LimelightHelper.getBotPoseEstimate_wpiBlue(name2);
-            if (allianceColor.get() == Alliance.Red) {
-                LLMeasurment2 = LimelightHelper.getBotPoseEstimate_wpiRed(name2);
-            }
             drivetrain.resetPose(LLMeasurment2.pose);
             drivetrain.getPigeon2().setYaw(LLMeasurment2.pose.getRotation().getDegrees());
         }
@@ -394,9 +379,6 @@ public class Vision extends SubsystemBase {
     
     public void resetGyroMT1(){
         var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-        if (allianceColor.get() == Alliance.Red) {
-            LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiRed(name);
-        }
         if((distToAprilTag() < 1.1) && (speed() < 3) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI )){
                 drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
             };
@@ -405,10 +387,7 @@ public class Vision extends SubsystemBase {
 
     public void resetGyroMT1Periodic(){
         var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-        if (allianceColor.get() == Alliance.Red) {
-            LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiRed(name);
-        }
-        if((distToAprilTag() < 0.8) && (speed() < 0.5) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < Math.PI/4 )){
+        if((distToAprilTag() < 0.8) && (speed() < 0.25) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < Math.PI/4 )){
             drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
         };
     }

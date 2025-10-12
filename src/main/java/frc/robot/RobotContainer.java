@@ -362,8 +362,8 @@ public class RobotContainer {
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
+        traj1.resetOdometry(),
         resetMT1(),
-        // traj1.resetOdometry(),
         scoreL4RightVision(2.5).andThen(alignSource(4.0).andThen(scoreL4RightVision(2.5).andThen(alignSource(3.5).andThen(scoreL4LeftVision(2.5)))))
 
       )
@@ -380,8 +380,8 @@ public class RobotContainer {
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
-        // traj1.resetOdometry(),
         resetMT1(),
+        traj1.resetOdometry(),
         scoreL4LeftVision(2.5) .andThen(alignSource(4.0).andThen(scoreL4LeftVision(2.5).andThen(alignSource(3.5).andThen(scoreL4RightVision(2.5)))))
        
 
@@ -398,8 +398,8 @@ public class RobotContainer {
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
-        // traj1.resetOdometry(),
         resetMT1(),
+        traj1.resetOdometry(),
         scoreL4RightVision(2.5)
 
       )
