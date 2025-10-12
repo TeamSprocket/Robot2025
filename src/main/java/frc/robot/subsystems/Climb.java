@@ -17,13 +17,14 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.Climb;
 import frc.util.Util;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climb extends SubsystemBase {
   MotionMagicVoltage climbmmv = new MotionMagicVoltage(0);
-
+  // private final PWM servo = new PWM(0);
   private final TalonFX climbpivot = new TalonFX(RobotMap.Climb.CLIMB_PIVOT);
 
 
@@ -58,7 +59,8 @@ public class Climb extends SubsystemBase {
 
       case CLIMB:
         climbpivot.setVoltage(7);//-2 //2
-        break;
+        // servo.setPosition(0.7);
+         break;
 
       case UNDOCLIMB:
         climbpivot.setVoltage(-7);

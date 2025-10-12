@@ -62,7 +62,7 @@ public class RobotContainer {
   Superstructure superstructure = new Superstructure(elevator, intake, outtake, pivot, climb);
 
   // ------- Swerve Generated -------
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)*0.6; // kSpeedAt12Volts desired top speed
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)*1; // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.5).in(RadiansPerSecond); //(0.75) 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -115,6 +115,8 @@ public class RobotContainer {
     autoChooser.addRoutine("testPID", this::testPID);
     autoChooser.addRoutine("left2VISION", this::left2Vision);
     autoChooser.addRoutine("right2VISION", this::right2Vision);
+    autoChooser.addRoutine("LeaveAUTON",this::leaveAuton);
+    autoChooser.addRoutine("middle1Vision", this::middle1Vision);
 
     SmartDashboard.putData("Select Auto", autoChooser);
     RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
@@ -237,14 +239,14 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.EJECT))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger (operator.button(8))
-      .whileTrue(superstructure.setState(SSStates.CLIMB))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
+    // new Trigger (operator.button(8))
+    //   .whileTrue(superstructure.setState(SSStates.CLIMB))
+    //   .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.button(7))
-      .whileTrue(superstructure.setState(SSStates.UNDOCLIMB))
-      .whileFalse(superstructure.setState(SSStates.STOWED));
-  }
+    // new Trigger(operator.button(7))
+    //   .whileTrue(superstructure.setState(SSStates.UNDOCLIMB))
+    //   .whileFalse(superstructure.setState(SSStates.STOWED));
+ }
 
   public Superstructure getSuperstructure() {
     return superstructure;
@@ -360,6 +362,7 @@ public class RobotContainer {
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
+        
         traj1.resetOdometry(),
         scoreL4RightVision(2.5).andThen(alignSource(4.0).andThen(scoreL4RightVision(2.5).andThen(alignSource(3.5).andThen(scoreL4LeftVision(2.5)))))
 
@@ -378,15 +381,16 @@ public class RobotContainer {
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
         traj1.resetOdometry(),
-        scoreL4LeftVision(2.5).andThen(alignSource(4.0).andThen(scoreL4LeftVision(2.5).andThen(alignSource(3.5).andThen(scoreL4RightVision(2.5)))))
+        scoreL4LeftVision(2.5) .andThen(alignSource(4.0).andThen(scoreL4LeftVision(2.5).andThen(alignSource(3.5).andThen(scoreL4RightVision(2.5)))))
+       
 
       )
     );
   
     return routine;
   }
-  public AutoRoutine middleVision() { 
-    AutoRoutine routine = autoFactory.newRoutine("right2Vision"); //ROUTINE NAME
+  public AutoRoutine middle1Vision() { 
+    AutoRoutine routine = autoFactory.newRoutine("middle1Vision"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STM_MR"); //LOAD ALL PATHS HERE
 
     routine.active().onTrue(
@@ -399,6 +403,17 @@ public class RobotContainer {
       )
     );
   
+    return routine;
+  }
+
+
+  public AutoRoutine leaveAuton() { 
+    AutoRoutine routine = autoFactory.newRoutine("leaveAuton"); //ROUTINE NAME
+    AutoTrajectory traj1 = routine.trajectory("STM_MR"); //LOAD ALL PATHS HERE
+
+    routine.active().onTrue(
+     moveForward()
+    );
     return routine;
   }
 
@@ -479,6 +494,9 @@ public class RobotContainer {
   public Command alignLeftV(double timeout) {
     return choreoAlignLeft().withTimeout(timeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
   }
+  public Command moveForward(){
+    return new InstantCommand(()-> vision.setAlignState(AlignStates.NONE)).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+  }
 
   public Command alignRight() {
     return choreoAlignRight().withTimeout(alignTimeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
@@ -490,6 +508,9 @@ public class RobotContainer {
 
   public Command alignSourceCommand(double timeout) {
     return choreoAlignSource().withTimeout(timeout).andThen(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING))).andThen(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2));
+  }
+  public Command resetMT1(){
+    return  new InstantCommand(()-> vision.resetAlignPoseMT1());
   }
 
   public Command scoreL4Left() {
