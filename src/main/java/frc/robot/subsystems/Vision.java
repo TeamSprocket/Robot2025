@@ -102,7 +102,7 @@ public class Vision extends SubsystemBase {
     double distToAprilRight = 0.0;
     boolean updateFirst = true;
 
-    double maxDistance = 2.00;
+    double maxDistance = 1.5; //2.00
 
     double fiducialID;
 
@@ -142,7 +142,9 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 
         if (timer.get() > 0.075 && !(currentAlignState == AlignStates.NONE)) {
+            resetGyroMT1Periodic(); //NEW CHECK THIS
             updateAlignPose();
+            
             // System.out.println("UPDATING");
             timer.reset();
             timer.start();
@@ -379,7 +381,14 @@ public class Vision extends SubsystemBase {
                 drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
             };
     }
-   
+    
+
+    public void resetGyroMT1Periodic(){
+        var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+        if((distToAprilTag() < 0.8) && (speed() < 0.5) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < Math.PI/4 )){
+            drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
+        };
+    }
 
 
 
