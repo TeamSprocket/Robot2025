@@ -153,7 +153,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 
         if (timer.get() > 0.075 && !(currentAlignState == AlignStates.NONE)) {
-            resetGyroMT1Periodic(); //NEW CHECK THIS
+            // resetGyroMT1Periodic(); //NEW CHECK THIS
             updateAlignPose();
             
             // System.out.println("UPDATING");
