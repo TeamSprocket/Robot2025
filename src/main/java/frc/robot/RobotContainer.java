@@ -357,13 +357,13 @@ public class RobotContainer {
   public AutoRoutine left2Vision() { 
     AutoRoutine routine = autoFactory.newRoutine("left2Vision"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STL_BL"); //LOAD ALL PATHS HERE
-
+    // AutoTrajectory traj1 = routine.trajectory("STR_BL");//USE THIS FOR RED ALLIANCE
     routine.active().onTrue(
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
         superstructure.setState(SSStates.STOWED),
-        traj1.resetOdometry(),
         resetMT1(),
+        traj1.resetOdometry(),
         scoreL4RightVision(2.5).andThen(alignSource(4.0).andThen(scoreL4RightVision(2.5).andThen(alignSource(3.5).andThen(scoreL4LeftVision(2.5)))))
 
       )
@@ -375,7 +375,7 @@ public class RobotContainer {
   public AutoRoutine right2Vision() { 
     AutoRoutine routine = autoFactory.newRoutine("right2Vision"); //ROUTINE NAME
     AutoTrajectory traj1 = routine.trajectory("STR_BL"); //LOAD ALL PATHS HERE
-
+    // AutoTrajectory traj1 = routine.trajectory("STL_BL");//RED ALLIANCE
     routine.active().onTrue(
       Commands.sequence(
         new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)),
