@@ -144,7 +144,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("Target Speed Y", getAlignOffsetsRight()[1]);
 
         if (timer.get() > 0.075 && !(currentAlignState == AlignStates.NONE)) {
-            resetGyroMT1Periodic(); //NEW CHECK THIS
+            // resetGyroMT1Periodic(); //NEW CHECK THIS
             updateAlignPose();
             
             // System.out.println("UPDATING");
@@ -324,14 +324,14 @@ public class Vision extends SubsystemBase {
             double distance = Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2));
             if (distance < maxDistance) {
                 drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
-                drivetrain.addVisionMeasurement(visionEstimate.pose, Utils.getCurrentTimeSeconds());
+                drivetrain.addVisionMeasurement(visionEstimate.pose, Utils.fpgaToCurrentTime(visionEstimate.timestampSeconds));
             }
         }
         if (LimelightHelper.getTV(name2)) {
             double distanceB = Math.sqrt(Math.pow(tag.getX()-visionEstimateB.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimateB.pose.getY(), 2));
             if (distanceB < maxDistance) {
                 drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
-                drivetrain.addVisionMeasurement(visionEstimateB.pose, Utils.getCurrentTimeSeconds());
+                drivetrain.addVisionMeasurement(visionEstimateB.pose, Utils.fpgaToCurrentTime(visionEstimateB.timestampSeconds));
             }
         }
     }

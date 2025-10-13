@@ -56,8 +56,8 @@ public final class Constants {
     public static final Pose2d Red9 = new Pose2d( 12.643358  , 4.740402 , Rotation2d.fromDegrees(300));
     public static final Pose2d Red10 = new Pose2d(12.227305999999999 , 4.0208200000000005 , Rotation2d.fromDegrees(0));
     public static final Pose2d Red11 = new Pose2d( 12.643358 , 3.3012379999999997 , Rotation2d.fromDegrees(60));
-    public static final Pose2d RedSource1 = new Pose2d(16.39447593688965  , 7.019742012023926  , Rotation2d.fromDegrees(54));
-    public static final Pose2d RedSource2 = new Pose2d(16.337108612060547   , 0.9674757719039917  , Rotation2d.fromDegrees(306));
+    public static final Pose2d RedSource1 = new Pose2d(16.39447593688965  , 7.019742012023926  , Rotation2d.fromDegrees(234));
+    public static final Pose2d RedSource2 = new Pose2d(16.337108612060547   , 0.9674757719039917  , Rotation2d.fromDegrees(126));
     
     // public static final Pose2d Blue17 = new Pose2d(3.9883315563201904 , 3.1964995861053467, Rotation2d.fromDegrees(60));
     // public static final Pose2d Blue18 = new Pose2d(3.5167877674102783 , 4.027209281921387, Rotation2d.fromDegrees(0));
@@ -145,7 +145,7 @@ public final class Constants {
     public static final double kHeightHandoff = 0.0;
     public static final double kHeightCoral1 = 0.0;
     public static final double kHeightCoral2 = 1.52; //1.65
-    public static final double kHeightCoral3 = 3.34; //3.4
+    public static final double kHeightCoral3 = 2.85; // 3.34; //3.4
     public static final double kHeightCoral4 = 5.8; //5.775
 
     public static final double kHeightAlgaeRemove2 = 1.1; //1

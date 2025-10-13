@@ -246,7 +246,7 @@ public class RobotContainer {
     // new Trigger(operator.button(7))
     //   .whileTrue(superstructure.setState(SSStates.UNDOCLIMB))
     //   .whileFalse(superstructure.setState(SSStates.STOWED));
- }
+  }
 
   public Superstructure getSuperstructure() {
     return superstructure;
