@@ -37,6 +37,7 @@ public class Robot extends LoggedRobot {
     AutoLogOutputManager.addObject(m_robotContainer.outtake);
     AutoLogOutputManager.addObject(m_robotContainer.intake);
     AutoLogOutputManager.addObject(m_robotContainer.pivot);
+    AutoLogOutputManager.addObject(m_robotContainer.drivetrain);
   
     // logging
     Logger.start();
