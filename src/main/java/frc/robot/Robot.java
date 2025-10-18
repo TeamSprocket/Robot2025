@@ -40,7 +40,9 @@ public class Robot extends LoggedRobot {
     AutoLogOutputManager.addObject(m_robotContainer.drivetrain);
   
     // logging
-    Logger.start();
+    
+
+    
   }
 
   @Override
@@ -52,6 +54,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
+    Logger.start();
   }
 
   @Override
@@ -88,7 +91,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.getSuperstructure().setStowed();
-
+    Logger.start();
   }
 
   @Override

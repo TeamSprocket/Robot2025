@@ -108,6 +108,7 @@ public Pivot getPivot() {
       true,
       drivetrain
     );
+    drivetrain.resetPose(new Pose2d(2, 2, new Rotation2d()));
     configureBindings();
     initAutons();
   }

@@ -39,6 +39,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+import edu.wpi.first.math.geometry.Pose2d;
+
 import frc.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Constants;
 import frc.robot.subsystems.Vision;
@@ -368,4 +371,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
+
+    @AutoLogOutput(key = "Drive/Pose")
+    public Pose2d getPose() {
+        return getState().Pose;
+}
 }
