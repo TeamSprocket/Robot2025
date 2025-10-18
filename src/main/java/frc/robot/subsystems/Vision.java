@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.lang.reflect.Array;
+
 import com.ctre.phoenix6.Utils;
 
 // import com.pathplanner.lib.auto.AutoBuilder;
@@ -17,6 +19,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,17 +45,27 @@ import frc.util.Util;
  */
 public class Vision extends SubsystemBase {
     StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Current Pose", Pose2d.struct).publish();
-    StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
+    StructPublisher<Pose2d> publisher2 = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish(); 
+    StructPublisher<Pose2d> publisher3 = NetworkTableInstance.getDefault().getStructTopic("LL Pose", Pose2d.struct).publish();     
+    DoublePublisher Errorx = NetworkTableInstance.getDefault().getDoubleTopic("errorX").publish();  
+    DoublePublisher Errory = NetworkTableInstance.getDefault().getDoubleTopic("errorY").publish();  
+    DoublePublisher Errortheta = NetworkTableInstance.getDefault().getDoubleTopic("errorTheta").publish();  
+
+    
+
+
+
+
 
     private TrapezoidProfile.Constraints m_contraints = new TrapezoidProfile.Constraints(Constants.Vision.kMaxDrivingSpeed,0.1);
 
     private PIDController pidRotationAlign = new PIDController(5.0, 0, 0); //4.5 0 0
-    private PIDController pidXAlign = new PIDController(1.5, 0, 0.001); //1.3 0 0
-    private PIDController pidYAlign = new PIDController(1.5, 0, 0.001); //1.3 0 0
+    private PIDController pidXAlign = new PIDController(1.25, 0, 0.001); //1.3 0 0
+    private PIDController pidYAlign = new PIDController(1.25, 0, 0.001); //1.3 0 0
 
-    private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0.02);
-    private ProfiledPIDController pidXAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
-    private ProfiledPIDController pidYAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
+    // private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0.02);
+    // private ProfiledPIDController pidXAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
+    // private ProfiledPIDController pidYAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
 
 
 
@@ -324,14 +337,14 @@ public class Vision extends SubsystemBase {
             double distance = Math.sqrt(Math.pow(tag.getX()-visionEstimate.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimate.pose.getY(), 2));
             if (distance < maxDistance) {
                 drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
-                drivetrain.addVisionMeasurement(visionEstimate.pose, Utils.fpgaToCurrentTime(visionEstimate.timestampSeconds));
+                drivetrain.addVisionMeasurement(visionEstimate.pose, Utils.getCurrentTimeSeconds());
             }
         }
         if (LimelightHelper.getTV(name2)) {
             double distanceB = Math.sqrt(Math.pow(tag.getX()-visionEstimateB.pose.getX(), 2) + Math.pow(tag.getY()-visionEstimateB.pose.getY(), 2));
             if (distanceB < maxDistance) {
                 drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevConstant()[0],stdDevConstant()[1],stdDevConstant()[2]));
-                drivetrain.addVisionMeasurement(visionEstimateB.pose, Utils.fpgaToCurrentTime(visionEstimateB.timestampSeconds));
+                drivetrain.addVisionMeasurement(visionEstimateB.pose, Utils.getCurrentTimeSeconds());
             }
         }
     }
@@ -367,30 +380,19 @@ public class Vision extends SubsystemBase {
             drivetrain.resetPose(LLMeasurment.pose);
             drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
         }
-        
-
         else if (LimelightHelper.getTV(name2)) {
             var LLMeasurment2 = LimelightHelper.getBotPoseEstimate_wpiBlue(name2);
             drivetrain.resetPose(LLMeasurment2.pose);
             drivetrain.getPigeon2().setYaw(LLMeasurment2.pose.getRotation().getDegrees());
         }
     }
-    
-    
-    public void resetGyroMT1(){
-        var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-        if((distToAprilTag() < 1.1) && (speed() < 3) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < 2*Math.PI )){
-                drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
-            };
-    }
-    
 
-    public void resetGyroMT1Periodic(){
-        var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
-        if((distToAprilTag() < 0.8) && (speed() < 0.25) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < Math.PI/4 )){
-            drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
-        };
-    }
+    // public void resetGyroMT1Periodic(){
+    //     var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
+    //     if((distToAprilTag() < 0.8) && (speed() < 0.25) && (drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble() < Math.PI/4 )){
+    //         drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
+    //     };
+    // }
 
 
 
@@ -583,8 +585,8 @@ public class Vision extends SubsystemBase {
     // }
 
     public double[] stdDevConstant() {
-        double stdDevX = 0.25;
-        double stdDevY = 0.25;
+        double stdDevX = 0.1;//o.25
+        double stdDevY = 0.1;//0.25
         double stdDevTheta = 0.9999;
 
     // if(distToAprilTag()>Constants.Vision.apriltagMinSpeed && distToAprilTag() <= 1){
@@ -670,6 +672,31 @@ public class Vision extends SubsystemBase {
         return targetSource;
     }
 
+    public double errorX(){
+        double LLest = visionEstimate.pose.getX();
+        double ODest = drivetrain.getState().Pose.getX();
+        double error;
+        error = Math.abs(LLest - ODest);
+        return error;
+    }
+    public double errorY(){
+        double LLest = visionEstimate.pose.getY();
+        double ODest = drivetrain.getState().Pose.getY();
+        double error;
+        error = Math.abs(LLest - ODest);
+        return error;
+    }
+    public double errorTheta(){
+        double LLest = visionEstimate.pose.getRotation().getDegrees();
+        double ODest = drivetrain.getState().Pose.getRotation().getDegrees();
+        double error;
+        error = Math.abs(LLest - ODest);
+        return error;
+   
+    }
+
+
+    
    
     
     /**
@@ -677,8 +704,8 @@ public class Vision extends SubsystemBase {
      */
     private void debug() {
         // SmartDashboard.putBoolean("Has Reef Target [VI]", hasReefTargets());
-        // // SmartDashboard.putNumber("Vision POSE X", visionEstimate.pose.getX());
-        // // SmartDashboard.putNumber("Vision POSE Y", visionEstimate.pose.getY());
+        // SmartDashboard.putNumber("Vision POSE X", visionEstimate.pose.getX());
+        // SmartDashboard.putNumber("Vision POSE Y", visionEstimate.pose.getY());
         // SmartDashboard.putNumber("dist to left", distToAprilLeft);
         // SmartDashboard.putNumber("dist to right", distToAprilRight);
         // SmartDashboard.putNumber("times reset", counter);
@@ -696,10 +723,22 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("Goal Y RIGHT", getTargetTagRight().getY());
         SmartDashboard.putNumber("Goal Theta RIGHT", getTargetTagRight().getRotation().getDegrees());
         
+        SmartDashboard.putNumber("Tx LL",NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tx").getDouble(0));
+        SmartDashboard.putNumber("Ty LL",NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("ty").getDouble(0));
         
+       
+        // SmartDashboard.putNumber("ERROR X", errorX());
+        // SmartDashboard.putNumber("ERROR Y", errorY());
+        // SmartDashboard.putNumber("ERROR Theta", errorTheta());
+
 
         publisher.set(drivetrain.getState().Pose);
         publisher2.set(getTargetTagRight());
+        // Errorx.set(errorX());
+        // Errory.set(errorY());
+        // Errortheta.set(errorTheta());   
+        
+
      }
 
 }
