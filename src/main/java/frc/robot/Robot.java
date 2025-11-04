@@ -27,7 +27,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-
+    Logger.start();
 
     Logger.addDataReceiver(new WPILOGWriter());
     Logger.addDataReceiver(new RLOGServer());
@@ -54,7 +54,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().cancelAll();
-    Logger.start();
+    Logger.end();
   }
 
   @Override
@@ -91,7 +91,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.getSuperstructure().setStowed();
-    Logger.start();
+    
   }
 
   @Override
