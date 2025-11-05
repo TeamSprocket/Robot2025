@@ -147,8 +147,8 @@ public Pivot getPivot() {
     drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
     drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.75) // Drive forward with negative Y (forward)
-            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.75) // Drive left with negative X (left)
+        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.5) // Drive forward with negative Y (forward)
+            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.5) // Drive left with negative X (left)
             .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6
             ) // Drive counterclockwise with negative X (left)
         )
