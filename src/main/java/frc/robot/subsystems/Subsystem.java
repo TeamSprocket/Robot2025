@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
@@ -21,7 +22,7 @@ public class Subsystem extends SubsystemBase {
      * Move onto part two when you're done
      * (Reminder all types of comments using // is for code, all ones using /* are for instructions)
     */
-
+    private final TalonFX SubsytemMotor = new TalonFX(0);
 
     public Subsystem() {
         /* 
@@ -29,21 +30,33 @@ public class Subsystem extends SubsystemBase {
          * Also fill in your motor name below in the setPosition line of code
          */
         configMotors();
-        //.setPosition(0);
+        SubsytemMotor.setPosition(0);
     }
+    
+    public void publishMotorPosition() {
+        SmartDashboard.putNumber("Position", getMotorPosition());
 
+    }
     @Override
+
     public void periodic() {
         /*
          * 6. make a SmartDashboard function to send the value up to be displayed in Elastic
          * After, move to the RobotContainer.java file
          */
+        publishMotorPosition();
+
+
+    
 
     }
 
     /*
      * 4. Make a method below to run the motor at a speed of 0.5, calling the method runMotor with a return of void
-     */
+    */
+    public void setMotorSpeedHalf(){
+        SubsytemMotor.set(0.5);
+    }
 
 
 
@@ -51,7 +64,9 @@ public class Subsystem extends SubsystemBase {
     /*
      * 5. Make a method below to get the motor's position value, and return it for analysis and logging
      */
-
+    public double getMotorPosition(){
+        return SubsytemMotor.getPosition().getValueAsDouble();
+    }
 
     private void configMotors() {
         /*
@@ -61,12 +76,17 @@ public class Subsystem extends SubsystemBase {
          */
         TalonFXConfiguration config = new TalonFXConfiguration();
 
-        //config.withFeedback();
+        // public TalonFXConfiguration withFeedback(FeedbackConfigs newFeedback)
+        FeedbackConfigs configF = new FeedbackConfigs();
 
-        //config.withMotorOutput();
+        config.withFeedback(configF);
 
-        //.getConfigurator().apply(config);
+        MotorOutputConfigs configG = new MotorOutputConfigs();
 
-        //.setNeutralMode(NeutralModeValue.Brake);
+        config.withMotorOutput(configG);
+
+        SubsytemMotor.getConfigurator().apply(config);
+
+        SubsytemMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 }

@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Power;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.event.EventLoop;
@@ -26,16 +27,18 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Subsystem;
+
 import static edu.wpi.first.units.Units.*;
 
 public class RobotContainer {
-  // private final CommandXboxController driver = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driver = new CommandXboxController(0); // My joystick
 
   /*
    * 7. From here, define your subsystem as an object. If an error pops up, use the lightbulb in the corner
    * to import the subsystem. Also, uncomment the above piece of code
    */
-
+  private final Subsystem oSubsystem = new Subsystem();
 
   private Timer timer = new Timer();
 
@@ -44,7 +47,6 @@ public class RobotContainer {
     configureBindings();
   }
   
-
   public void configureBindings() {
     /*
      * 8. Here, use the driver controller to bind the a button to powering the motor. Once you've done that
@@ -52,6 +54,8 @@ public class RobotContainer {
      */
 
     // --------------------=Driver=--------------------
+
+    driver.a().whileTrue(new InstantCommand(() -> oSubsystem.setMotorSpeedHalf()));
   }
 
 
