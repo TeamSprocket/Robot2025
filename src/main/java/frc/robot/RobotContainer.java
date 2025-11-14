@@ -29,12 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static edu.wpi.first.units.Units.*;
 
 public class RobotContainer {
-  // private final CommandXboxController driver = new CommandXboxController(0); // My joystick
-
-  /*
-   * 7. From here, define your subsystem as an object. If an error pops up, use the lightbulb in the corner
-   * to import the subsystem. Also, uncomment the above piece of code
-   */
+  
 
 
   private Timer timer = new Timer();
@@ -46,11 +41,6 @@ public class RobotContainer {
   
 
   public void configureBindings() {
-    /*
-     * 8. Here, use the driver controller to bind the a button to powering the motor. Once you've done that
-     * and gotten check, speak to a lead to see if you can test the function. Congratulations, you've completed the module!
-     */
-
     // --------------------=Driver=--------------------
   }
 
