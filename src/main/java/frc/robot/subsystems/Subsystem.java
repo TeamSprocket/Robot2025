@@ -53,18 +53,18 @@ public class Subsystem extends SubsystemBase {
          */
         TalonFXConfiguration config = new TalonFXConfiguration();
 
-        //config.withFeedback();
+        config.withFeedback(FeedbackConfigs newFeedback);
 
-        //config.withSlot0();
+        config.withSlot0(Slot0Configs newSlot0);
         
-        //config.withMotionMagic();
+        config.withMotionMagic(MotionMagicConfigs newMotionMagic);
 
-        //config.withMotorOutput();
+        config.withMotorOutput(MotorOutputConfigs newMotorOutput);
 
-        //.getConfigurator().apply(config);
+        .getConfigurator().apply(config);
 
-        //.setNeutralMode(NeutralModeValue.Brake);
+        .setNeutralMode(NeutralModeValue.Brake);
 
-        //.setControl(-put in something about follower-)
+        .setControl(NeutralModeValue.Brake request);
     }
 }
