@@ -59,8 +59,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     SwerveDriveKinematics m_kinematics;
 
-    private PIDController C_PID_Translation = new PIDController(4.80, 0.0, 0.001); //4.85 5.00  0.55 0 0.01
-    private PIDController C_PID_Rotation = new PIDController(1.75, 0, 0);  //15 0 0      30 0 1 // 1.35
+    private PIDController C_PID_Translation = new PIDController(6, 0.0, 0); //5     4.85            .001     4.85 5.00  0.55 0 0.01
+    private PIDController C_PID_Rotation = new PIDController(13, 0, 0.0001);  //5      1.3       15 0 0      30 0 1 // 1.35
 
     private double pathX = 0.0;
     private double pathY = 0.0;

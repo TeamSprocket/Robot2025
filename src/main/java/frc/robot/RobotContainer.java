@@ -132,9 +132,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
     drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.75) // Drive forward with negative Y (forward)
-            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.75) // Drive left with negative X (left)
-            .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6
+        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier ) //*0.55 */ Drive forward with negative Y (forward)
+            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier ) //*0.55 */ Drive left with negative X (left)
+            .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.8
             ) // Drive counterclockwise with negative X (left)
         )
     );
@@ -422,7 +422,7 @@ public class RobotContainer {
 
   public AutoRoutine testPID() {
     AutoRoutine routine = autoFactory.newRoutine("testPID"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("testPID"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj1 = routine.trajectory("testPID3"); //LOAD ALL PATHS HERE
 
 
     routine.active().onTrue(
