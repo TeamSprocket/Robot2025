@@ -35,6 +35,7 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.util.LimelightHelper;
 import frc.util.ShuffleboardIO;
 import frc.util.Util;
+import frc.util.LimelightHelper.LimelightTarget_Barcode;
 
 
 /**
@@ -59,9 +60,9 @@ public class Vision extends SubsystemBase {
 
     private TrapezoidProfile.Constraints m_contraints = new TrapezoidProfile.Constraints(Constants.Vision.kMaxDrivingSpeed,0.1);
 
-    private PIDController pidRotationAlign = new PIDController(5.0, 0, 0); //4.5 0 0
-    private PIDController pidXAlign = new PIDController(1.25, 0, 0.001); //1.3 0 0
-    private PIDController pidYAlign = new PIDController(1.25, 0, 0.001); //1.3 0 0
+    private PIDController pidRotationAlign = new PIDController(4.6, 0, 0); //4.5 0 0
+    private PIDController pidXAlign = new PIDController(1.2, 0, 0); //1.25,0,0.0001
+    private PIDController pidYAlign = new PIDController(1.2, 0, 0); //1.25,0,0.0001
 
     // private ProfiledPIDController pidRotationAlign_MP = new ProfiledPIDController(4.5,0,0,m_contraints,0.02);
     // private ProfiledPIDController pidXAlign_MP = new ProfiledPIDController(3.0,0,0,m_contraints, 0.02);
@@ -71,6 +72,8 @@ public class Vision extends SubsystemBase {
 
 
     Timer timer = new Timer();
+
+    Timer IMUtimer = new Timer();
 
     Pose2d testPose = new Pose2d();
 
@@ -98,7 +101,7 @@ public class Vision extends SubsystemBase {
     int counter = 0;
     int tagOutside = 1;
 
-    double maxSpeed = 0.90; //0.75
+    double maxSpeed = 1.15; //0.75
 
     // double moveForwardAlignDisplacement = 0.9;
 
@@ -129,7 +132,7 @@ public class Vision extends SubsystemBase {
         timer.reset();
         timer.start();
         drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0,0,0));
-        // LimelightHelper.SetIMUMode(name, 1);
+        LimelightHelper.SetIMUMode(name, 0);
         ShuffleboardIO.addSlider("Alignment X", 0, 7, 0);
         ShuffleboardIO.addSlider("Alignment Y", 0, 7, 0);
     }
@@ -163,6 +166,12 @@ public class Vision extends SubsystemBase {
             // System.out.println("UPDATING");
             timer.reset();
             timer.start();
+        }
+
+        if (IMUMode2 && IMUtimer.get() > 0.2) {
+            LimelightHelper.SetIMUMode(name, 2);
+            IMUtimer.reset();
+            IMUMode2 = false;
         }
         
         debug();
@@ -375,10 +384,15 @@ public class Vision extends SubsystemBase {
     // }
 
     public void resetAlignPoseMT1() {
+        
+        LimelightHelper.SetIMUMode(name, 1);
         if (LimelightHelper.getTV(name)) {
             var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
             drivetrain.resetPose(LLMeasurment.pose);
             drivetrain.getPigeon2().setYaw(LLMeasurment.pose.getRotation().getDegrees());
+            LimelightHelper.SetRobotOrientation(name, LLMeasurment.pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            IMUMode2 = true;
+            IMUtimer.start();
         }
         else if (LimelightHelper.getTV(name2)) {
             var LLMeasurment2 = LimelightHelper.getBotPoseEstimate_wpiBlue(name2);
@@ -386,6 +400,8 @@ public class Vision extends SubsystemBase {
             drivetrain.getPigeon2().setYaw(LLMeasurment2.pose.getRotation().getDegrees());
         }
     }
+
+
 
     // public void resetGyroMT1Periodic(){
     //     var LLMeasurment = LimelightHelper.getBotPoseEstimate_wpiBlue(name);
@@ -585,9 +601,9 @@ public class Vision extends SubsystemBase {
     // }
 
     public double[] stdDevConstant() {
-        double stdDevX = 0.1;//o.25
-        double stdDevY = 0.1;//0.25
-        double stdDevTheta = 0.9999;
+        double stdDevX = 0.01;//0.1,o.25,0.08(close)
+        double stdDevY = 0.01;//0.1,0.25,0.08(close)
+        double stdDevTheta = 0.0;
 
     // if(distToAprilTag()>Constants.Vision.apriltagMinSpeed && distToAprilTag() <= 1){
     //     stdDevX = 0.07;
@@ -673,21 +689,28 @@ public class Vision extends SubsystemBase {
     }
 
     public double errorX(){
-        double LLest = visionEstimate.pose.getX();
+        LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
+        LimelightHelper.PoseEstimate visionEstimate2 = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+        double LLest = visionEstimate2.pose.getX();
         double ODest = drivetrain.getState().Pose.getX();
         double error;
         error = Math.abs(LLest - ODest);
         return error;
     }
     public double errorY(){
-        double LLest = visionEstimate.pose.getY();
+        LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
+        LimelightHelper.PoseEstimate visionEstimate2 = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+        double LLest = visionEstimate2.pose.getY();
         double ODest = drivetrain.getState().Pose.getY();
         double error;
         error = Math.abs(LLest - ODest);
         return error;
     }
     public double errorTheta(){
-        double LLest = visionEstimate.pose.getRotation().getDegrees();
+        
+        LimelightHelper.SetRobotOrientation(name, drivetrain.getPigeon2().getYaw().getValueAsDouble(), drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0, 0, 0, 0);
+        LimelightHelper.PoseEstimate visionEstimate2 = LimelightHelper.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+        double LLest = visionEstimate2.pose.getRotation().getDegrees();
         double ODest = drivetrain.getState().Pose.getRotation().getDegrees();
         double error;
         error = Math.abs(LLest - ODest);
@@ -723,9 +746,10 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("Goal Y RIGHT", getTargetTagRight().getY());
         SmartDashboard.putNumber("Goal Theta RIGHT", getTargetTagRight().getRotation().getDegrees());
         
+        SmartDashboard.putNumber("Pigeon2", drivetrain.getPigeon2().getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Tx LL",NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tx").getDouble(0));
         SmartDashboard.putNumber("Ty LL",NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("ty").getDouble(0));
-        
+         
        
         // SmartDashboard.putNumber("ERROR X", errorX());
         // SmartDashboard.putNumber("ERROR Y", errorY());
@@ -734,9 +758,9 @@ public class Vision extends SubsystemBase {
 
         publisher.set(drivetrain.getState().Pose);
         publisher2.set(getTargetTagRight());
-        // Errorx.set(errorX());
-        // Errory.set(errorY());
-        // Errortheta.set(errorTheta());   
+        Errorx.set(errorX());
+        Errory.set(errorY());
+        Errortheta.set(errorTheta());   
         
 
      }
