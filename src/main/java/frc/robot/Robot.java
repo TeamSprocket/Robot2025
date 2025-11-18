@@ -21,13 +21,13 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
-  private RobotContainer m_robotContainer;
+  public static RobotContainer m_robotContainer;
   // private boolean run = false;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    Logger.start();
+    
 
     Logger.addDataReceiver(new WPILOGWriter());
     Logger.addDataReceiver(new RLOGServer());
@@ -92,6 +92,8 @@ public class Robot extends LoggedRobot {
     }
     m_robotContainer.getSuperstructure().setStowed();
     
+
+    Logger.start();
   }
 
   @Override
