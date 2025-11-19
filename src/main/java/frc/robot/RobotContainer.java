@@ -422,7 +422,7 @@ public class RobotContainer {
 
   public AutoRoutine testPID() {
     AutoRoutine routine = autoFactory.newRoutine("testPID"); //ROUTINE NAME
-    AutoTrajectory traj1 = routine.trajectory("testPID3"); //LOAD ALL PATHS HERE
+    AutoTrajectory traj1 = routine.trajectory("testPID4"); //LOAD ALL PATHS HERE
 
 
     routine.active().onTrue(
