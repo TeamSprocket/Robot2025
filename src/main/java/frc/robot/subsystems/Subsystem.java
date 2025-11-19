@@ -54,15 +54,49 @@ public class Subsystem extends SubsystemBase {
          */
         TalonFXConfiguration config = new TalonFXConfiguration();
 
-        config.withFeedback(FeedbackConfigs newFeedback);
+        config.withFeedback (
+            new FeedbackConfigs()
+            .FeedbackRemoteSensorID()
+            .FeedbackRotorOffset()
+            .FeedbackSensorSource()
+            .RotorToSensorRatio()
+            .SensorToMechanismRatio()
+            .VelocityFilterTimeConstant()
+        )
 
-        config.withSlot0(Slot0Configs newSlot0);
+        config.withSlot0(
+            new Slot0Configs()
+            .kP()
+            .kI()
+            .kD()
+            .kS()
+            .kV()
+            .kA()
+            .kG()
+            .GravityType()
+            .StaticFeedforwardSign()
+        );
         
-        config.withMotionMagic(MotionMagicConfigs newMotionMagic);
+        config.withMotionMagic(
+            new MotionMagicConfigs()
+            .MotionMagicCruiseVelocity()
+            .MotionMagicAccerleration()
+            .MotionMagicJerk()
+            .MotionMagicExpo_kV()
+            .MotionMagicExpo_kA()
+        );
 
-        config.withMotorOutput(MotorOutputConfigs newMotorOutput);
+        config.withMotorOutput(
+            new MotorOutputConfigs()
+            .Inverted()
+            .NeutralMode()
+            .DutyCycleNeutralDeadband()
+            .PeakForwardDutyCycle()
+            .PeakReverseDutyCycle()
+            .ControlTimesyncFreqHz()
+        )
 
-        config.getConfigurator().apply(config);
+        config.getConfigurator().apply(new configurationFX());
 
         config.setNeutralMode(NeutralModeValue.Brake);
 
