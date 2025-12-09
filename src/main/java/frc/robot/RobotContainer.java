@@ -5,15 +5,23 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyFieldSpeeds;
 import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
+
+import edu.wpi.first.epilogue.EpilogueConfiguration;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.logging.EpilogueBackend;
 // import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.event.EventLoop;
@@ -21,11 +29,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Superstructure.SSStates;
 import frc.robot.subsystems.Vision.AlignStates;
@@ -33,6 +44,8 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.Telemetry;
 import frc.robot.subsystems.swerve.TunerConstants;
 import static edu.wpi.first.units.Units.*;
+
+import java.util.function.Consumer;
 
 // import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.path.PathConstraints;
@@ -145,6 +158,8 @@ public class RobotContainer {
     // driver.b().whileTrue(drivetrain.applyRequest(() ->
     //     point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
     // ));
+    driver.x().whileTrue(new InstantCommand(()-> drivetrain.sysIdDynamic(Direction.kForward) ));
+    driver.y().whileTrue(new InstantCommand(()-> drivetrain.sysIdQuasistatic(Direction.kForward)));
 
 
 
@@ -604,4 +619,7 @@ public class RobotContainer {
         .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsSource()[0], vision.getAlignOffsetsSource()[1], vision.getRotationalAlignSpeedSource()))
     ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.UPDATING)));
   }
+
+
+ 
 }
