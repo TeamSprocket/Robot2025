@@ -130,58 +130,58 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
     drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.75) // Drive forward with negative Y (forward)
-            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.75) // Drive left with negative X (left)
+        drive.withVelocityX(-driver.getLeftY() * MaxSpeed * speedMultiplier * 0.5) // Drive forward with negative Y (forward)
+            .withVelocityY(-driver.getLeftX() * MaxSpeed * speedMultiplier * 0.5) // Drive left with negative X (left)
             .withRotationalRate(-driver.getRightX() * MaxAngularRate * 0.6
             ) // Drive counterclockwise with negative X (left)
         )
     );
 
-    driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    driver.b().whileTrue(drivetrain.applyRequest(() ->
-        point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
-    ));
+    // driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    // driver.b().whileTrue(drivetrain.applyRequest(() ->
+    //     point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
+    // ));
 
-    driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.5, 0.0, 0.0))));
-    driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))));
-    driver.povRight().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, -0.5, 0.0))));
-    driver.povLeft().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0.5, 0.0))));
+    // driver.povDown().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(-0.5, 0.0, 0.0))));
+    // driver.povUp().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))));
+    // driver.povRight().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, -0.5, 0.0))));
+    // driver.povLeft().whileTrue(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0, 0.5, 0.0))));
     
     drivetrain.registerTelemetry(logger::telemeterize);
 
     // reset the field-centric heading on left bumper press
     driver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-    driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    // driver.rightBumper().onTrue(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
+    // driver.y().onTrue(new InstantCommand(() -> vision.updateAlignPose()));
 
-    driver.rightTrigger()
-    .whileTrue(
-      drivetrain.applyRequest(
-        () -> new ApplyFieldSpeeds()
-          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedRight()))
-      ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
-      .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    // driver.rightTrigger()
+    // .whileTrue(
+    //   drivetrain.applyRequest(
+    //     () -> new ApplyFieldSpeeds()
+    //       .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsRight()[0], vision.getAlignOffsetsRight()[1], vision.getRotationalAlignSpeedRight()))
+    //   ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
+    //   .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    // driver.rightTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
-    driver.leftTrigger()
-    .whileTrue(
-      drivetrain.applyRequest(
-        () -> new ApplyFieldSpeeds()
-          .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsLeft()[1], vision.getRotationalAlignSpeedLeft()))
-        ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
-    .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
+    // driver.leftTrigger()
+    // .whileTrue(
+    //   drivetrain.applyRequest(
+    //     () -> new ApplyFieldSpeeds()
+    //       .withSpeeds(new ChassisSpeeds(vision.getAlignOffsetsLeft()[0], vision.getAlignOffsetsLeft()[1], vision.getRotationalAlignSpeedLeft()))
+    //     ).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.ALIGNING))))
+    // .onFalse(new InstantCommand(()->vision.setAlignState(AlignStates.NONE)));
 
-    driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
+    // driver.leftTrigger().onFalse(drivetrain.applyRequest(() -> new ApplyRobotSpeeds().withSpeeds(new ChassisSpeeds(0.5, 0.0, 0.0))).withTimeout(0.2).alongWith(new InstantCommand(()->vision.setAlignState(AlignStates.NONE))));
 
     // --------------------=Operator=--------------------
 
-    new Trigger(operator.leftTrigger())
+    new Trigger(driver.leftTrigger())
       .whileTrue(superstructure.setState(SSStates.INTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.rightTrigger())
+    new Trigger(driver.rightTrigger())
       .whileTrue(superstructure.setState(SSStates.OUTTAKE))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
@@ -189,7 +189,7 @@ public class RobotContainer {
       .whileTrue(superstructure.setState(SSStates.CORAL_1))
       .whileFalse(superstructure.setState(SSStates.STOWED));
 
-    new Trigger(operator.b())
+    new Trigger(driver.b())
       .whileTrue(superstructure.setState(SSStates.CORAL_2))
       .onFalse(superstructure.setState(SSStates.STOWED));
     
